@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">AnyText</string>
+    <string name="apply">应用</string>
+    <string name="perform_origin_click">触发原点击事件</string>
+    <string name="successfully_modified">成功修改</string>
+    <string name="anytext_working_now">AnyText运行中</string>
+    <string name="about">关于</string>
+    <string name="requirement_content">系统要求:\n1.已经Root\n2.安装了Xposed框架</string>
+    <string name="github">Github</string>
+    <string name="get_source">在Github上获取源码</string>
+    <string name="caution_text">本软件完全免费且开源，仅供学习交流使用，请从Github页面上下载本应用，或者自己编译安装包，避免未知来源的安装包。</string>
+    <string name="about_description">本软件可以修改正在运行的应用的布局参数，就像浏览器中的元素审查一样。</string>
+    <string name="caution">注意</string>
+</resources>
