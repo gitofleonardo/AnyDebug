@@ -3,6 +3,7 @@ package com.hhvvg.anydebug
 import android.view.View
 import com.hhvvg.anydebug.handler.ViewDispatchHandler
 import com.hhvvg.anydebug.handler.textview.TextViewDispatchHandler
+import com.hhvvg.anydebug.util.getOnClickListener
 import kotlin.reflect.KClass
 
 /**
@@ -25,10 +26,9 @@ class ViewDispatcher private constructor() {
         var handled = false
         for (handler in handlers) {
             if (handler.support(view)) {
-                handled = handler.handle(view)
-                if (handled) {
-                    break
-                }
+                handler.handle(view)
+                handled = true
+                break
             }
         }
         return handled

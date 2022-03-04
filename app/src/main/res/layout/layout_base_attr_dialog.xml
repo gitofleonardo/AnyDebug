@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="10dp"
+    android:orientation="vertical"
+    android:tag="ANYDEBUG_IGNORE_HOOK">
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scroll_parent"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginBottom="10dp">
+        <LinearLayout
+            android:id="@+id/attr_parent_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RelativeLayout xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginBottom="10dp">
+
+                <TextView
+                    android:textSize="16sp"
+                    android:id="@+id/width_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@id/width_spinner"
+                    android:layout_alignParentTop="true"
+                    android:gravity="center"
+                    android:text="@string/width" />
+
+                <Spinner
+                    android:id="@+id/width_spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="42dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_toEndOf="@id/width_title" />
+
+                <EditText
+                    android:id="@+id/width_value"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/width_spinner"
+                    android:layout_marginTop="10dp"
+                    android:inputType="number"
+                    tools:visibility="visible" />
+
+                <TextView
+                    android:textSize="16sp"
+                    android:id="@+id/height_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/width_value"
+                    android:layout_alignBottom="@id/height_spinner"
+                    android:gravity="center"
+                    android:text="@string/height" />
+
+                <Spinner
+                    android:id="@+id/height_spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="42dp"
+                    android:layout_below="@id/width_value"
+                    android:layout_marginStart="10dp"
+                    android:layout_toEndOf="@id/height_title" />
+
+                <EditText
+                    android:id="@+id/height_value"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/height_spinner"
+                    android:layout_marginTop="10dp"
+                    android:inputType="number"
+                    tools:visibility="visible" />
+            </RelativeLayout>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+    <LinearLayout
+        android:gravity="end"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <Button
+            android:tag="ANYDEBUG_IGNORE_HOOK"
+            android:layout_marginEnd="10dp"
+            android:id="@+id/cancel_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <Button
+            android:tag="ANYDEBUG_IGNORE_HOOK"
+            android:id="@+id/apply_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+</LinearLayout>

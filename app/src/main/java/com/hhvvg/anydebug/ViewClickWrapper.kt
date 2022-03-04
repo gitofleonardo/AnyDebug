@@ -20,6 +20,13 @@ class ViewClickWrapper(
             originListener?.onClick(v)
             return
         }
-        ViewDispatcher.dispatch(v)
+        val dispatched = ViewDispatcher.dispatch(v)
+        if (!dispatched) {
+            performOriginClick()
+        }
+    }
+
+    fun performOriginClick() {
+        originListener?.onClick(view)
     }
 }

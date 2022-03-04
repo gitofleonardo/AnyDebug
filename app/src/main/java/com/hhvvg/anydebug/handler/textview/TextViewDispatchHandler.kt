@@ -14,9 +14,9 @@ class TextViewDispatchHandler : ViewDispatchHandler {
         return view is TextView
     }
 
-    override fun handle(view: View): Boolean {
+    override fun handle(view: View) {
         val textView = view as TextView
-
-        return true
+        val dialog = TextEditingDialog(textView)
+        dialog.show()
     }
 }

@@ -1,6 +1,7 @@
 package com.hhvvg.anydebug.handler
 
 import android.view.View
+import com.hhvvg.anydebug.ViewClickWrapper
 
 /**
  * @author hhvvg
@@ -21,7 +22,6 @@ interface ViewDispatchHandler {
      * Handle the view dispatched
      *
      * @param view View dispatched
-     * @return true if view is successfully handled
      */
-    fun handle(view: View): Boolean
+    fun handle(view: View)
 }

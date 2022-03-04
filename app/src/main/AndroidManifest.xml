@@ -9,6 +9,16 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <meta-data
+            android:name="xposedmodule"
+            android:value="true" />
+        <meta-data
+            android:name="xposeddescription"
+            android:value="Debug your app, change view attributes." />
+        <meta-data
+            android:name="xposedminversion"
+            android:value="53" />
+
         <activity
             android:name=".MainActivity"
             android:exported="true">

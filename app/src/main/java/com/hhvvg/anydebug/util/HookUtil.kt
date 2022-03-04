@@ -13,3 +13,8 @@ fun hookViewOnClickListener(view: View, listenerGeneratorCallback: (origin: View
     val newListener = listenerGeneratorCallback.invoke(originListener)
     XposedHelpers.setObjectField(info, "mOnClickListener", newListener)
 }
+
+fun View.getOnClickListener(): View.OnClickListener? {
+    val info = XposedHelpers.callMethod(this, "getListenerInfo")
+    return XposedHelpers.getObjectField(info, "mOnClickListener") as View.OnClickListener?
+}
