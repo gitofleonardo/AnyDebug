@@ -4,51 +4,92 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="16dp"
     android:orientation="vertical"
+    android:padding="16dp"
     android:tag="ANYDEBUG_IGNORE_HOOK">
-    <LinearLayout
-        android:gravity="center"
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <TextView
-            android:textColor="#000000"
-            android:layout_weight="1"
-            android:textStyle="bold"
-            android:textSize="18sp"
-            android:id="@+id/title"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"/>
-        <ImageView
-            android:tag="ANYDEBUG_IGNORE_HOOK"
-            android:padding="5dp"
-            android:layout_margin="5dp"
-            android:id="@+id/parent_view_attr_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:tint="#000000"
-            android:tint="#000000"
-            tools:ignore="UseAppTint" />
-    </LinearLayout>
-    <androidx.core.widget.NestedScrollView
+
+    <TextView
+        android:layout_marginBottom="10dp"
+        android:text="Title"
+        android:textStyle="bold"
+        android:textSize="18sp"
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <ScrollView
+        android:scrollbars="none"
         android:id="@+id/scroll_parent"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
-        android:layout_marginTop="10dp">
+        android:layout_weight="1">
+
         <LinearLayout
             android:id="@+id/attr_parent_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <RelativeLayout xmlns:tools="http://schemas.android.com/tools"
+            <ImageView
+                android:id="@+id/preview_image"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <FrameLayout
+                android:tag="ANYDEBUG_IGNORE_HOOK"
+                android:id="@+id/parent_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginBottom="10dp">
+                android:paddingStart="0dp"
+                android:paddingTop="10dp"
+                android:paddingEnd="10dp"
+                android:paddingBottom="10dp">
+
+                <TextView
+                    android:id="@+id/parent_spinner_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/parent"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end|center"
+                    android:text=">" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:tag="ANYDEBUG_IGNORE_HOOK"
+                android:id="@+id/children_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="0dp"
+                android:paddingTop="10dp"
+                android:paddingEnd="10dp"
+                android:paddingBottom="10dp">
+
+                <TextView
+                    android:id="@+id/children_spinner_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/children"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end|center"
+                    android:text=">" />
+            </FrameLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/width_title"
@@ -102,32 +143,172 @@
                     android:layout_marginTop="10dp"
                     android:inputType="number"
                     tools:visibility="visible" />
+
+                <RelativeLayout
+                    android:id="@+id/margin_values"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/height_value"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginTop="10dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/margin_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignTop="@id/margin_identical_checkbox"
+                        android:layout_alignBottom="@id/margin_identical_checkbox"
+                        android:layout_marginEnd="10dp"
+                        android:gravity="center"
+                        android:text="Margin(dp)-L-T-R-B"
+                        android:textSize="16sp" />
+
+                    <CheckBox
+                        android:id="@+id/margin_identical_checkbox"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:text="@string/identical" />
+
+                    <LinearLayout
+                        android:id="@+id/margin_inputs"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/margin_identical_checkbox"
+                        android:orientation="horizontal">
+
+                        <EditText
+                            android:id="@+id/margin_left"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:hint="Left"
+                            android:inputType="number" />
+
+                        <EditText
+                            android:id="@+id/margin_top"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:hint="Top"
+                            android:inputType="number" />
+
+                        <EditText
+                            android:id="@+id/margin_right"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:hint="Right"
+                            android:inputType="number" />
+
+                        <EditText
+                            android:id="@+id/margin_bottom"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:hint="Bottom"
+                            android:inputType="number" />
+                    </LinearLayout>
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/padding_values"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/margin_values"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginTop="10dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/padding_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignTop="@id/padding_identical_checkbox"
+                        android:layout_alignBottom="@id/padding_identical_checkbox"
+                        android:layout_marginEnd="10dp"
+                        android:gravity="center"
+                        android:text="Padding(dp)-L-T-R-B"
+                        android:textSize="16sp" />
+
+                    <CheckBox
+                        android:id="@+id/padding_identical_checkbox"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:text="@string/identical" />
+
+                    <LinearLayout
+                        android:id="@+id/padding_inputs"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/padding_title"
+                        android:orientation="horizontal">
+
+                        <EditText
+                            android:id="@+id/padding_left"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:hint="Left"
+                            android:inputType="number" />
+
+                        <EditText
+                            android:id="@+id/padding_top"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:hint="Top"
+                            android:inputType="number" />
+
+                        <EditText
+                            android:id="@+id/padding_right"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:hint="Right"
+                            android:inputType="number" />
+
+                        <EditText
+                            android:id="@+id/padding_bottom"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:hint="Bottom"
+                            android:inputType="number" />
+                    </LinearLayout>
+                </RelativeLayout>
             </RelativeLayout>
         </LinearLayout>
-    </androidx.core.widget.NestedScrollView>
+    </ScrollView>
+
     <LinearLayout
-        android:gravity="end"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:gravity="end">
+
         <Button
-            android:layout_weight="1"
-            android:tag="ANYDEBUG_IGNORE_HOOK"
             android:id="@+id/origin_click_button"
-            android:layout_marginEnd="10dp"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-        <Button
-            android:layout_weight="1"
-            android:tag="ANYDEBUG_IGNORE_HOOK"
+            android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
+            android:layout_weight="1"
+            android:tag="ANYDEBUG_IGNORE_HOOK" />
+
+        <Button
             android:id="@+id/cancel_button"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-        <Button
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
             android:layout_weight="1"
-            android:tag="ANYDEBUG_IGNORE_HOOK"
+            android:tag="ANYDEBUG_IGNORE_HOOK" />
+
+        <Button
             android:id="@+id/apply_button"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:tag="ANYDEBUG_IGNORE_HOOK" />
     </LinearLayout>
 </LinearLayout>

@@ -29,7 +29,4 @@
         <item name="android:windowTranslucentStatus">false</item>
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
     </style>
-
-    <style name="DialogTheme" parent="Theme.Material3.Light.Dialog">
-    </style>
 </resources>

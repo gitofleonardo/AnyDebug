@@ -2,4 +2,4 @@ package com.hhvvg.anydebug.handler.textview
 
 import com.hhvvg.anydebug.data.BaseViewAttrData
 
-class TextViewAttrData(width: Int, height: Int, val text: String) : BaseViewAttrData(width, height)
+class TextViewAttrData(baseData: BaseViewAttrData, val text: String, val maxLine: Int) : BaseViewAttrData(baseData)

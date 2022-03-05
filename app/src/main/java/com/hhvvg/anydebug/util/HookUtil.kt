@@ -8,6 +8,9 @@ fun hookViewOnClickListener(view: View, listenerGeneratorCallback: (origin: View
     if (!view.isClickable) {
         view.isClickable = true
     }
+    if (!view.isFocusable) {
+        view.isFocusable = true
+    }
     val info = XposedHelpers.callMethod(view, "getListenerInfo")
     val originListener = XposedHelpers.getObjectField(info, "mOnClickListener") as View.OnClickListener?
     val newListener = listenerGeneratorCallback.invoke(originListener)

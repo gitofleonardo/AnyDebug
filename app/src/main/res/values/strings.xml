@@ -17,10 +17,11 @@
     <string name="height">Height</string>
     <string name="height_value">Height value</string>
     <string name="enter_text">Enter text</string>
-
-    <string-array name="spec_spinner_values">
-        <item>MATCH_PARENT</item>
-        <item>WRAP_CONTENT</item>
-        <item>Value</item>
-    </string-array>
+    <string name="text_content">Text Content</string>
+    <string name="max_line">Max Line</string>
+    <string name="identical">Identical</string>
+    <string name="parent">Parent</string>
+    <string name="children">Children</string>
+    <string name="select_parent">Select Parent</string>
+    <string name="select_children">Select Children</string>
 </resources>

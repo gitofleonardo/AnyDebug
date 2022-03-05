@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="spec_spinner_values">
+        <item>MATCH_PARENT</item>
+        <item>WRAP_CONTENT</item>
+        <item>Value</item>
+    </string-array>
+</resources>

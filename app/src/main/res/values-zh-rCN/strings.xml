@@ -18,4 +18,11 @@
     <string name="height">高度</string>
     <string name="height_value">高度值</string>
     <string name="enter_text">输入文本</string>
+    <string name="text_content">文本内容</string>
+    <string name="max_line">最大行数</string>
+    <string name="identical">相同值</string>
+    <string name="parent">父控件</string>
+    <string name="children">子控件</string>
+    <string name="select_parent">选择父控件</string>
+    <string name="select_children">选择子控件</string>
 </resources>
