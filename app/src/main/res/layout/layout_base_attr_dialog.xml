@@ -1,16 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="10dp"
+    android:padding="16dp"
     android:orientation="vertical"
     android:tag="ANYDEBUG_IGNORE_HOOK">
+    <LinearLayout
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:textColor="#000000"
+            android:layout_weight="1"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:id="@+id/title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"/>
+        <ImageView
+            android:tag="ANYDEBUG_IGNORE_HOOK"
+            android:padding="5dp"
+            android:layout_margin="5dp"
+            android:id="@+id/parent_view_attr_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:tint="#000000"
+            android:tint="#000000"
+            tools:ignore="UseAppTint" />
+    </LinearLayout>
     <androidx.core.widget.NestedScrollView
         android:id="@+id/scroll_parent"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:layout_marginBottom="10dp">
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp">
         <LinearLayout
             android:id="@+id/attr_parent_container"
             android:layout_width="match_parent"
@@ -24,14 +51,14 @@
                 android:layout_marginBottom="10dp">
 
                 <TextView
-                    android:textSize="16sp"
                     android:id="@+id/width_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignBottom="@id/width_spinner"
                     android:layout_alignParentTop="true"
                     android:gravity="center"
-                    android:text="@string/width" />
+                    android:text="@string/width"
+                    android:textSize="16sp" />
 
                 <Spinner
                     android:id="@+id/width_spinner"
@@ -50,14 +77,14 @@
                     tools:visibility="visible" />
 
                 <TextView
-                    android:textSize="16sp"
                     android:id="@+id/height_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/width_value"
                     android:layout_alignBottom="@id/height_spinner"
                     android:gravity="center"
-                    android:text="@string/height" />
+                    android:text="@string/height"
+                    android:textSize="16sp" />
 
                 <Spinner
                     android:id="@+id/height_spinner"
@@ -83,12 +110,21 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <Button
+            android:layout_weight="1"
+            android:tag="ANYDEBUG_IGNORE_HOOK"
+            android:id="@+id/origin_click_button"
+            android:layout_marginEnd="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <Button
+            android:layout_weight="1"
             android:tag="ANYDEBUG_IGNORE_HOOK"
             android:layout_marginEnd="10dp"
             android:id="@+id/cancel_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
         <Button
+            android:layout_weight="1"
             android:tag="ANYDEBUG_IGNORE_HOOK"
             android:id="@+id/apply_button"
             android:layout_width="wrap_content"

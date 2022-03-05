@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">AnyDebug</string>
     <string name="apply">Apply</string>
-    <string name="perform_origin_click">Perform original click</string>
+    <string name="perform_origin_click">Original Click</string>
     <string name="successfully_modified">Successfully modified</string>
     <string name="anytext_working_now">AnyText is working now</string>
     <string name="about">About</string>

@@ -1,6 +1,7 @@
 package com.hhvvg.anydebug
 
 import android.view.View
+import com.hhvvg.anydebug.handler.DefaultViewDispatchHandler
 import com.hhvvg.anydebug.handler.ViewDispatchHandler
 import com.hhvvg.anydebug.handler.textview.TextViewDispatchHandler
 import com.hhvvg.anydebug.util.getOnClickListener
@@ -37,7 +38,8 @@ class ViewDispatcher private constructor() {
     companion object {
         @JvmStatic
         private val sRegistryHandler = arrayOf<KClass<*>>(
-            TextViewDispatchHandler::class
+            TextViewDispatchHandler::class,
+            DefaultViewDispatchHandler::class
         )
 
         @JvmStatic

@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name">AnyDebug</string>
     <string name="apply">应用</string>
-    <string name="perform_origin_click">触发原点击事件</string>
+    <string name="perform_origin_click">触发原点击</string>
     <string name="successfully_modified">成功修改</string>
     <string name="anytext_working_now">AnyText运行中</string>
     <string name="about">关于</string>
