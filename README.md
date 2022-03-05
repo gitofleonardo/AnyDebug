@@ -22,3 +22,7 @@ This application is completely free and 100% open-source.  It's just for learnin
 
 本应用完全开源免费，且仅供学习交流使用。使用者在使用本应用的过程产生的任何后果都与开发者无关。
 
+# Sample
+
+| ![sample0.png](https://github.com/gitofleonardo/AnyDebug/blob/master/raw/sample0.png) | ![sample1.png](https://github.com/gitofleonardo/AnyDebug/blob/master/raw/sample1.png) | ![sample1.png](https://github.com/gitofleonardo/AnyDebug/blob/master/raw/sample2.png) | ![sample1.png](https://github.com/gitofleonardo/AnyDebug/blob/master/raw/sample3.png) |
+| -- | -- | -- | -- |
