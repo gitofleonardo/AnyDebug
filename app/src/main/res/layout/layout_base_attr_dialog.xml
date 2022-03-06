@@ -30,10 +30,19 @@
             android:id="@+id/attr_parent_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            tools:ignore="UseSwitchCompatOrMaterialXml">
 
             <ImageView
+                android:layout_marginBottom="10dp"
                 android:id="@+id/preview_image"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <Switch
+                android:textSize="16sp"
+                android:text="@string/show_global_layout_bounds"
+                android:id="@+id/show_layout_bounds_switch"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
@@ -164,7 +173,7 @@
                         android:text="Margin(dp)-L-T-R-B"
                         android:textSize="16sp" />
 
-                    <CheckBox
+                    <Switch
                         android:id="@+id/margin_identical_checkbox"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -232,7 +241,7 @@
                         android:text="Padding(dp)-L-T-R-B"
                         android:textSize="16sp" />
 
-                    <CheckBox
+                    <Switch
                         android:id="@+id/padding_identical_checkbox"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

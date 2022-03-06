@@ -1,6 +1,7 @@
 package com.hhvvg.anydebug.ui
 
 import android.app.AlertDialog
+import android.app.AndroidAppHelper
 import android.content.DialogInterface
 import android.os.Bundle
 import android.text.SpannableString
@@ -25,8 +26,12 @@ import com.hhvvg.anydebug.ViewDispatcher
 import com.hhvvg.anydebug.data.BaseViewAttrData
 import com.hhvvg.anydebug.databinding.LayoutBaseAttrDialogBinding
 import com.hhvvg.anydebug.hook.AnyHookZygote.Companion.moduleRes
+import com.hhvvg.anydebug.util.APP_FIELD_SHOW_BOUNDS
 import com.hhvvg.anydebug.util.dp
+import com.hhvvg.anydebug.util.drawLayoutBounds
+import com.hhvvg.anydebug.util.getInjectedField
 import com.hhvvg.anydebug.util.getOnClickListener
+import com.hhvvg.anydebug.util.injectField
 import com.hhvvg.anydebug.util.px
 
 /**
@@ -190,6 +195,14 @@ abstract class BaseAttrDialog<T : BaseViewAttrData>(private val view: View) :
                 }
                 dismiss()
             }
+        }
+        val app = AndroidAppHelper.currentApplication()
+        val showBoundsNow = app.getInjectedField(APP_FIELD_SHOW_BOUNDS, false) ?: false
+        binding.showLayoutBoundsSwitch.isChecked = showBoundsNow
+        binding.showLayoutBoundsSwitch.text = SpannableString(moduleRes.getString(R.string.show_global_layout_bounds))
+        binding.showLayoutBoundsSwitch.setOnCheckedChangeListener { _, isChecked ->
+            app.injectField(APP_FIELD_SHOW_BOUNDS, isChecked)
+            view.rootView.drawLayoutBounds(isChecked, true)
         }
     }
 

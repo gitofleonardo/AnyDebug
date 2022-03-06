@@ -24,4 +24,5 @@
     <string name="children">Children</string>
     <string name="select_parent">Select Parent</string>
     <string name="select_children">Select Children</string>
+    <string name="show_global_layout_bounds">Show Global Layout Bounds</string>
 </resources>

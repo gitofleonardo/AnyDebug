@@ -15,6 +15,9 @@ import androidx.core.view.children
 import com.hhvvg.anydebug.BuildConfig
 import com.hhvvg.anydebug.IGNORE_HOOK
 import com.hhvvg.anydebug.ViewClickWrapper
+import com.hhvvg.anydebug.util.APP_FIELD_SHOW_BOUNDS
+import com.hhvvg.anydebug.util.drawLayoutBounds
+import com.hhvvg.anydebug.util.getInjectedField
 import com.hhvvg.anydebug.util.hookViewOnClickListener
 import de.robv.android.xposed.IXposedHookLoadPackage
 import de.robv.android.xposed.XC_MethodHook
@@ -78,8 +81,8 @@ class AnyHookPackage : IXposedHookLoadPackage{
             }
         }
 
-        private fun dfsHookViewListener(viewGroup: ViewGroup) {
-            if (viewGroup.tag == IGNORE_HOOK) {
+        private fun dfsHookViewListener(view: View) {
+            if (view.tag == IGNORE_HOOK) {
                 return
             }
             fun hook(view: View) {
@@ -91,9 +94,15 @@ class AnyHookPackage : IXposedHookLoadPackage{
                     }
                 }
             }
+            val app = AndroidAppHelper.currentApplication()
+            val showBounds = app.getInjectedField(APP_FIELD_SHOW_BOUNDS, false) ?: false
+            view.drawLayoutBounds(drawEnabled = showBounds, cascadeChildren = false)
 
-            hook(viewGroup)
-            val children = viewGroup.children
+            hook(view)
+            if (view !is ViewGroup) {
+                return
+            }
+            val children = view.children
             for (child in children) {
                 if (child is ViewGroup) {
                     dfsHookViewListener(child)
@@ -109,6 +118,10 @@ class AnyHookPackage : IXposedHookLoadPackage{
         }
 
         override fun onActivityResumed(activity: Activity) {
+            val app = AndroidAppHelper.currentApplication()
+            val showBounds = app.getInjectedField(APP_FIELD_SHOW_BOUNDS, false) ?: false
+            val decor = activity.window.decorView as ViewGroup
+            decor.drawLayoutBounds(showBounds, true)
         }
 
         override fun onActivityPaused(activity: Activity) {
