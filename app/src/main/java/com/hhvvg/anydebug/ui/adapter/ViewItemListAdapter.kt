@@ -34,7 +34,11 @@ class ViewItemListAdapter(private val views: List<View>) : BaseAdapter() {
         }
         itemView.tag = IGNORE_HOOK
         val binding: LayoutViewPreviewItemBinding = LayoutViewPreviewItemBinding.bind(itemView)
-        GlideApp.with(view).load(view).into(binding.viewImage)
+        GlideApp
+            .with(view)
+            .load(view)
+            .skipMemoryCache(true)
+            .into(binding.viewImage)
         binding.viewImage.setOnClickListener {
             showViewImageDialog(view)
         }

@@ -2,7 +2,6 @@ package com.hhvvg.anydebug.ui
 
 import android.app.AlertDialog
 import android.app.AndroidAppHelper
-import android.content.DialogInterface
 import android.os.Bundle
 import android.text.SpannableString
 import android.view.LayoutInflater
@@ -13,13 +12,12 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.LinearLayout
-import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.ancestors
 import androidx.core.view.children
 import androidx.core.view.drawToBitmap
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
-import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.hhvvg.anydebug.IGNORE_HOOK
 import com.hhvvg.anydebug.R
 import com.hhvvg.anydebug.ViewClickWrapper
@@ -33,6 +31,7 @@ import com.hhvvg.anydebug.util.dp
 import com.hhvvg.anydebug.util.drawLayoutBounds
 import com.hhvvg.anydebug.util.getInjectedField
 import com.hhvvg.anydebug.util.getOnClickListener
+import com.hhvvg.anydebug.util.glide.GlideApp
 import com.hhvvg.anydebug.util.injectField
 import com.hhvvg.anydebug.util.px
 
@@ -121,11 +120,11 @@ abstract class BaseAttrDialog<T : BaseViewAttrData>(private val view: View) :
         setupMargin()
         setupPadding()
         setupChildrenParentSpinner()
-        setPreview()
+        renderPreview()
         setTitle(view::class.java.name)
     }
 
-    private fun setPreview() {
+    private fun renderPreview() {
         if (!view.isLaidOut) {
             return
         }
@@ -206,6 +205,8 @@ abstract class BaseAttrDialog<T : BaseViewAttrData>(private val view: View) :
         binding.showLayoutBoundsSwitch.setOnCheckedChangeListener { _, isChecked ->
             app.injectField(APP_FIELD_SHOW_BOUNDS, isChecked)
             view.rootView.drawLayoutBounds(isChecked, true)
+            GlideApp.get(context).clearMemory()
+            renderPreview()
         }
     }
 
@@ -216,7 +217,16 @@ abstract class BaseAttrDialog<T : BaseViewAttrData>(private val view: View) :
         return view.children.toList()
     }
 
-    private fun findAncestors(): List<ViewGroup> = view.ancestors.filter { it is ViewGroup }.map { it as ViewGroup }.toList()
+    private fun findAncestors(): List<ViewGroup> {
+        val ancestor = view.ancestors
+        val result = ArrayList<ViewGroup>()
+        for (a in ancestor) {
+            if (a is ViewGroup) {
+                result.add(a)
+            }
+        }
+        return result
+    }
 
     private fun setupInput() {
         binding.heightValue.setText(SpannableString(viewHeight.toString()))
