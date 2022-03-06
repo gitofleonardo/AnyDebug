@@ -10,10 +10,12 @@ import androidx.core.view.children
 import com.hhvvg.anydebug.BuildConfig
 import com.hhvvg.anydebug.IGNORE_HOOK
 import com.hhvvg.anydebug.ViewClickWrapper
+import com.hhvvg.anydebug.util.APP_FIELD_FORCE_CLICKABLE
 import com.hhvvg.anydebug.util.APP_FIELD_SHOW_BOUNDS
 import com.hhvvg.anydebug.util.drawLayoutBounds
 import com.hhvvg.anydebug.util.getInjectedField
-import com.hhvvg.anydebug.util.hookViewOnClickListener
+import com.hhvvg.anydebug.util.replaceOnClickListener
+import com.hhvvg.anydebug.util.setGlobalHookClick
 import de.robv.android.xposed.IXposedHookLoadPackage
 import de.robv.android.xposed.XC_MethodHook
 import de.robv.android.xposed.XposedBridge
@@ -70,39 +72,12 @@ class AnyHookPackage : IXposedHookLoadPackage{
     private class ActivityCallback : Application.ActivityLifecycleCallbacks {
         override fun onActivityPostCreated(activity: Activity, savedInstanceState: Bundle?) {
             val contentView = activity.window.decorView as ViewGroup
-            dfsHookViewListener(contentView)
             contentView.viewTreeObserver.addOnGlobalLayoutListener {
-                dfsHookViewListener(contentView)
-            }
-        }
-
-        private fun dfsHookViewListener(view: View) {
-            if (view.tag == IGNORE_HOOK) {
-                return
-            }
-            fun hook(view: View) {
-                hookViewOnClickListener(view) { origin ->
-                    if (origin is ViewClickWrapper) {
-                        origin
-                    } else {
-                        ViewClickWrapper(origin, view)
-                    }
-                }
-            }
-            val app = AndroidAppHelper.currentApplication()
-            val showBounds = app.getInjectedField(APP_FIELD_SHOW_BOUNDS, false) ?: false
-            view.drawLayoutBounds(drawEnabled = showBounds, traversalChildren = false)
-
-            hook(view)
-            if (view !is ViewGroup) {
-                return
-            }
-            val children = view.children
-            for (child in children) {
-                if (child is ViewGroup) {
-                    dfsHookViewListener(child)
-                }
-                hook(child)
+                val app = AndroidAppHelper.currentApplication()
+                val showBounds = app.getInjectedField(APP_FIELD_SHOW_BOUNDS, false) ?: false
+                val forceClickable = app.getInjectedField(APP_FIELD_FORCE_CLICKABLE, false) ?: false
+                contentView.drawLayoutBounds(showBounds, true)
+                contentView.setGlobalHookClick(enabled = true, traversalChildren = true, forceClickable)
             }
         }
 
@@ -115,8 +90,10 @@ class AnyHookPackage : IXposedHookLoadPackage{
         override fun onActivityResumed(activity: Activity) {
             val app = AndroidAppHelper.currentApplication()
             val showBounds = app.getInjectedField(APP_FIELD_SHOW_BOUNDS, false) ?: false
+            val forceClickable = app.getInjectedField(APP_FIELD_FORCE_CLICKABLE, false) ?: false
             val decor = activity.window.decorView as ViewGroup
             decor.drawLayoutBounds(showBounds, true)
+            decor.setGlobalHookClick(enabled = true, traversalChildren = true, forceClickable)
         }
 
         override fun onActivityPaused(activity: Activity) {
@@ -143,11 +120,11 @@ class AnyHookPackage : IXposedHookLoadPackage{
             if (view.tag == IGNORE_HOOK) {
                 return
             }
-            hookViewOnClickListener(view) { origin ->
+            view.replaceOnClickListener { origin ->
                 if (origin is ViewClickWrapper) {
                     origin
                 } else {
-                    ViewClickWrapper(origin, view)
+                    ViewClickWrapper(origin, view.isClickable, view)
                 }
             }
         }

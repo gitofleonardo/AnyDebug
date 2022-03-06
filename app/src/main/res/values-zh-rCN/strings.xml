@@ -26,4 +26,5 @@
     <string name="select_parent">选择父控件</string>
     <string name="select_children">选择子控件</string>
     <string name="show_global_layout_bounds">显示全局边界布局</string>
+    <string name="force_clickable">全局控件可点击</string>
 </resources>

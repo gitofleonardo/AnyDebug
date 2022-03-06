@@ -3,20 +3,14 @@ package com.hhvvg.anydebug.util
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.children
+import com.hhvvg.anydebug.IGNORE_HOOK
+import com.hhvvg.anydebug.ViewClickWrapper
 import de.robv.android.xposed.XposedHelpers
 
-fun hookViewOnClickListener(
-    view: View,
+fun View.replaceOnClickListener(
     listenerGeneratorCallback: (origin: View.OnClickListener?) -> View.OnClickListener?
 ) {
-    // Make it clickable first
-    if (!view.isClickable) {
-        view.isClickable = true
-    }
-    if (!view.isFocusable) {
-        view.isFocusable = true
-    }
-    val info = XposedHelpers.callMethod(view, "getListenerInfo")
+    val info = XposedHelpers.callMethod(this, "getListenerInfo")
     val originListener =
         XposedHelpers.getObjectField(info, "mOnClickListener") as View.OnClickListener?
     val newListener = listenerGeneratorCallback.invoke(originListener)
@@ -38,4 +32,46 @@ fun View.drawLayoutBounds(drawEnabled: Boolean, traversalChildren: Boolean) {
         }
     }
     this.invalidate()
+}
+
+fun View.setGlobalHookClick(
+    enabled: Boolean,
+    traversalChildren: Boolean = true,
+    forceClickable: Boolean = false
+) {
+    if (tag == IGNORE_HOOK) {
+        return
+    }
+    replaceOnClickListener { origin ->
+        if (enabled) {
+            // Replace with my custom one
+            if (origin is ViewClickWrapper) {
+                origin
+            } else {
+                ViewClickWrapper(origin, isClickable, this)
+            }
+        } else {
+            // Restore to original listener
+            if (origin != null && origin is ViewClickWrapper) {
+                origin.originListener
+            } else {
+                origin
+            }
+        }
+    }
+    if (forceClickable) {
+        isClickable = true
+    } else {
+        val listener = getOnClickListener()
+        if (listener != null && listener is ViewClickWrapper) {
+            isClickable = listener.originClickable
+        }
+    }
+    if (this !is ViewGroup || !traversalChildren) {
+        return
+    }
+    val children = this.children
+    for (child in children) {
+        child.setGlobalHookClick(enabled, traversalChildren, forceClickable)
+    }
 }

@@ -9,6 +9,7 @@ const val IGNORE_HOOK = "ANYDEBUG_IGNORE_HOOK"
  */
 class ViewClickWrapper(
     val originListener: View.OnClickListener?,
+    val originClickable: Boolean,
     private val view: View
 ): View.OnClickListener {
 

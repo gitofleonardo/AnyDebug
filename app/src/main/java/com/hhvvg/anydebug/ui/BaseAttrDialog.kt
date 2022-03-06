@@ -26,6 +26,7 @@ import com.hhvvg.anydebug.data.BaseViewAttrData
 import com.hhvvg.anydebug.databinding.LayoutBaseAttrDialogBinding
 import com.hhvvg.anydebug.hook.AnyHookZygote.Companion.moduleRes
 import com.hhvvg.anydebug.ui.adapter.ViewItemListAdapter
+import com.hhvvg.anydebug.util.APP_FIELD_FORCE_CLICKABLE
 import com.hhvvg.anydebug.util.APP_FIELD_SHOW_BOUNDS
 import com.hhvvg.anydebug.util.dp
 import com.hhvvg.anydebug.util.drawLayoutBounds
@@ -34,6 +35,7 @@ import com.hhvvg.anydebug.util.getOnClickListener
 import com.hhvvg.anydebug.util.glide.GlideApp
 import com.hhvvg.anydebug.util.injectField
 import com.hhvvg.anydebug.util.px
+import com.hhvvg.anydebug.util.setGlobalHookClick
 
 /**
  * @author hhvvg
@@ -201,12 +203,25 @@ abstract class BaseAttrDialog<T : BaseViewAttrData>(private val view: View) :
         val app = AndroidAppHelper.currentApplication()
         val showBoundsNow = app.getInjectedField(APP_FIELD_SHOW_BOUNDS, false) ?: false
         binding.showLayoutBoundsSwitch.isChecked = showBoundsNow
-        binding.showLayoutBoundsSwitch.text = SpannableString(moduleRes.getString(R.string.show_global_layout_bounds))
+        binding.showLayoutBoundsSwitch.text =
+            SpannableString(moduleRes.getString(R.string.show_global_layout_bounds))
         binding.showLayoutBoundsSwitch.setOnCheckedChangeListener { _, isChecked ->
             app.injectField(APP_FIELD_SHOW_BOUNDS, isChecked)
             view.rootView.drawLayoutBounds(isChecked, true)
-            GlideApp.get(context).clearMemory()
             renderPreview()
+        }
+
+        val ignoreEmptyVg = app.getInjectedField(APP_FIELD_FORCE_CLICKABLE, false) ?: false
+        binding.ignoreEmptyVgSwitch.isChecked = ignoreEmptyVg
+        binding.ignoreEmptyVgSwitch.text =
+            SpannableString(moduleRes.getString(R.string.force_clickable))
+        binding.ignoreEmptyVgSwitch.setOnCheckedChangeListener { _, isChecked ->
+            app.injectField(APP_FIELD_FORCE_CLICKABLE, isChecked)
+            view.rootView.setGlobalHookClick(
+                enabled = true,
+                traversalChildren = true,
+                forceClickable = isChecked
+            )
         }
     }
 
