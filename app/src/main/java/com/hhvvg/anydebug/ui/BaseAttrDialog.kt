@@ -19,6 +19,7 @@ import androidx.core.view.children
 import androidx.core.view.drawToBitmap
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
+import androidx.recyclerview.widget.RecyclerView
 import com.hhvvg.anydebug.IGNORE_HOOK
 import com.hhvvg.anydebug.R
 import com.hhvvg.anydebug.ViewClickWrapper
@@ -26,6 +27,7 @@ import com.hhvvg.anydebug.ViewDispatcher
 import com.hhvvg.anydebug.data.BaseViewAttrData
 import com.hhvvg.anydebug.databinding.LayoutBaseAttrDialogBinding
 import com.hhvvg.anydebug.hook.AnyHookZygote.Companion.moduleRes
+import com.hhvvg.anydebug.ui.adapter.ViewItemListAdapter
 import com.hhvvg.anydebug.util.APP_FIELD_SHOW_BOUNDS
 import com.hhvvg.anydebug.util.dp
 import com.hhvvg.anydebug.util.drawLayoutBounds
@@ -124,6 +126,9 @@ abstract class BaseAttrDialog<T : BaseViewAttrData>(private val view: View) :
     }
 
     private fun setPreview() {
+        if (!view.isLaidOut) {
+            return
+        }
         binding.previewImage.setImageBitmap(view.drawToBitmap())
     }
 
@@ -139,8 +144,7 @@ abstract class BaseAttrDialog<T : BaseViewAttrData>(private val view: View) :
         binding.childrenButton.setOnClickListener {
             val dialog = Builder(context)
                 .setTitle(moduleRes.getString(R.string.select_children))
-                .setItems(children.map { it::class.java.name }.toTypedArray()
-                ) { d, which ->
+                .setAdapter(ViewItemListAdapter(children)) { d, which ->
                     d.dismiss()
                     val selected = children[which]
                     ViewDispatcher.dispatch(selected)
@@ -152,8 +156,7 @@ abstract class BaseAttrDialog<T : BaseViewAttrData>(private val view: View) :
         binding.parentButton.setOnClickListener {
             val dialog = Builder(context)
                 .setTitle(moduleRes.getString(R.string.select_parent))
-                .setItems(ancestors.map { it::class.java.name }.toTypedArray()
-                ) { d, which ->
+                .setAdapter(ViewItemListAdapter(ancestors)) { d, which ->
                     d.dismiss()
                     val selected = ancestors[which]
                     ViewDispatcher.dispatch(selected)

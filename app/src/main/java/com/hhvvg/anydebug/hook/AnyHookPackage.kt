@@ -3,14 +3,9 @@ package com.hhvvg.anydebug.hook
 import android.app.Activity
 import android.app.AndroidAppHelper
 import android.app.Application
-import android.graphics.Color
 import android.os.Bundle
-import android.text.Spannable
-import android.text.SpannableString
-import android.text.style.BackgroundColorSpan
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.core.view.children
 import com.hhvvg.anydebug.BuildConfig
 import com.hhvvg.anydebug.IGNORE_HOOK
@@ -96,7 +91,7 @@ class AnyHookPackage : IXposedHookLoadPackage{
             }
             val app = AndroidAppHelper.currentApplication()
             val showBounds = app.getInjectedField(APP_FIELD_SHOW_BOUNDS, false) ?: false
-            view.drawLayoutBounds(drawEnabled = showBounds, cascadeChildren = false)
+            view.drawLayoutBounds(drawEnabled = showBounds, traversalChildren = false)
 
             hook(view)
             if (view !is ViewGroup) {

@@ -28,10 +28,10 @@ fun View.getOnClickListener(): View.OnClickListener? {
     return XposedHelpers.getObjectField(info, "mOnClickListener") as View.OnClickListener?
 }
 
-fun View.drawLayoutBounds(drawEnabled: Boolean, cascadeChildren: Boolean) {
+fun View.drawLayoutBounds(drawEnabled: Boolean, traversalChildren: Boolean) {
     val attachInfo = XposedHelpers.getObjectField(this, "mAttachInfo") ?: return
     XposedHelpers.setBooleanField(attachInfo, "mDebugLayout", drawEnabled)
-    if (cascadeChildren && this is ViewGroup) {
+    if (traversalChildren && this is ViewGroup) {
         val children = this.children
         for (child in children) {
             child.drawLayoutBounds(drawEnabled, true)

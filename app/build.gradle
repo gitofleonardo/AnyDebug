@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id "org.jetbrains.kotlin.kapt"
 }
 
 android {
@@ -60,7 +61,8 @@ android {
 dependencies {
     // Include libs as compile-only
     compileOnly fileTree(dir: 'libs', include: ['*.jar'])
-
+    implementation 'com.github.bumptech.glide:glide:4.13.1'
+    kapt 'com.github.bumptech.glide:compiler:4.13.1'
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation 'androidx.appcompat:appcompat:1.4.1'
     implementation 'com.google.android.material:material:1.5.0'
