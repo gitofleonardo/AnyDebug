@@ -125,7 +125,7 @@ abstract class BaseAttrDialog<T : BaseViewAttrData>(protected val itemView: View
         setTitle(itemView::class.java.name)
     }
 
-    private fun renderPreview() {
+    protected fun renderPreview() {
         if (!itemView.isLaidOut) {
             return
         }

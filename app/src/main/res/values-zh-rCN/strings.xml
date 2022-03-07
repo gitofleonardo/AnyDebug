@@ -28,4 +28,5 @@
     <string name="show_global_layout_bounds">显示全局边界布局</string>
     <string name="force_clickable">全局控件可点击</string>
     <string name="image_url">图片链接</string>
+    <string name="scale_type">缩放类型</string>
 </resources>

@@ -2,12 +2,16 @@ package com.hhvvg.anydebug.handler.imageview
 
 import android.os.Bundle
 import android.text.SpannableString
+import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.ImageView
 import com.hhvvg.anydebug.R
 import com.hhvvg.anydebug.databinding.LayoutImageViewAttrBinding
-import com.hhvvg.anydebug.hook.AnyHookZygote
+import com.hhvvg.anydebug.hook.AnyHookZygote.Companion.moduleRes
 import com.hhvvg.anydebug.ui.BaseAttrDialog
 import com.hhvvg.anydebug.util.glide.GlideApp
+import de.robv.android.xposed.XposedBridge
 
 /**
  * @author hhvvg
@@ -22,13 +26,45 @@ class ImageViewAttrDialog(private val view: ImageView) : BaseAttrDialog<ImageVie
         }
 
     private lateinit var binding: LayoutImageViewAttrBinding
+    private val scaleTypeIndexMap by lazy {
+        HashMap<ImageView.ScaleType, Int>().apply {
+            val types = ImageView.ScaleType.values()
+            for (i in types.indices) {
+                put(types[i], i)
+            }
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val attrView = appendAttrPanelView(R.layout.layout_image_view_attr)
         binding = LayoutImageViewAttrBinding.bind(attrView)
-        binding.imageUrlTitle.text = SpannableString(AnyHookZygote.moduleRes.getString(R.string.image_url))
-        binding.imageUrlInput.hint = SpannableString(AnyHookZygote.moduleRes.getString(R.string.image_url))
+        binding.imageUrlTitle.text = SpannableString(moduleRes.getString(R.string.image_url))
+        binding.imageUrlInput.hint = SpannableString(moduleRes.getString(R.string.image_url))
+        binding.scaleTypeTitle.text = SpannableString(moduleRes.getString(R.string.scale_type))
+
+        val scaleTypes = moduleRes.getStringArray(R.array.image_scale_type)
+        binding.scaleTypeSpinner.adapter =
+            ArrayAdapter(context, android.R.layout.simple_spinner_dropdown_item, scaleTypes)
+        binding.scaleTypeSpinner.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    parent: AdapterView<*>?,
+                    v: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    view.scaleType = ImageView.ScaleType.values()[position]
+                    view.postDelayed({
+                        renderPreview()
+                    }, 200)
+                }
+
+                override fun onNothingSelected(parent: AdapterView<*>?) {
+                }
+            }
+        val scaleType = view.scaleType
+        binding.scaleTypeSpinner.setSelection(scaleTypeIndexMap[scaleType] ?: 0)
     }
 
     override fun onApply(data: ImageViewAttrData) {

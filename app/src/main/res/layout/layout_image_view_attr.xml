@@ -2,22 +2,42 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
+
     <TextView
         android:gravity="center"
-        android:layout_alignTop="@id/image_url_input"
-        android:layout_alignBottom="@id/image_url_input"
-        android:id="@+id/image_url_title"
-        android:text="@string/image_url"
+        android:layout_alignTop="@id/scale_type_spinner"
+        android:layout_alignBottom="@id/scale_type_spinner"
+        android:id="@+id/scale_type_title"
+        android:text="@string/scale_type"
         android:textSize="16sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
-    <EditText
-        android:hint="@string/image_url"
-        android:layout_toEndOf="@id/image_url_title"
-        android:layout_alignParentEnd="true"
+    <Spinner
         android:layout_marginStart="10dp"
+        android:layout_toEndOf="@id/scale_type_title"
+        android:id="@+id/scale_type_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/image_url_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/image_url_input"
+        android:layout_alignBottom="@id/image_url_input"
+        android:gravity="center"
+        android:text="@string/image_url"
+        android:textSize="16sp" />
+
+    <EditText
         android:id="@+id/image_url_input"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_below="@id/scale_type_spinner"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_toEndOf="@id/image_url_title"
+        android:hint="@string/image_url" />
 </RelativeLayout>

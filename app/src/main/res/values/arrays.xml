@@ -5,4 +5,15 @@
         <item>WRAP_CONTENT</item>
         <item>Value</item>
     </string-array>
+
+    <string-array name="image_scale_type">
+        <item>Matrix</item>
+        <item>FitXY</item>
+        <item>FitStart</item>
+        <item>FitCenter</item>
+        <item>FitEnd</item>
+        <item>Center</item>
+        <item>CenterCrop</item>
+        <item>CenterInside</item>
+    </string-array>
 </resources>

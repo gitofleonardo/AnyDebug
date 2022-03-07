@@ -27,4 +27,5 @@
     <string name="show_global_layout_bounds">Show Global Layout Bounds</string>
     <string name="force_clickable">Force All Widgets Clickable</string>
     <string name="image_url">Image Url</string>
+    <string name="scale_type">Scale Type</string>
 </resources>
