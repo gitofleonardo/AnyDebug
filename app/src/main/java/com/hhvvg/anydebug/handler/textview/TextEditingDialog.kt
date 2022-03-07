@@ -26,7 +26,7 @@ class TextEditingDialog(private val view: TextView) : BaseAttrDialog<TextViewAtt
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        addAttrPanelView(binding.root)
+        appendAttrPanelView(binding.root)
 
         binding.editText.hint = SpannableString(moduleRes.getString(R.string.enter_text))
         binding.textMaxLine.hint = SpannableString(moduleRes.getString(R.string.max_line))

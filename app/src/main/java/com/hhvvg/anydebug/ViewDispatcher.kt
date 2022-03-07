@@ -3,6 +3,7 @@ package com.hhvvg.anydebug
 import android.view.View
 import com.hhvvg.anydebug.handler.DefaultViewDispatchHandler
 import com.hhvvg.anydebug.handler.ViewDispatchHandler
+import com.hhvvg.anydebug.handler.imageview.ImageViewDispatchHandler
 import com.hhvvg.anydebug.handler.textview.TextViewDispatchHandler
 import com.hhvvg.anydebug.util.getOnClickListener
 import kotlin.reflect.KClass
@@ -39,6 +40,7 @@ class ViewDispatcher private constructor() {
         @JvmStatic
         private val sRegistryHandler = arrayOf<KClass<*>>(
             TextViewDispatchHandler::class,
+            ImageViewDispatchHandler::class,
             DefaultViewDispatchHandler::class
         )
 

@@ -12,12 +12,12 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.LinearLayout
+import androidx.annotation.LayoutRes
 import androidx.core.view.ancestors
 import androidx.core.view.children
 import androidx.core.view.drawToBitmap
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
-import com.bumptech.glide.Glide
 import com.hhvvg.anydebug.IGNORE_HOOK
 import com.hhvvg.anydebug.R
 import com.hhvvg.anydebug.ViewClickWrapper
@@ -32,7 +32,6 @@ import com.hhvvg.anydebug.util.dp
 import com.hhvvg.anydebug.util.drawLayoutBounds
 import com.hhvvg.anydebug.util.getInjectedField
 import com.hhvvg.anydebug.util.getOnClickListener
-import com.hhvvg.anydebug.util.glide.GlideApp
 import com.hhvvg.anydebug.util.injectField
 import com.hhvvg.anydebug.util.px
 import com.hhvvg.anydebug.util.setGlobalHookClick
@@ -42,8 +41,8 @@ import com.hhvvg.anydebug.util.setGlobalHookClick
  *
  * Base dialog for editing basic view attributes.
  */
-abstract class BaseAttrDialog<T : BaseViewAttrData>(private val view: View) :
-    AlertDialog(view.context) {
+abstract class BaseAttrDialog<T : BaseViewAttrData>(protected val itemView: View) :
+    AlertDialog(itemView.context) {
     private val binding by lazy {
         val layout = moduleRes.getLayout(R.layout.layout_base_attr_dialog)
         val inflater = LayoutInflater.from(context)
@@ -95,21 +94,21 @@ abstract class BaseAttrDialog<T : BaseViewAttrData>(private val view: View) :
             )
         }
 
-    protected var viewWidth: Int = view.layoutParams.width
-    protected var viewHeight: Int = view.layoutParams.height
+    protected var viewWidth: Int = itemView.layoutParams.width
+    protected var viewHeight: Int = itemView.layoutParams.height
 
     protected abstract val attrData: T
 
     protected open fun onApply(data: T) {
         val baseData = baseAttrData
-        val param = view.layoutParams
+        val param = itemView.layoutParams
         param.width = baseData.width
         param.height = baseData.height
         if (param is ViewGroup.MarginLayoutParams) {
             param.setMargins(data.marginLeft, data.marginTop, data.marginRight, data.marginBottom)
         }
-        view.layoutParams = param
-        view.setPadding(data.paddingLeft, data.paddingTop, data.paddingRight, data.paddingBottom)
+        itemView.layoutParams = param
+        itemView.setPadding(data.paddingLeft, data.paddingTop, data.paddingRight, data.paddingBottom)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -123,14 +122,14 @@ abstract class BaseAttrDialog<T : BaseViewAttrData>(private val view: View) :
         setupPadding()
         setupChildrenParentSpinner()
         renderPreview()
-        setTitle(view::class.java.name)
+        setTitle(itemView::class.java.name)
     }
 
     private fun renderPreview() {
-        if (!view.isLaidOut) {
+        if (!itemView.isLaidOut) {
             return
         }
-        binding.previewImage.setImageBitmap(view.drawToBitmap())
+        binding.previewImage.setImageBitmap(itemView.drawToBitmap())
     }
 
     override fun setTitle(title: CharSequence?) {
@@ -187,7 +186,7 @@ abstract class BaseAttrDialog<T : BaseViewAttrData>(private val view: View) :
             onApply(attrData)
             dismiss()
         }
-        val listener = view.getOnClickListener()
+        val listener = itemView.getOnClickListener()
         if (listener == null || (listener is ViewClickWrapper && listener.originListener == null)) {
             binding.originClickButton.isVisible = false
         } else {
@@ -195,7 +194,7 @@ abstract class BaseAttrDialog<T : BaseViewAttrData>(private val view: View) :
                 if (listener is ViewClickWrapper) {
                     listener.performOriginClick()
                 } else {
-                    listener.onClick(view)
+                    listener.onClick(itemView)
                 }
                 dismiss()
             }
@@ -207,7 +206,7 @@ abstract class BaseAttrDialog<T : BaseViewAttrData>(private val view: View) :
             SpannableString(moduleRes.getString(R.string.show_global_layout_bounds))
         binding.showLayoutBoundsSwitch.setOnCheckedChangeListener { _, isChecked ->
             app.injectField(APP_FIELD_SHOW_BOUNDS, isChecked)
-            view.rootView.drawLayoutBounds(isChecked, true)
+            itemView.rootView.drawLayoutBounds(isChecked, true)
             renderPreview()
         }
 
@@ -217,7 +216,7 @@ abstract class BaseAttrDialog<T : BaseViewAttrData>(private val view: View) :
             SpannableString(moduleRes.getString(R.string.force_clickable))
         binding.ignoreEmptyVgSwitch.setOnCheckedChangeListener { _, isChecked ->
             app.injectField(APP_FIELD_FORCE_CLICKABLE, isChecked)
-            view.rootView.setGlobalHookClick(
+            itemView.rootView.setGlobalHookClick(
                 enabled = true,
                 traversalChildren = true,
                 forceClickable = isChecked
@@ -226,14 +225,14 @@ abstract class BaseAttrDialog<T : BaseViewAttrData>(private val view: View) :
     }
 
     private fun findChildren(): List<View> {
-        if (view !is ViewGroup || view.childCount <= 0) {
+        if (itemView !is ViewGroup || itemView.childCount <= 0) {
             return emptyList()
         }
-        return view.children.toList()
+        return itemView.children.toList()
     }
 
     private fun findAncestors(): List<ViewGroup> {
-        val ancestor = view.ancestors
+        val ancestor = itemView.ancestors
         val result = ArrayList<ViewGroup>()
         for (a in ancestor) {
             if (a is ViewGroup) {
@@ -346,7 +345,7 @@ abstract class BaseAttrDialog<T : BaseViewAttrData>(private val view: View) :
     }
 
     private fun setupMargin() {
-        val margin = view.layoutParams
+        val margin = itemView.layoutParams
         if (margin !is ViewGroup.MarginLayoutParams) {
             binding.marginValues.isVisible = false
             return
@@ -386,10 +385,10 @@ abstract class BaseAttrDialog<T : BaseViewAttrData>(private val view: View) :
     }
 
     private fun setupPadding() {
-        binding.paddingLeft.setText(SpannableString(view.paddingLeft.dp().toString()))
-        binding.paddingTop.setText(SpannableString(view.paddingTop.dp().toString()))
-        binding.paddingBottom.setText(SpannableString(view.paddingBottom.dp().toString()))
-        binding.paddingRight.setText(SpannableString(view.paddingRight.dp().toString()))
+        binding.paddingLeft.setText(SpannableString(itemView.paddingLeft.dp().toString()))
+        binding.paddingTop.setText(SpannableString(itemView.paddingTop.dp().toString()))
+        binding.paddingBottom.setText(SpannableString(itemView.paddingBottom.dp().toString()))
+        binding.paddingRight.setText(SpannableString(itemView.paddingRight.dp().toString()))
         binding.paddingIdenticalCheckbox.text =
             SpannableString(moduleRes.getString(R.string.identical))
 
@@ -420,12 +419,20 @@ abstract class BaseAttrDialog<T : BaseViewAttrData>(private val view: View) :
         }
     }
 
-    protected fun addAttrPanelView(view: View) {
+    protected fun appendAttrPanelView(view: View) {
         val param = LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.MATCH_PARENT,
             LinearLayout.LayoutParams.WRAP_CONTENT
         )
         binding.attrParentContainer.addView(view, param)
+    }
+
+    protected fun appendAttrPanelView(@LayoutRes resId: Int): View{
+        val layout = moduleRes.getLayout(resId)
+        val inflater = LayoutInflater.from(context)
+        val view = inflater.inflate(layout, null, false)
+        appendAttrPanelView(view)
+        return view
     }
 
     override fun show() {
