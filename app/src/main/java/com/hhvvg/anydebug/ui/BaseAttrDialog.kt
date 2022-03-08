@@ -108,7 +108,12 @@ abstract class BaseAttrDialog<T : BaseViewAttrData>(protected val itemView: View
             param.setMargins(data.marginLeft, data.marginTop, data.marginRight, data.marginBottom)
         }
         itemView.layoutParams = param
-        itemView.setPadding(data.paddingLeft, data.paddingTop, data.paddingRight, data.paddingBottom)
+        itemView.setPadding(
+            data.paddingLeft,
+            data.paddingTop,
+            data.paddingRight,
+            data.paddingBottom
+        )
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -427,7 +432,7 @@ abstract class BaseAttrDialog<T : BaseViewAttrData>(protected val itemView: View
         binding.attrParentContainer.addView(view, param)
     }
 
-    protected fun appendAttrPanelView(@LayoutRes resId: Int): View{
+    protected fun appendAttrPanelView(@LayoutRes resId: Int): View {
         val layout = moduleRes.getLayout(resId)
         val inflater = LayoutInflater.from(context)
         val view = inflater.inflate(layout, null, false)

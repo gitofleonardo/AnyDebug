@@ -6,7 +6,8 @@ import android.app.Application
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.children
+import android.view.WindowManager
+import android.widget.PopupWindow
 import com.hhvvg.anydebug.BuildConfig
 import com.hhvvg.anydebug.IGNORE_HOOK
 import com.hhvvg.anydebug.ViewClickWrapper
@@ -28,7 +29,7 @@ import java.util.ArrayList
  *
  * @author hhvvg
  */
-class AnyHookPackage : IXposedHookLoadPackage{
+class AnyHookPackage : IXposedHookLoadPackage {
     override fun handleLoadPackage(p0: XC_LoadPackage.LoadPackageParam?) {
         if (p0 == null) {
             return
@@ -43,7 +44,7 @@ class AnyHookPackage : IXposedHookLoadPackage{
         // Hook application#onCreate
         val appClazz = Application::class.java
         val onCreateHook = ApplicationOnCreateMethodHook()
-        val method = XposedHelpers.findMethodBestMatch(appClazz,"onCreate", arrayOf(), arrayOf())
+        val method = XposedHelpers.findMethodBestMatch(appClazz, "onCreate", arrayOf(), arrayOf())
         XposedBridge.hookMethod(method, onCreateHook)
 
         // Hook setOnClickListener
@@ -54,9 +55,28 @@ class AnyHookPackage : IXposedHookLoadPackage{
             View.OnClickListener::class.java
         )
         XposedBridge.hookMethod(clickMethod, clickMethodHook)
+
+        // Hook PupupWindow invoke popup
+        val popupMethodHook = PopupWindowInvokePopupMethodHook()
+        val popupMethod = XposedHelpers.findMethodBestMatch(
+            PopupWindow::class.java,
+            "invokePopup",
+            WindowManager.LayoutParams::class.java
+        )
+        XposedBridge.hookMethod(popupMethod, popupMethodHook)
     }
 
-    private class ApplicationOnCreateMethodHook: XC_MethodHook() {
+    private class PopupWindowInvokePopupMethodHook : XC_MethodHook() {
+        override fun beforeHookedMethod(param: MethodHookParam?) {
+            if (param == null) {
+                return
+            }
+            val decorView = XposedHelpers.getObjectField(param.thisObject, "mDecorView") as ViewGroup
+            decorView.setGlobalHookClick(enabled = false)
+        }
+    }
+
+    private class ApplicationOnCreateMethodHook : XC_MethodHook() {
         override fun afterHookedMethod(param: MethodHookParam?) {
             if (param == null) {
                 return
@@ -64,7 +84,8 @@ class AnyHookPackage : IXposedHookLoadPackage{
             val app = AndroidAppHelper.currentApplication()
             val appClazz = app::class.java
             val callback = XposedHelpers.findField(appClazz, "mActivityLifecycleCallbacks")
-            val callbackArray = callback.get(app) as ArrayList<Application.ActivityLifecycleCallbacks>
+            val callbackArray =
+                callback.get(app) as ArrayList<Application.ActivityLifecycleCallbacks>
             callbackArray.add(ActivityCallback())
         }
     }
@@ -77,7 +98,11 @@ class AnyHookPackage : IXposedHookLoadPackage{
                 val showBounds = app.getInjectedField(APP_FIELD_SHOW_BOUNDS, false) ?: false
                 val forceClickable = app.getInjectedField(APP_FIELD_FORCE_CLICKABLE, false) ?: false
                 contentView.drawLayoutBounds(showBounds, true)
-                contentView.setGlobalHookClick(enabled = true, traversalChildren = true, forceClickable)
+                contentView.setGlobalHookClick(
+                    enabled = true,
+                    traversalChildren = true,
+                    forceClickable
+                )
             }
         }
 
@@ -110,7 +135,7 @@ class AnyHookPackage : IXposedHookLoadPackage{
 
     }
 
-    private class ViewSetOnClickListenerMethodHook: XC_MethodHook() {
+    private class ViewSetOnClickListenerMethodHook : XC_MethodHook() {
         override fun afterHookedMethod(param: MethodHookParam?) {
             if (param == null) {
                 return
