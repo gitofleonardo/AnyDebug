@@ -24,5 +24,5 @@ This application is completely free and 100% open-source.  It's just for learnin
 
 # Sample
 
-| ![sample0.png](https://github.com/gitofleonardo/AnyDebug/blob/master/raw/sample0.png) | ![sample1.png](https://github.com/gitofleonardo/AnyDebug/blob/master/raw/sample1.png) | ![sample1.png](https://github.com/gitofleonardo/AnyDebug/blob/master/raw/sample2.png) | ![sample1.png](https://github.com/gitofleonardo/AnyDebug/blob/master/raw/sample3.png) |
+| ![sample0.png](raw/sample0.png) | ![sample1.png](raw/sample1.png) | ![sample1.png](raw/sample2.png) | ![sample1.png](raw/sample3.png) |
 | -- | -- | -- | -- |
