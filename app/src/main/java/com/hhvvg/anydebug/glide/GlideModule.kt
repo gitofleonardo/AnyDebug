@@ -1,4 +1,4 @@
-package com.hhvvg.anydebug.util.glide
+package com.hhvvg.anydebug.glide
 
 import android.content.Context
 import android.graphics.Bitmap

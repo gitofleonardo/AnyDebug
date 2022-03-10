@@ -5,14 +5,13 @@ import android.text.SpannableString
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
 import android.widget.BaseAdapter
 import com.hhvvg.anydebug.IGNORE_HOOK
 import com.hhvvg.anydebug.R
 import com.hhvvg.anydebug.databinding.LayoutImageBinding
 import com.hhvvg.anydebug.databinding.LayoutViewPreviewItemBinding
+import com.hhvvg.anydebug.glide.GlideApp
 import com.hhvvg.anydebug.hook.AnyHookZygote
-import com.hhvvg.anydebug.util.glide.GlideApp
 
 class ViewItemListAdapter(private val views: List<View>) : BaseAdapter() {
     override fun getCount(): Int = views.size

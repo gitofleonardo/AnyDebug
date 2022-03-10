@@ -8,10 +8,9 @@ import android.widget.ArrayAdapter
 import android.widget.ImageView
 import com.hhvvg.anydebug.R
 import com.hhvvg.anydebug.databinding.LayoutImageViewAttrBinding
+import com.hhvvg.anydebug.glide.GlideApp
 import com.hhvvg.anydebug.hook.AnyHookZygote.Companion.moduleRes
 import com.hhvvg.anydebug.ui.BaseAttrDialog
-import com.hhvvg.anydebug.util.glide.GlideApp
-import de.robv.android.xposed.XposedBridge
 
 /**
  * @author hhvvg
