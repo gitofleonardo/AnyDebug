@@ -28,4 +28,6 @@
     <string name="force_clickable">Force All Widgets Clickable</string>
     <string name="image_url">Image Url</string>
     <string name="scale_type">Scale Type</string>
+    <string name="text_size">Text Size</string>
+    <string name="sp">sp</string>
 </resources>

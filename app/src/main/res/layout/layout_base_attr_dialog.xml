@@ -34,7 +34,6 @@
             tools:ignore="UseSwitchCompatOrMaterialXml">
 
             <ImageView
-                android:scaleType="center"
                 android:layout_marginBottom="10dp"
                 android:id="@+id/preview_image"
                 android:layout_width="match_parent"

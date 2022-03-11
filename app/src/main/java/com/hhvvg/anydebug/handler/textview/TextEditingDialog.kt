@@ -8,6 +8,7 @@ import com.hhvvg.anydebug.R
 import com.hhvvg.anydebug.databinding.LayoutTextViewAttrBinding
 import com.hhvvg.anydebug.ui.BaseAttrDialog
 import com.hhvvg.anydebug.hook.AnyHookZygote.Companion.moduleRes
+import com.hhvvg.anydebug.util.sp
 
 /**
  * @author hhvvg
@@ -32,9 +33,12 @@ class TextEditingDialog(private val view: TextView) : BaseAttrDialog<TextViewAtt
         binding.textMaxLine.hint = SpannableString(moduleRes.getString(R.string.max_line))
         binding.textContentTitle.text = SpannableString(moduleRes.getText(R.string.text_content))
         binding.textMaxLineTitle.text = SpannableString(moduleRes.getText(R.string.max_line))
+        binding.textSizeTitle.text = SpannableString(moduleRes.getString(R.string.text_size))
+        binding.textSizeInput.hint = SpannableString(moduleRes.getString(R.string.sp))
 
         binding.editText.setText(SpannableString(view.text))
         binding.textMaxLine.setText(SpannableString(view.maxLines.toString()))
+        binding.textSizeInput.setText(SpannableString(view.textSize.sp().toString()))
     }
 
     override val attrData: TextViewAttrData
@@ -42,7 +46,8 @@ class TextEditingDialog(private val view: TextView) : BaseAttrDialog<TextViewAtt
             return TextViewAttrData(
                 baseAttrData,
                 binding.editText.text.toString(),
-                binding.textMaxLine.text.toString().toIntOrNull() ?: view.maxLines
+                binding.textMaxLine.text.toString().toIntOrNull() ?: view.maxLines,
+                binding.textSizeInput.text.toString().toFloatOrNull() ?: view.textSize.sp()
             )
         }
 
@@ -50,5 +55,6 @@ class TextEditingDialog(private val view: TextView) : BaseAttrDialog<TextViewAtt
         super.onApply(data)
         view.text = SpannableString(data.text)
         view.maxLines = data.maxLine
+        view.textSize = data.textSizeInSp
     }
 }
