@@ -15,7 +15,8 @@ open class BaseViewAttrData(
     val marginLeft: Int,
     val marginTop: Int,
     val marginBottom: Int,
-    val marginRight: Int
+    val marginRight: Int,
+    val visibility: Int,
 ) {
     constructor(data: BaseViewAttrData) : this(
         data.width,
@@ -27,6 +28,7 @@ open class BaseViewAttrData(
         data.marginLeft,
         data.marginTop,
         data.marginBottom,
-        data.marginRight
+        data.marginRight,
+        data.visibility
     )
 }

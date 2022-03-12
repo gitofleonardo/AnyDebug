@@ -31,4 +31,10 @@
     <string name="scale_type">缩放类型</string>
     <string name="text_size">字体大小</string>
     <string name="sp">sp</string>
+    <string name="left">Left</string>
+    <string name="top">Top</string>
+    <string name="right">Right</string>
+    <string name="bottom">Bottom</string>
+    <string name="ancestors">父控件</string>
+    <string name="visibility">可见性</string>
 </resources>

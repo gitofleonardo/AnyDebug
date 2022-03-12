@@ -50,8 +50,6 @@ abstract class BaseAttrDialog<T : BaseViewAttrData>(protected val itemView: View
      */
     protected val baseAttrData: BaseViewAttrData
         get() {
-            val width = actualViewWidth
-            val height = actualViewHeight
             val marginLeft = binding.marginLeft.text.toString().toIntOrNull() ?: 0
             val marginTop = binding.marginTop.text.toString().toIntOrNull() ?: 0
             val marginBottom = binding.marginBottom.text.toString().toIntOrNull() ?: 0
@@ -61,8 +59,8 @@ abstract class BaseAttrDialog<T : BaseViewAttrData>(protected val itemView: View
             val paddingBottom = binding.paddingBottom.text.toString().toIntOrNull() ?: 0
             val paddingRight = binding.paddingRight.text.toString().toIntOrNull() ?: 0
             return BaseViewAttrData(
-                width,
-                height,
+                actualViewWidth,
+                actualViewHeight,
                 paddingLeft.px(),
                 paddingTop.px(),
                 paddingBottom.px(),
@@ -70,11 +68,12 @@ abstract class BaseAttrDialog<T : BaseViewAttrData>(protected val itemView: View
                 marginLeft.px(),
                 marginTop.px(),
                 marginBottom.px(),
-                marginRight.px()
+                marginRight.px(),
+                currentVisibility
             )
         }
 
-    private val widthSpinnerAdapter = object : AdapterView.OnItemSelectedListener {
+    private val widthSpinnerAdapterListener = object : AdapterView.OnItemSelectedListener {
         override fun onItemSelected(
             parent: AdapterView<*>?,
             view: View?,
@@ -102,7 +101,7 @@ abstract class BaseAttrDialog<T : BaseViewAttrData>(protected val itemView: View
         }
     }
 
-    private val heightSpinnerAdapter = object : AdapterView.OnItemSelectedListener {
+    private val heightSpinnerAdapterListener = object : AdapterView.OnItemSelectedListener {
         override fun onItemSelected(
             parent: AdapterView<*>?,
             view: View?,
@@ -130,6 +129,24 @@ abstract class BaseAttrDialog<T : BaseViewAttrData>(protected val itemView: View
         }
 
     }
+
+    private val visibilitySpinnerAdapterListener = object : AdapterView.OnItemSelectedListener {
+        override fun onItemSelected(p0: AdapterView<*>?, p1: View?, pos: Int, p3: Long) {
+            currentVisibility = when (pos) {
+                0 -> View.VISIBLE
+                1 -> View.INVISIBLE
+                2 -> View.GONE
+                else -> View.VISIBLE
+            }
+        }
+
+        override fun onNothingSelected(p0: AdapterView<*>?) {
+            // Do nothing
+        }
+
+    }
+
+    private var currentVisibility: Int = itemView.visibility
 
     /**
      * Temporary view width
@@ -192,6 +209,7 @@ abstract class BaseAttrDialog<T : BaseViewAttrData>(protected val itemView: View
             data.paddingRight,
             data.paddingBottom
         )
+        itemView.visibility = data.visibility
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -204,7 +222,20 @@ abstract class BaseAttrDialog<T : BaseViewAttrData>(protected val itemView: View
         setupMargin()
         setupPadding()
         setupChildrenParentButton()
+        setupVisibilitySpinner()
         renderPreview()
+    }
+
+    private fun setupVisibilitySpinner() {
+        binding.visibilitySpinner.adapter = ArrayAdapter(context, android.R.layout.simple_spinner_dropdown_item, moduleRes.getStringArray(R.array.visibility))
+        binding.visibilitySpinner.onItemSelectedListener = visibilitySpinnerAdapterListener
+        val selection = when (currentVisibility) {
+            View.VISIBLE -> 0
+            View.INVISIBLE -> 1
+            View.GONE -> 2
+            else -> 0
+        }
+        binding.visibilitySpinner.setSelection(selection)
     }
 
     /**
@@ -260,12 +291,13 @@ abstract class BaseAttrDialog<T : BaseViewAttrData>(protected val itemView: View
         binding.applyButton.text = SpannableString(moduleRes.getText(R.string.apply))
         binding.originClickButton.text =
             SpannableString(moduleRes.getText(R.string.perform_origin_click))
-        binding.parentSpinnerTitle.text = SpannableString(moduleRes.getString(R.string.parent))
-        binding.childrenSpinnerTitle.text = SpannableString(moduleRes.getString(R.string.children))
+        binding.parentButton.text = SpannableString(moduleRes.getString(R.string.ancestors))
+        binding.childrenButton.text = SpannableString(moduleRes.getString(R.string.children))
         binding.showLayoutBoundsSwitch.text =
             SpannableString(moduleRes.getString(R.string.show_global_layout_bounds))
         binding.ignoreEmptyVgSwitch.text =
             SpannableString(moduleRes.getString(R.string.force_clickable))
+        binding.visibilityTitle.text = SpannableString(moduleRes.getString(R.string.visibility))
     }
 
     private fun setupButtons() {
@@ -352,12 +384,12 @@ abstract class BaseAttrDialog<T : BaseViewAttrData>(protected val itemView: View
         binding.heightSpinner.apply {
             adapter =
                 ArrayAdapter(context, android.R.layout.simple_spinner_dropdown_item, specArray)
-            onItemSelectedListener = heightSpinnerAdapter
+            onItemSelectedListener = heightSpinnerAdapterListener
         }
         binding.widthSpinner.apply {
             adapter =
                 ArrayAdapter(context, android.R.layout.simple_spinner_dropdown_item, specArray)
-            onItemSelectedListener = widthSpinnerAdapter
+            onItemSelectedListener = widthSpinnerAdapterListener
         }
         when (viewWidth) {
             ViewGroup.LayoutParams.MATCH_PARENT -> {
@@ -471,7 +503,7 @@ abstract class BaseAttrDialog<T : BaseViewAttrData>(protected val itemView: View
             LinearLayout.LayoutParams.MATCH_PARENT,
             LinearLayout.LayoutParams.WRAP_CONTENT
         )
-        binding.attrParentContainer.addView(view, param)
+        binding.additionalPanelContainer.addView(view, param)
     }
 
     /**

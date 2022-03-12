@@ -30,4 +30,10 @@
     <string name="scale_type">Scale Type</string>
     <string name="text_size">Text Size</string>
     <string name="sp">sp</string>
+    <string name="left">Left</string>
+    <string name="top">Top</string>
+    <string name="right">Right</string>
+    <string name="bottom">Bottom</string>
+    <string name="ancestors">Ancestors</string>
+    <string name="visibility">Visibility</string>
 </resources>

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -9,24 +8,23 @@
     android:tag="ANYDEBUG_IGNORE_HOOK">
 
     <TextView
-        android:layout_marginBottom="10dp"
-        android:text="Title"
-        android:textStyle="bold"
-        android:textSize="18sp"
         android:id="@+id/title"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:textSize="18sp"
+        android:textStyle="bold" />
 
     <ScrollView
-        android:scrollbars="none"
         android:id="@+id/scroll_parent"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        android:scrollbars="none">
 
-        <LinearLayout
+        <RelativeLayout
             android:id="@+id/attr_parent_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -34,272 +32,269 @@
             tools:ignore="UseSwitchCompatOrMaterialXml">
 
             <ImageView
-                android:layout_marginBottom="10dp"
                 android:id="@+id/preview_image"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true" />
 
             <Switch
-                android:textSize="16sp"
-                android:text="@string/show_global_layout_bounds"
                 android:id="@+id/show_layout_bounds_switch"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:layout_below="@id/preview_image"
+                android:text="@string/show_global_layout_bounds"
+                android:textSize="16sp" />
 
             <Switch
-                android:layout_marginTop="10dp"
-                android:textSize="16sp"
-                android:text="@string/force_clickable"
                 android:id="@+id/ignore_empty_vg_switch"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:layout_below="@id/show_layout_bounds_switch"
+                android:layout_marginTop="10dp"
+                android:text="@string/force_clickable"
+                android:textSize="16sp" />
 
-            <FrameLayout
-                android:tag="ANYDEBUG_IGNORE_HOOK"
+            <TextView
                 android:id="@+id/parent_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_below="@id/ignore_empty_vg_switch"
                 android:paddingStart="0dp"
                 android:paddingTop="10dp"
                 android:paddingEnd="10dp"
-                android:paddingBottom="10dp">
-
-                <TextView
-                    android:id="@+id/parent_spinner_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/parent"
-                    android:textSize="16sp" />
-
-                <TextView
-                    android:layout_marginEnd="10dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="end|center"
-                    android:text=">>" />
-            </FrameLayout>
-
-            <FrameLayout
+                android:paddingBottom="10dp"
                 android:tag="ANYDEBUG_IGNORE_HOOK"
+                android:text="@string/ancestors"
+                android:textSize="16sp" />
+
+            <TextView
                 android:id="@+id/children_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_below="@id/parent_button"
                 android:paddingStart="0dp"
                 android:paddingTop="10dp"
                 android:paddingEnd="10dp"
-                android:paddingBottom="10dp">
+                android:paddingBottom="10dp"
+                android:tag="ANYDEBUG_IGNORE_HOOK"
+                android:text="@string/children"
+                android:textSize="16sp" />
 
-                <TextView
-                    android:id="@+id/children_spinner_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/children"
-                    android:textSize="16sp" />
+            <TextView
+                android:layout_alignTop="@id/visibility_spinner"
+                android:layout_alignBottom="@id/visibility_spinner"
+                android:gravity="center"
+                android:textSize="16sp"
+                android:id="@+id/visibility_title"
+                android:text="@string/visibility"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
 
-                <TextView
-                    android:layout_marginEnd="10dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="end|center"
-                    android:text=">>" />
-            </FrameLayout>
+            <Spinner
+                android:layout_marginStart="10dp"
+                android:layout_toEndOf="@id/visibility_title"
+                android:layout_below="@+id/children_button"
+                android:id="@+id/visibility_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="42dp"/>
 
-            <RelativeLayout
+            <TextView
+                android:id="@+id/width_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@id/width_spinner"
+                android:layout_alignBottom="@id/width_spinner"
+                android:gravity="center"
+                android:text="@string/width"
+                android:textSize="16sp" />
+
+            <Spinner
+                android:id="@+id/width_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:layout_below="@id/visibility_spinner"
+                android:layout_marginStart="10dp"
+                android:layout_toEndOf="@id/width_title" />
+
+            <EditText
+                android:id="@+id/width_value"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
+                android:layout_below="@id/width_spinner"
+                android:layout_marginTop="10dp"
+                android:inputType="number"
+                tools:visibility="visible" />
+
+            <TextView
+                android:id="@+id/height_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/width_value"
+                android:layout_alignBottom="@id/height_spinner"
+                android:gravity="center"
+                android:text="@string/height"
+                android:textSize="16sp" />
+
+            <Spinner
+                android:id="@+id/height_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:layout_below="@id/width_value"
+                android:layout_marginStart="10dp"
+                android:layout_toEndOf="@id/height_title" />
+
+            <EditText
+                android:id="@+id/height_value"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/height_spinner"
+                android:layout_marginTop="10dp"
+                android:inputType="number"
+                tools:visibility="visible" />
+
+
+            <RelativeLayout
+                android:id="@+id/margin_values"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/height_value"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="10dp"
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/width_title"
+                    android:id="@+id/margin_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignBottom="@id/width_spinner"
-                    android:layout_alignParentTop="true"
+                    android:layout_alignTop="@id/margin_identical_checkbox"
+                    android:layout_alignBottom="@id/margin_identical_checkbox"
+                    android:layout_marginEnd="10dp"
                     android:gravity="center"
-                    android:text="@string/width"
+                    android:text="Margin(dp)-L-T-R-B"
                     android:textSize="16sp" />
 
-                <Spinner
-                    android:id="@+id/width_spinner"
-                    android:layout_width="match_parent"
-                    android:layout_height="42dp"
-                    android:layout_marginStart="10dp"
-                    android:layout_toEndOf="@id/width_title" />
+                <Switch
+                    android:id="@+id/margin_identical_checkbox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:text="@string/identical" />
 
-                <EditText
-                    android:id="@+id/width_value"
+                <LinearLayout
+                    android:id="@+id/margin_inputs"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/width_spinner"
-                    android:layout_marginTop="10dp"
-                    android:inputType="number"
-                    tools:visibility="visible" />
+                    android:layout_below="@id/margin_identical_checkbox"
+                    android:orientation="horizontal">
+
+                    <EditText
+                        android:id="@+id/margin_left"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:hint="@string/left"
+                        android:inputType="number" />
+
+                    <EditText
+                        android:id="@+id/margin_top"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:hint="@string/top"
+                        android:inputType="number" />
+
+                    <EditText
+                        android:id="@+id/margin_right"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:hint="@string/right"
+                        android:inputType="number" />
+
+                    <EditText
+                        android:id="@+id/margin_bottom"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:hint="@string/bottom"
+                        android:inputType="number" />
+                </LinearLayout>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/padding_values"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/margin_values"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="10dp"
+                android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/height_title"
+                    android:id="@+id/padding_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/width_value"
-                    android:layout_alignBottom="@id/height_spinner"
+                    android:layout_alignTop="@id/padding_identical_checkbox"
+                    android:layout_alignBottom="@id/padding_identical_checkbox"
+                    android:layout_marginEnd="10dp"
                     android:gravity="center"
-                    android:text="@string/height"
+                    android:text="Padding(dp)-L-T-R-B"
                     android:textSize="16sp" />
 
-                <Spinner
-                    android:id="@+id/height_spinner"
-                    android:layout_width="match_parent"
-                    android:layout_height="42dp"
-                    android:layout_below="@id/width_value"
-                    android:layout_marginStart="10dp"
-                    android:layout_toEndOf="@id/height_title" />
-
-                <EditText
-                    android:id="@+id/height_value"
-                    android:layout_width="match_parent"
+                <Switch
+                    android:id="@+id/padding_identical_checkbox"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/height_spinner"
-                    android:layout_marginTop="10dp"
-                    android:inputType="number"
-                    tools:visibility="visible" />
-
-                <RelativeLayout
-                    android:id="@+id/margin_values"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/height_value"
                     android:layout_alignParentEnd="true"
-                    android:layout_marginTop="10dp"
-                    android:orientation="vertical">
+                    android:text="@string/identical" />
 
-                    <TextView
-                        android:id="@+id/margin_title"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignTop="@id/margin_identical_checkbox"
-                        android:layout_alignBottom="@id/margin_identical_checkbox"
-                        android:layout_marginEnd="10dp"
-                        android:gravity="center"
-                        android:text="Margin(dp)-L-T-R-B"
-                        android:textSize="16sp" />
-
-                    <Switch
-                        android:id="@+id/margin_identical_checkbox"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:text="@string/identical" />
-
-                    <LinearLayout
-                        android:id="@+id/margin_inputs"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/margin_identical_checkbox"
-                        android:orientation="horizontal">
-
-                        <EditText
-                            android:id="@+id/margin_left"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:hint="Left"
-                            android:inputType="number" />
-
-                        <EditText
-                            android:id="@+id/margin_top"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:hint="Top"
-                            android:inputType="number" />
-
-                        <EditText
-                            android:id="@+id/margin_right"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:hint="Right"
-                            android:inputType="number" />
-
-                        <EditText
-                            android:id="@+id/margin_bottom"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:hint="Bottom"
-                            android:inputType="number" />
-                    </LinearLayout>
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:id="@+id/padding_values"
+                <LinearLayout
+                    android:id="@+id/padding_inputs"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/margin_values"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginTop="10dp"
-                    android:orientation="vertical">
+                    android:layout_below="@id/padding_title"
+                    android:orientation="horizontal">
 
-                    <TextView
-                        android:id="@+id/padding_title"
-                        android:layout_width="wrap_content"
+                    <EditText
+                        android:id="@+id/padding_left"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_alignTop="@id/padding_identical_checkbox"
-                        android:layout_alignBottom="@id/padding_identical_checkbox"
-                        android:layout_marginEnd="10dp"
-                        android:gravity="center"
-                        android:text="Padding(dp)-L-T-R-B"
-                        android:textSize="16sp" />
+                        android:layout_weight="1"
+                        android:hint="@string/left"
+                        android:inputType="number" />
 
-                    <Switch
-                        android:id="@+id/padding_identical_checkbox"
-                        android:layout_width="wrap_content"
+                    <EditText
+                        android:id="@+id/padding_top"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:text="@string/identical" />
+                        android:layout_weight="1"
+                        android:hint="@string/top"
+                        android:inputType="number" />
 
-                    <LinearLayout
-                        android:id="@+id/padding_inputs"
-                        android:layout_width="match_parent"
+                    <EditText
+                        android:id="@+id/padding_right"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_below="@id/padding_title"
-                        android:orientation="horizontal">
+                        android:layout_weight="1"
+                        android:hint="@string/right"
+                        android:inputType="number" />
 
-                        <EditText
-                            android:id="@+id/padding_left"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:hint="Left"
-                            android:inputType="number" />
-
-                        <EditText
-                            android:id="@+id/padding_top"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:hint="Top"
-                            android:inputType="number" />
-
-                        <EditText
-                            android:id="@+id/padding_right"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:hint="Right"
-                            android:inputType="number" />
-
-                        <EditText
-                            android:id="@+id/padding_bottom"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:hint="Bottom"
-                            android:inputType="number" />
-                    </LinearLayout>
-                </RelativeLayout>
+                    <EditText
+                        android:id="@+id/padding_bottom"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:hint="@string/bottom"
+                        android:inputType="number" />
+                </LinearLayout>
             </RelativeLayout>
-        </LinearLayout>
+            <LinearLayout
+                android:layout_below="@id/padding_values"
+                android:orientation="vertical"
+                android:id="@+id/additional_panel_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </RelativeLayout>
     </ScrollView>
 
     <LinearLayout
