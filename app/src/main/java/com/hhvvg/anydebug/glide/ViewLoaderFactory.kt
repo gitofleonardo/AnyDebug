@@ -12,5 +12,6 @@ class ViewLoaderFactory : ModelLoaderFactory<View, Bitmap> {
     }
 
     override fun teardown() {
+        //Do nothing
     }
 }

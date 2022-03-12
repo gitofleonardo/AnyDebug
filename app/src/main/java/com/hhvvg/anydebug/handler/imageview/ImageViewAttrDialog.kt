@@ -19,18 +19,34 @@ import com.hhvvg.anydebug.ui.BaseAttrDialog
  */
 class ImageViewAttrDialog(private val view: ImageView) : BaseAttrDialog<ImageViewAttrData>(view) {
     override val attrData: ImageViewAttrData
-        get() {
-            val url = binding.imageUrlInput.text.toString()
-            return ImageViewAttrData(baseAttrData, url)
-        }
+        get() = ImageViewAttrData(baseAttrData, binding.imageUrlInput.text.toString())
 
     private lateinit var binding: LayoutImageViewAttrBinding
+
     private val scaleTypeIndexMap by lazy {
-        HashMap<ImageView.ScaleType, Int>().apply {
-            val types = ImageView.ScaleType.values()
-            for (i in types.indices) {
-                put(types[i], i)
-            }
+        val map = HashMap<ImageView.ScaleType, Int>()
+        val types = ImageView.ScaleType.values()
+        for (i in types.indices) {
+            map[types[i]] = i
+        }
+        map
+    }
+
+    private val onScaleTypeItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        override fun onItemSelected(
+            parent: AdapterView<*>?,
+            v: View?,
+            position: Int,
+            id: Long
+        ) {
+            view.scaleType = ImageView.ScaleType.values()[position]
+            view.postDelayed({
+                renderPreview()
+            }, 200)
+        }
+
+        override fun onNothingSelected(parent: AdapterView<*>?) {
+            // Do nothing
         }
     }
 
@@ -45,23 +61,7 @@ class ImageViewAttrDialog(private val view: ImageView) : BaseAttrDialog<ImageVie
         val scaleTypes = moduleRes.getStringArray(R.array.image_scale_type)
         binding.scaleTypeSpinner.adapter =
             ArrayAdapter(context, android.R.layout.simple_spinner_dropdown_item, scaleTypes)
-        binding.scaleTypeSpinner.onItemSelectedListener =
-            object : AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(
-                    parent: AdapterView<*>?,
-                    v: View?,
-                    position: Int,
-                    id: Long
-                ) {
-                    view.scaleType = ImageView.ScaleType.values()[position]
-                    view.postDelayed({
-                        renderPreview()
-                    }, 200)
-                }
-
-                override fun onNothingSelected(parent: AdapterView<*>?) {
-                }
-            }
+        binding.scaleTypeSpinner.onItemSelectedListener = onScaleTypeItemSelectedListener
         val scaleType = view.scaleType
         binding.scaleTypeSpinner.setSelection(scaleTypeIndexMap[scaleType] ?: 0)
     }

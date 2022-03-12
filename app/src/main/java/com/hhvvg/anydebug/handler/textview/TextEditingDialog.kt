@@ -6,8 +6,8 @@ import android.view.LayoutInflater
 import android.widget.TextView
 import com.hhvvg.anydebug.R
 import com.hhvvg.anydebug.databinding.LayoutTextViewAttrBinding
-import com.hhvvg.anydebug.ui.BaseAttrDialog
 import com.hhvvg.anydebug.hook.AnyHookZygote.Companion.moduleRes
+import com.hhvvg.anydebug.ui.BaseAttrDialog
 import com.hhvvg.anydebug.util.sp
 
 /**
@@ -16,11 +16,13 @@ import com.hhvvg.anydebug.util.sp
  * Editing attributes in TextView.
  */
 class TextEditingDialog(private val view: TextView) : BaseAttrDialog<TextViewAttrData>(view) {
+
     private val rootView by lazy {
         val layout = moduleRes.getLayout(R.layout.layout_text_view_attr)
         val inflater = LayoutInflater.from(context)
         inflater.inflate(layout, null)
     }
+
     private val binding by lazy {
         LayoutTextViewAttrBinding.bind(rootView)
     }
@@ -42,14 +44,12 @@ class TextEditingDialog(private val view: TextView) : BaseAttrDialog<TextViewAtt
     }
 
     override val attrData: TextViewAttrData
-        get() {
-            return TextViewAttrData(
-                baseAttrData,
-                binding.editText.text.toString(),
-                binding.textMaxLine.text.toString().toIntOrNull() ?: view.maxLines,
-                binding.textSizeInput.text.toString().toFloatOrNull() ?: view.textSize.sp()
-            )
-        }
+        get() = TextViewAttrData(
+            baseAttrData,
+            binding.editText.text.toString(),
+            binding.textMaxLine.text.toString().toIntOrNull() ?: view.maxLines,
+            binding.textSizeInput.text.toString().toFloatOrNull() ?: view.textSize.sp()
+        )
 
     override fun onApply(data: TextViewAttrData) {
         super.onApply(data)

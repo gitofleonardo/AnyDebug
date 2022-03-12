@@ -2,7 +2,6 @@ package com.hhvvg.anydebug.ui
 
 import android.app.AlertDialog
 import android.app.AndroidAppHelper
-import android.content.ComponentCallbacks2
 import android.os.Bundle
 import android.text.SpannableString
 import android.view.LayoutInflater
@@ -13,6 +12,7 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.LinearLayout
+import androidx.annotation.CallSuper
 import androidx.annotation.LayoutRes
 import androidx.core.view.ancestors
 import androidx.core.view.children
@@ -28,16 +28,7 @@ import com.hhvvg.anydebug.databinding.LayoutBaseAttrDialogBinding
 import com.hhvvg.anydebug.glide.GlideApp
 import com.hhvvg.anydebug.hook.AnyHookZygote.Companion.moduleRes
 import com.hhvvg.anydebug.ui.adapter.ViewItemListAdapter
-import com.hhvvg.anydebug.util.APP_FIELD_FORCE_CLICKABLE
-import com.hhvvg.anydebug.util.APP_FIELD_SHOW_BOUNDS
-import com.hhvvg.anydebug.util.dp
-import com.hhvvg.anydebug.util.drawLayoutBounds
-import com.hhvvg.anydebug.util.getInjectedField
-import com.hhvvg.anydebug.util.getOnClickListener
-import com.hhvvg.anydebug.util.injectField
-import com.hhvvg.anydebug.util.px
-import com.hhvvg.anydebug.util.setGlobalHookClick
-import kotlin.concurrent.thread
+import com.hhvvg.anydebug.util.*
 
 /**
  * @author hhvvg
@@ -59,22 +50,8 @@ abstract class BaseAttrDialog<T : BaseViewAttrData>(protected val itemView: View
      */
     protected val baseAttrData: BaseViewAttrData
         get() {
-            val width = when (viewWidth) {
-                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT -> {
-                    viewWidth
-                }
-                else -> {
-                    viewWidth.px()
-                }
-            }
-            val height = when (viewHeight) {
-                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT -> {
-                    viewHeight
-                }
-                else -> {
-                    viewHeight.px()
-                }
-            }
+            val width = actualViewWidth
+            val height = actualViewHeight
             val marginLeft = binding.marginLeft.text.toString().toIntOrNull() ?: 0
             val marginTop = binding.marginTop.text.toString().toIntOrNull() ?: 0
             val marginBottom = binding.marginBottom.text.toString().toIntOrNull() ?: 0
@@ -97,11 +74,109 @@ abstract class BaseAttrDialog<T : BaseViewAttrData>(protected val itemView: View
             )
         }
 
+    private val widthSpinnerAdapter = object : AdapterView.OnItemSelectedListener {
+        override fun onItemSelected(
+            parent: AdapterView<*>?,
+            view: View?,
+            position: Int,
+            id: Long
+        ) {
+            when (position) {
+                0 -> {
+                    viewWidth = ViewGroup.LayoutParams.MATCH_PARENT
+                    binding.widthValue.isVisible = false
+                }
+                1 -> {
+                    viewWidth = ViewGroup.LayoutParams.WRAP_CONTENT
+                    binding.widthValue.isVisible = false
+                }
+                2 -> {
+                    binding.widthValue.isVisible = true
+                    viewWidth = binding.widthValue.text.toString().toIntOrNull() ?: return
+                }
+            }
+        }
+
+        override fun onNothingSelected(parent: AdapterView<*>?) {
+            // Do nothing
+        }
+    }
+
+    private val heightSpinnerAdapter = object : AdapterView.OnItemSelectedListener {
+        override fun onItemSelected(
+            parent: AdapterView<*>?,
+            view: View?,
+            position: Int,
+            id: Long
+        ) {
+            when (position) {
+                0 -> {
+                    viewHeight = ViewGroup.LayoutParams.MATCH_PARENT
+                    binding.heightValue.isVisible = false
+                }
+                1 -> {
+                    viewHeight = ViewGroup.LayoutParams.WRAP_CONTENT
+                    binding.heightValue.isVisible = false
+                }
+                2 -> {
+                    binding.heightValue.isVisible = true
+                    viewHeight = binding.heightValue.text.toString().toIntOrNull() ?: return
+                }
+            }
+        }
+
+        override fun onNothingSelected(parent: AdapterView<*>?) {
+            // Do nothing
+        }
+
+    }
+
+    /**
+     * Temporary view width
+     */
     protected var viewWidth: Int = itemView.layoutParams.width
+
+    /**
+     * Temporary view height
+     */
     protected var viewHeight: Int = itemView.layoutParams.height
 
+    /**
+     * Final view width in pixel
+     */
+    protected val actualViewWidth: Int
+        get() = when (viewWidth) {
+            ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT -> {
+                viewWidth
+            }
+            else -> {
+                viewWidth.px()
+            }
+        }
+
+    /**
+     * Final view height in pixel
+     */
+    protected val actualViewHeight: Int
+        get() = when (viewHeight) {
+            ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT -> {
+                viewHeight
+            }
+            else -> {
+                viewHeight.px()
+            }
+        }
+
+    /**
+     * View attributes data holder
+     */
     protected abstract val attrData: T
 
+    /**
+     * Invoked when clicking the confirm button.
+     * Child view should override this to apply their own data
+     */
+    @CallSuper
     protected open fun onApply(data: T) {
         val baseData = baseAttrData
         val param = itemView.layoutParams
@@ -128,11 +203,13 @@ abstract class BaseAttrDialog<T : BaseViewAttrData>(protected val itemView: View
         setupText()
         setupMargin()
         setupPadding()
-        setupChildrenParentSpinner()
+        setupChildrenParentButton()
         renderPreview()
-        setTitle(itemView::class.java.name)
     }
 
+    /**
+     * Render bitmap and then load into the dialog to show preview of current {@link #itemView}.
+     */
     protected fun renderPreview() {
         if (!itemView.isLaidOut) {
             return
@@ -144,40 +221,37 @@ abstract class BaseAttrDialog<T : BaseViewAttrData>(protected val itemView: View
         binding.title.text = SpannableString(title)
     }
 
-    private fun setupChildrenParentSpinner() {
+    private fun setupChildrenParentButton() {
         val ancestors = findAncestors()
         val children = findChildren()
-        binding.parentSpinnerTitle.text = SpannableString(moduleRes.getString(R.string.parent))
-        binding.childrenSpinnerTitle.text = SpannableString(moduleRes.getString(R.string.children))
         binding.childrenButton.setOnClickListener {
-            GlideApp.get(context).clearMemory()
-            val dialog = Builder(context)
-                .setTitle(moduleRes.getString(R.string.select_children))
-                .setAdapter(ViewItemListAdapter(children)) { d, which ->
-                    d.dismiss()
-                    val selected = children[which]
-                    ViewDispatcher.dispatch(selected)
-                    dismiss()
-                }
-                .create()
-            dialog.show()
+            showViewItemDialog(moduleRes.getString(R.string.select_children), children)
         }
         binding.parentButton.setOnClickListener {
-            GlideApp.get(context).clearMemory()
-            val dialog = Builder(context)
-                .setTitle(moduleRes.getString(R.string.select_parent))
-                .setAdapter(ViewItemListAdapter(ancestors)) { d, which ->
-                    d.dismiss()
-                    val selected = ancestors[which]
-                    ViewDispatcher.dispatch(selected)
-                    dismiss()
-                }
-                .create()
-            dialog.show()
+            showViewItemDialog(moduleRes.getString(R.string.select_parent), ancestors)
         }
     }
 
+    private fun showViewItemDialog(title: String, views: List<View>) {
+        GlideApp.get(context).clearMemory()
+        Builder(context)
+            .setTitle(title)
+            .setAdapter(ViewItemListAdapter(views)) { d, which ->
+                d.dismiss()
+                val selected = views[which]
+                ViewDispatcher.dispatch(selected)
+                dismiss()
+            }
+            .create()
+            .show()
+    }
+
+    /**
+     * Set custom text here, since you can just simply put string id in xml layout file.
+     */
     private fun setupText() {
+        setTitle(itemView::class.java.name)
+
         binding.widthTitle.text =
             SpannableString(moduleRes.getString(R.string.width))
         binding.heightTitle.text =
@@ -186,6 +260,12 @@ abstract class BaseAttrDialog<T : BaseViewAttrData>(protected val itemView: View
         binding.applyButton.text = SpannableString(moduleRes.getText(R.string.apply))
         binding.originClickButton.text =
             SpannableString(moduleRes.getText(R.string.perform_origin_click))
+        binding.parentSpinnerTitle.text = SpannableString(moduleRes.getString(R.string.parent))
+        binding.childrenSpinnerTitle.text = SpannableString(moduleRes.getString(R.string.children))
+        binding.showLayoutBoundsSwitch.text =
+            SpannableString(moduleRes.getString(R.string.show_global_layout_bounds))
+        binding.ignoreEmptyVgSwitch.text =
+            SpannableString(moduleRes.getString(R.string.force_clickable))
     }
 
     private fun setupButtons() {
@@ -212,19 +292,14 @@ abstract class BaseAttrDialog<T : BaseViewAttrData>(protected val itemView: View
         val app = AndroidAppHelper.currentApplication()
         val showBoundsNow = app.getInjectedField(APP_FIELD_SHOW_BOUNDS, false) ?: false
         binding.showLayoutBoundsSwitch.isChecked = showBoundsNow
-        binding.showLayoutBoundsSwitch.text =
-            SpannableString(moduleRes.getString(R.string.show_global_layout_bounds))
         binding.showLayoutBoundsSwitch.setOnCheckedChangeListener { _, isChecked ->
             app.injectField(APP_FIELD_SHOW_BOUNDS, isChecked)
             itemView.rootView.drawLayoutBounds(isChecked, true)
             renderPreview()
             GlideApp.get(context).clearMemory()
         }
-
         val ignoreEmptyVg = app.getInjectedField(APP_FIELD_FORCE_CLICKABLE, false) ?: false
         binding.ignoreEmptyVgSwitch.isChecked = ignoreEmptyVg
-        binding.ignoreEmptyVgSwitch.text =
-            SpannableString(moduleRes.getString(R.string.force_clickable))
         binding.ignoreEmptyVgSwitch.setOnCheckedChangeListener { _, isChecked ->
             app.injectField(APP_FIELD_FORCE_CLICKABLE, isChecked)
             itemView.rootView.setGlobalHookClick(
@@ -235,14 +310,20 @@ abstract class BaseAttrDialog<T : BaseViewAttrData>(protected val itemView: View
         }
     }
 
-    private fun findChildren(): List<View> {
+    /**
+     * Find child views of the {@link #itemView}
+     */
+    protected fun findChildren(): List<View> {
         if (itemView !is ViewGroup || itemView.childCount <= 0) {
             return emptyList()
         }
         return itemView.children.toList()
     }
 
-    private fun findAncestors(): List<ViewGroup> {
+    /**
+     * Find parent views of the {@link #itemView}
+     */
+    protected fun findAncestors(): List<ViewGroup> {
         val ancestor = itemView.ancestors
         val result = ArrayList<ViewGroup>()
         for (a in ancestor) {
@@ -271,63 +352,12 @@ abstract class BaseAttrDialog<T : BaseViewAttrData>(protected val itemView: View
         binding.heightSpinner.apply {
             adapter =
                 ArrayAdapter(context, android.R.layout.simple_spinner_dropdown_item, specArray)
-            onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(
-                    parent: AdapterView<*>?,
-                    view: View?,
-                    position: Int,
-                    id: Long
-                ) {
-                    when (position) {
-                        0 -> {
-                            viewHeight = ViewGroup.LayoutParams.MATCH_PARENT
-                            binding.heightValue.isVisible = false
-                        }
-                        1 -> {
-                            viewHeight = ViewGroup.LayoutParams.WRAP_CONTENT
-                            binding.heightValue.isVisible = false
-                        }
-                        2 -> {
-                            binding.heightValue.isVisible = true
-                            viewHeight = binding.heightValue.text.toString().toIntOrNull() ?: return
-                        }
-                    }
-                }
-
-                override fun onNothingSelected(parent: AdapterView<*>?) {
-                }
-
-            }
+            onItemSelectedListener = heightSpinnerAdapter
         }
         binding.widthSpinner.apply {
             adapter =
                 ArrayAdapter(context, android.R.layout.simple_spinner_dropdown_item, specArray)
-            onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(
-                    parent: AdapterView<*>?,
-                    view: View?,
-                    position: Int,
-                    id: Long
-                ) {
-                    when (position) {
-                        0 -> {
-                            viewWidth = ViewGroup.LayoutParams.MATCH_PARENT
-                            binding.widthValue.isVisible = false
-                        }
-                        1 -> {
-                            viewWidth = ViewGroup.LayoutParams.WRAP_CONTENT
-                            binding.widthValue.isVisible = false
-                        }
-                        2 -> {
-                            binding.widthValue.isVisible = true
-                            viewWidth = binding.widthValue.text.toString().toIntOrNull() ?: return
-                        }
-                    }
-                }
-
-                override fun onNothingSelected(parent: AdapterView<*>?) {
-                }
-            }
+            onItemSelectedListener = widthSpinnerAdapter
         }
         when (viewWidth) {
             ViewGroup.LayoutParams.MATCH_PARENT -> {
@@ -430,6 +460,12 @@ abstract class BaseAttrDialog<T : BaseViewAttrData>(protected val itemView: View
         }
     }
 
+    /**
+     * Add additional attributes settings panel.
+     * If you implement this dialog, you should add your customized settings view through this method.
+     *
+     * @param view Additional settings view
+     */
     protected fun appendAttrPanelView(view: View) {
         val param = LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.MATCH_PARENT,
@@ -438,6 +474,12 @@ abstract class BaseAttrDialog<T : BaseViewAttrData>(protected val itemView: View
         binding.attrParentContainer.addView(view, param)
     }
 
+    /**
+     * Add additional attributes settings panel.
+     * If you implement this dialog, you should add your customized settings view through this method.
+     *
+     * @param resId Layout resource id
+     */
     protected fun appendAttrPanelView(@LayoutRes resId: Int): View {
         val layout = moduleRes.getLayout(resId)
         val inflater = LayoutInflater.from(context)
@@ -446,6 +488,9 @@ abstract class BaseAttrDialog<T : BaseViewAttrData>(protected val itemView: View
         return view
     }
 
+    /**
+     * Show this dialog, additionally setup soft input flags.
+     */
     override fun show() {
         super.show()
         window?.apply {
