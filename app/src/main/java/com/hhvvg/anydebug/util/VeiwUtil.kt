@@ -2,6 +2,7 @@ package com.hhvvg.anydebug.util
 
 import android.app.AndroidAppHelper
 import android.content.Context
+import android.view.ViewGroup
 
 private val context: Context
     get() = AndroidAppHelper.currentApplication().applicationContext
@@ -44,4 +45,26 @@ fun Float.spToPx(): Float {
 
 fun Int.spToPx(): Int {
     return (this.toFloat().spToPx() + 0.5F).toInt()
+}
+
+fun Int.specOrPx(): Int {
+    return when (this) {
+        ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT -> {
+            this
+        }
+        else -> {
+            this.px()
+        }
+    }
+}
+
+fun Int.specOrDp(): Int {
+    return when(this) {
+        ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT -> {
+            this
+        }
+        else -> {
+            this.dp()
+        }
+    }
 }

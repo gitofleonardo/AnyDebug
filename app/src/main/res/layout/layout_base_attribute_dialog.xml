@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:tag="ANYDEBUG_IGNORE_HOOK">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp">
+
+            <ImageView
+                android:id="@+id/preview_image"
+                android:layout_width="54dp"
+                android:layout_height="54dp"
+                android:layout_alignParentTop="true"
+                android:tag="ANYDEBUG_IGNORE_HOOK" />
+
+            <TextView
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_toEndOf="@id/preview_image" />
+
+            <Switch
+                android:id="@+id/show_layout_bounds_switch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/preview_image"
+                android:layout_marginTop="5dp"
+                android:text="@string/show_global_layout_bounds"
+                tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+            <Switch
+                android:id="@+id/force_widgets_clickable"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/show_layout_bounds_switch"
+                android:layout_marginTop="5dp"
+                android:text="@string/force_clickable"
+                tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+            <Button
+                android:id="@+id/ancestor_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/force_widgets_clickable"
+                android:layout_alignParentStart="true"
+                android:layout_marginTop="5dp"
+                android:tag="ANYDEBUG_IGNORE_HOOK"
+                android:text="@string/ancestors" />
+
+            <Button
+                android:id="@+id/children_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/force_widgets_clickable"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="5dp"
+                android:layout_toEndOf="@id/ancestor_button"
+                android:tag="ANYDEBUG_IGNORE_HOOK"
+                android:text="@string/children" />
+
+            <TextView
+                android:id="@+id/visibility_spinner_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/children_button"
+                android:layout_marginTop="5dp"
+                android:text="@string/visibility" />
+
+            <Spinner
+                android:id="@+id/visibility_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/visibility_spinner_title"
+                android:layout_marginTop="5dp" />
+
+            <TextView
+                android:id="@+id/width_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/visibility_spinner"
+                android:layout_marginTop="5dp"
+                android:text="@string/width" />
+
+            <Spinner
+                android:id="@+id/width_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/width_title"
+                android:layout_marginTop="5dp" />
+
+            <EditText
+                android:id="@+id/width_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/width_spinner"
+                android:hint="@string/width" />
+
+            <TextView
+                android:id="@+id/height_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/width_input"
+                android:layout_marginTop="5dp"
+                android:text="@string/height" />
+
+            <Spinner
+                android:id="@+id/height_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/height_title"
+                android:layout_marginTop="5dp" />
+
+            <EditText
+                android:id="@+id/height_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/height_spinner"
+                android:hint="@string/height" />
+
+            <TextView
+                android:id="@+id/margin_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/height_input"
+                android:layout_marginTop="5dp"
+                android:text="@string/margin_title" />
+
+            <Switch
+                android:id="@+id/margin_identical_checkbox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@id/margin_title"
+                android:layout_alignParentEnd="true"
+                android:text="@string/identical"
+                tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+            <LinearLayout
+                android:id="@+id/margin_inputs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/margin_title"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/margin_left"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="@string/left"
+                    android:inputType="number" />
+
+                <EditText
+                    android:id="@+id/margin_top"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="@string/top"
+                    android:inputType="number" />
+
+                <EditText
+                    android:id="@+id/margin_right"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="@string/right"
+                    android:inputType="number" />
+
+                <EditText
+                    android:id="@+id/margin_bottom"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="@string/bottom"
+                    android:inputType="number" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/padding_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/margin_inputs"
+                android:layout_marginTop="5dp"
+                android:text="@string/padding_title" />
+
+            <Switch
+                android:id="@+id/padding_identical_checkbox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@id/padding_title"
+                android:layout_alignParentEnd="true"
+                android:text="@string/identical"
+                tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+            <LinearLayout
+                android:id="@+id/padding_inputs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/padding_title"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/padding_left"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="@string/left"
+                    android:inputType="number" />
+
+                <EditText
+                    android:id="@+id/padding_top"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="@string/top"
+                    android:inputType="number" />
+
+                <EditText
+                    android:id="@+id/padding_right"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="@string/right"
+                    android:inputType="number" />
+
+                <EditText
+                    android:id="@+id/padding_bottom"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="@string/bottom"
+                    android:inputType="number" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/additional_panel_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/padding_inputs"
+                android:layout_marginTop="5dp"
+                android:orientation="vertical" />
+        </RelativeLayout>
+    </ScrollView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/origin_click_button"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:tag="ANYDEBUG_IGNORE_HOOK"
+            android:text="@string/perform_origin_click" />
+
+        <Button
+            android:id="@+id/cancel_button"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:tag="ANYDEBUG_IGNORE_HOOK"
+            android:text="@string/cancel" />
+
+        <Button
+            android:id="@+id/apply_button"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:tag="ANYDEBUG_IGNORE_HOOK"
+            android:text="@string/apply" />
+    </LinearLayout>
+</LinearLayout>

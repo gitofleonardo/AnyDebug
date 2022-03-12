@@ -37,4 +37,7 @@
     <string name="bottom">Bottom</string>
     <string name="ancestors">父控件</string>
     <string name="visibility">可见性</string>
+    <string name="title">标题</string>
+    <string name="margin_title">Margin(dp)-L-T-R-B</string>
+    <string name="padding_title">Padding(dp)-L-T-R-B</string>
 </resources>
