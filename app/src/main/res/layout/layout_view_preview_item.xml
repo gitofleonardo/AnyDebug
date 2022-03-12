@@ -6,11 +6,11 @@
     android:tag="ANYDEBUG_IGNORE_HOOK">
 
     <ImageView
-        android:tag="ANYDEBUG_IGNORE_HOOK"
         android:id="@+id/view_image"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:scaleType="centerCrop" />
+        android:scaleType="centerCrop"
+        android:tag="ANYDEBUG_IGNORE_HOOK" />
 
     <TextView
         android:gravity="center"

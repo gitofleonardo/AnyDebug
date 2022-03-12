@@ -22,16 +22,18 @@ fun View.getOnClickListener(): View.OnClickListener? {
     return XposedHelpers.getObjectField(info, "mOnClickListener") as View.OnClickListener?
 }
 
-fun View.drawLayoutBounds(drawEnabled: Boolean, traversalChildren: Boolean) {
+fun View.drawLayoutBounds(drawEnabled: Boolean, traversalChildren: Boolean, invalidate: Boolean = true) {
     val attachInfo = XposedHelpers.getObjectField(this, "mAttachInfo") ?: return
     XposedHelpers.setBooleanField(attachInfo, "mDebugLayout", drawEnabled)
     if (traversalChildren && this is ViewGroup) {
         val children = this.children
         for (child in children) {
-            child.drawLayoutBounds(drawEnabled, true)
+            child.drawLayoutBounds(drawEnabled, true, invalidate)
         }
     }
-    this.invalidate()
+    if (invalidate) {
+        this.invalidate()
+    }
 }
 
 fun View.setGlobalHookClick(

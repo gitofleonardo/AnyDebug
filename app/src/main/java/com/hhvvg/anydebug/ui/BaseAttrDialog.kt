@@ -2,6 +2,7 @@ package com.hhvvg.anydebug.ui
 
 import android.app.AlertDialog
 import android.app.AndroidAppHelper
+import android.content.ComponentCallbacks2
 import android.os.Bundle
 import android.text.SpannableString
 import android.view.LayoutInflater
@@ -24,6 +25,7 @@ import com.hhvvg.anydebug.ViewClickWrapper
 import com.hhvvg.anydebug.ViewDispatcher
 import com.hhvvg.anydebug.data.BaseViewAttrData
 import com.hhvvg.anydebug.databinding.LayoutBaseAttrDialogBinding
+import com.hhvvg.anydebug.glide.GlideApp
 import com.hhvvg.anydebug.hook.AnyHookZygote.Companion.moduleRes
 import com.hhvvg.anydebug.ui.adapter.ViewItemListAdapter
 import com.hhvvg.anydebug.util.APP_FIELD_FORCE_CLICKABLE
@@ -35,6 +37,7 @@ import com.hhvvg.anydebug.util.getOnClickListener
 import com.hhvvg.anydebug.util.injectField
 import com.hhvvg.anydebug.util.px
 import com.hhvvg.anydebug.util.setGlobalHookClick
+import kotlin.concurrent.thread
 
 /**
  * @author hhvvg
@@ -147,6 +150,7 @@ abstract class BaseAttrDialog<T : BaseViewAttrData>(protected val itemView: View
         binding.parentSpinnerTitle.text = SpannableString(moduleRes.getString(R.string.parent))
         binding.childrenSpinnerTitle.text = SpannableString(moduleRes.getString(R.string.children))
         binding.childrenButton.setOnClickListener {
+            GlideApp.get(context).clearMemory()
             val dialog = Builder(context)
                 .setTitle(moduleRes.getString(R.string.select_children))
                 .setAdapter(ViewItemListAdapter(children)) { d, which ->
@@ -159,6 +163,7 @@ abstract class BaseAttrDialog<T : BaseViewAttrData>(protected val itemView: View
             dialog.show()
         }
         binding.parentButton.setOnClickListener {
+            GlideApp.get(context).clearMemory()
             val dialog = Builder(context)
                 .setTitle(moduleRes.getString(R.string.select_parent))
                 .setAdapter(ViewItemListAdapter(ancestors)) { d, which ->
@@ -213,6 +218,7 @@ abstract class BaseAttrDialog<T : BaseViewAttrData>(protected val itemView: View
             app.injectField(APP_FIELD_SHOW_BOUNDS, isChecked)
             itemView.rootView.drawLayoutBounds(isChecked, true)
             renderPreview()
+            GlideApp.get(context).clearMemory()
         }
 
         val ignoreEmptyVg = app.getInjectedField(APP_FIELD_FORCE_CLICKABLE, false) ?: false

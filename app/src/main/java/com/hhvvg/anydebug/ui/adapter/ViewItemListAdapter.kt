@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.hhvvg.anydebug.IGNORE_HOOK
 import com.hhvvg.anydebug.R
 import com.hhvvg.anydebug.databinding.LayoutImageBinding
@@ -14,6 +15,7 @@ import com.hhvvg.anydebug.glide.GlideApp
 import com.hhvvg.anydebug.hook.AnyHookZygote
 
 class ViewItemListAdapter(private val views: List<View>) : BaseAdapter() {
+
     override fun getCount(): Int = views.size
 
     override fun getItem(position: Int): Any = views[position]
@@ -36,7 +38,8 @@ class ViewItemListAdapter(private val views: List<View>) : BaseAdapter() {
         GlideApp
             .with(view)
             .load(view)
-            .skipMemoryCache(true)
+            .thumbnail()
+            .diskCacheStrategy(DiskCacheStrategy.NONE)
             .into(binding.viewImage)
         binding.viewImage.setOnClickListener {
             showViewImageDialog(view)
