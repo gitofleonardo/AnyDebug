@@ -10,7 +10,6 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.EditText
 import android.widget.LinearLayout
 import androidx.annotation.CallSuper
 import androidx.annotation.LayoutRes
@@ -267,8 +266,7 @@ open class BaseAttributeDialog(protected val itemView: View) : AlertDialog(itemV
             GlideApp.get(context).clearMemory()
         }
         binding.forceWidgetsClickable.setOnCheckedChangeListener { _, checked ->
-            application.injectField(APP_FIELD_FORCE_CLICKABLE, checked)
-            itemView.rootView.setGlobalHookClick(enabled = true, traversalChildren = true, checked)
+            viewModel.forceClickable = checked
         }
         binding.ancestorButton.setOnClickListener {
             showViewsDialog(getString(R.string.select_parent), findAncestors())
@@ -449,6 +447,9 @@ open class BaseAttributeDialog(protected val itemView: View) : AlertDialog(itemV
             data.paddingBottom
         )
         itemView.visibility = data.visibility
+        application.injectField(APP_FIELD_FORCE_CLICKABLE, data.forceClickable)
+        val enabled = application.getInjectedField(APP_FIELD_GLOBAL_CONTROL_ENABLED, true) ?: true
+        itemView.rootView.setAllViewsHookClick(enabled = enabled, traversalChildren = true, data.forceClickable)
     }
 
     /**

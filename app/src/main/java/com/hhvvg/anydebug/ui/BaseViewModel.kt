@@ -32,6 +32,8 @@ class BaseViewModel {
 
     val marginAvailable = ObservableField(false)
 
+    var forceClickable = false
+
     fun getData(): BaseViewAttribute {
         return BaseViewAttribute(
             width.specOrPx(),
@@ -44,7 +46,8 @@ class BaseViewModel {
             marginTop.data.px(),
             marginRight.data.px(),
             marginBottom.data.px(),
-            visibility
+            visibility,
+            forceClickable,
         )
     }
 }

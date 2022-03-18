@@ -40,4 +40,10 @@
     <string name="title">标题</string>
     <string name="margin_title">Margin(dp)-L-T-R-B</string>
     <string name="padding_title">Padding(dp)-L-T-R-B</string>
+    <string name="default_channel_name">控制通知</string>
+    <string name="default_channel_desc">控制通知渠道</string>
+    <string name="global_control">全局控制</string>
+    <string name="current_enable_state">当前状态： %s</string>
+    <string name="enabled">已启用</string>
+    <string name="disabled">已停用</string>
 </resources>

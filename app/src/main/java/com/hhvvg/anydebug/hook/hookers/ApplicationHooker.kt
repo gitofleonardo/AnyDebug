@@ -46,9 +46,10 @@ class ApplicationHooker : IHooker {
                 val app = AndroidAppHelper.currentApplication()
                 val showBounds = app.getInjectedField(APP_FIELD_SHOW_BOUNDS, false) ?: false
                 val forceClickable = app.getInjectedField(APP_FIELD_FORCE_CLICKABLE, false) ?: false
+                val globalEnabled = app.getInjectedField(APP_FIELD_GLOBAL_CONTROL_ENABLED, true) ?: true
                 contentView.drawLayoutBounds(showBounds, true)
-                contentView.setGlobalHookClick(
-                    enabled = true,
+                contentView.setAllViewsHookClick(
+                    enabled = globalEnabled,
                     traversalChildren = true,
                     forceClickable
                 )
@@ -67,9 +68,10 @@ class ApplicationHooker : IHooker {
             val app = AndroidAppHelper.currentApplication()
             val showBounds = app.getInjectedField(APP_FIELD_SHOW_BOUNDS, false) ?: false
             val forceClickable = app.getInjectedField(APP_FIELD_FORCE_CLICKABLE, false) ?: false
+            val enabled = app.getInjectedField(APP_FIELD_GLOBAL_CONTROL_ENABLED, false) ?: false
             val decor = activity.window.decorView as ViewGroup
             decor.drawLayoutBounds(showBounds, true)
-            decor.setGlobalHookClick(enabled = true, traversalChildren = true, forceClickable)
+            decor.setAllViewsHookClick(enabled = enabled, traversalChildren = true, forceClickable)
         }
 
         override fun onActivityPaused(activity: Activity) {

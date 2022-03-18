@@ -1,9 +1,12 @@
 package com.hhvvg.anydebug.hook.hookers
 
+import android.app.AndroidAppHelper
 import android.view.View
 import com.hhvvg.anydebug.IGNORE_HOOK
 import com.hhvvg.anydebug.ViewClickWrapper
 import com.hhvvg.anydebug.hook.IHooker
+import com.hhvvg.anydebug.util.APP_FIELD_GLOBAL_CONTROL_ENABLED
+import com.hhvvg.anydebug.util.getInjectedField
 import com.hhvvg.anydebug.util.replaceOnClickListener
 import de.robv.android.xposed.XC_MethodHook
 import de.robv.android.xposed.XposedBridge
@@ -15,7 +18,7 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage
  *
  * Hooks TextView.
  */
-class TextViewHooker : IHooker {
+class ViewClickHooker : IHooker {
     override fun onHook(param: XC_LoadPackage.LoadPackageParam) {
         val clickMethodHook = ViewSetOnClickListenerMethodHook()
         val clickMethod = XposedHelpers.findMethodBestMatch(
@@ -36,11 +39,15 @@ class TextViewHooker : IHooker {
             if (view.tag == IGNORE_HOOK) {
                 return
             }
-            view.replaceOnClickListener { origin ->
-                if (origin is ViewClickWrapper) {
-                    origin
-                } else {
-                    ViewClickWrapper(origin, view.isClickable, view)
+            val app = AndroidAppHelper.currentApplication()
+            val enabled = app.getInjectedField(APP_FIELD_GLOBAL_CONTROL_ENABLED, true) ?: true
+            if (enabled) {
+                view.replaceOnClickListener { origin ->
+                    if (origin is ViewClickWrapper) {
+                        origin
+                    } else {
+                        ViewClickWrapper(origin, view.isClickable, view)
+                    }
                 }
             }
         }

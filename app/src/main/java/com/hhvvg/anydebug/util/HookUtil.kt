@@ -36,7 +36,7 @@ fun View.drawLayoutBounds(drawEnabled: Boolean, traversalChildren: Boolean, inva
     }
 }
 
-fun View.setGlobalHookClick(
+fun View.setAllViewsHookClick(
     enabled: Boolean,
     traversalChildren: Boolean = true,
     forceClickable: Boolean = false
@@ -74,6 +74,6 @@ fun View.setGlobalHookClick(
     }
     val children = this.children
     for (child in children) {
-        child.setGlobalHookClick(enabled, traversalChildren, forceClickable)
+        child.setAllViewsHookClick(enabled, traversalChildren, forceClickable)
     }
 }

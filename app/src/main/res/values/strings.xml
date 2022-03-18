@@ -39,4 +39,10 @@
     <string name="title">title</string>
     <string name="margin_title">Margin(dp)-L-T-R-B</string>
     <string name="padding_title">Padding(dp)-L-T-R-B</string>
+    <string name="default_channel_name">Control Notification</string>
+    <string name="default_channel_desc">Channel to send control notification</string>
+    <string name="global_control">Global Control</string>
+    <string name="current_enable_state">Current state: %s</string>
+    <string name="enabled">Enabled</string>
+    <string name="disabled">Disabled</string>
 </resources>

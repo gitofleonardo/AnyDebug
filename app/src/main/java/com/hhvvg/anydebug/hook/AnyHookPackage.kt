@@ -2,8 +2,9 @@ package com.hhvvg.anydebug.hook
 
 import com.hhvvg.anydebug.BuildConfig
 import com.hhvvg.anydebug.hook.hookers.ApplicationHooker
+import com.hhvvg.anydebug.hook.hookers.GlobalControlHooker
 import com.hhvvg.anydebug.hook.hookers.PupupWindowHooker
-import com.hhvvg.anydebug.hook.hookers.TextViewHooker
+import com.hhvvg.anydebug.hook.hookers.ViewClickHooker
 import de.robv.android.xposed.IXposedHookLoadPackage
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 
@@ -15,8 +16,9 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage
 class AnyHookPackage : IXposedHookLoadPackage {
     private val hookers: ArrayList<IHooker> = arrayListOf(
         ApplicationHooker(),
-        TextViewHooker(),
+        ViewClickHooker(),
         PupupWindowHooker(),
+        GlobalControlHooker(),
     )
 
     override fun handleLoadPackage(p0: XC_LoadPackage.LoadPackageParam?) {
