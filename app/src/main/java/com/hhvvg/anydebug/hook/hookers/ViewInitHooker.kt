@@ -15,9 +15,9 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage
 /**
  * @author hhvvg
  *
- * Hooks application.
+ * Hooks application. Loads initial settings of current application.
  */
-class ApplicationHooker : IHooker {
+class ViewInitHooker : IHooker {
     override fun onHook(param: XC_LoadPackage.LoadPackageParam) {
         val appClazz = Application::class.java
         val onCreateHook = ApplicationOnCreateMethodHook()

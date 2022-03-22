@@ -46,4 +46,13 @@
     <string name="current_enable_state">当前状态： %s</string>
     <string name="enabled">已启用</string>
     <string name="disabled">已停用</string>
+
+    <!-- Perference strings -->
+    <string name="global_edit_title">启用全局编辑</string>
+    <string name="global_edit_desc">启用此项后，全局控件将可以进行编辑</string>
+
+    <string name="edit_persistent_title">启用持久化编辑</string>
+    <string name="edit_persistent_desc">启用此项后，在支持的控件上所作的修改将被保存</string>
+    <string name="about_desc">更多关于此应用的信息</string>
+    <string name="function">功能</string>
 </resources>

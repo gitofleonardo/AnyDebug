@@ -45,4 +45,18 @@
     <string name="current_enable_state">Current state: %s</string>
     <string name="enabled">Enabled</string>
     <string name="disabled">Disabled</string>
+
+    <!-- Preferences strings -->
+    <string name="global_edit_enable_key" translatable="false">key_global_edit_enable</string>
+    <string name="global_edit_title">Enable Global Edit</string>
+    <string name="global_edit_desc">By enabling this option, you will be able to edit attributes of views in an application.</string>
+
+    <string name="edit_persistent_key" translatable="false">key_enable_persistent_edit</string>
+    <string name="edit_persistent_title">Enable Persistent Edit</string>
+    <string name="edit_persistent_desc">When this option is on, your changes will be stored on supported views.</string>
+
+    <string name="about_key" translatable="false">key_about</string>
+
+    <string name="about_desc">Show information about this application.</string>
+    <string name="function">Function</string>
 </resources>

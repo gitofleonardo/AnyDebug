@@ -1,0 +1,27 @@
+<PreferenceScreen
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory
+        app:title="@string/function">
+
+        <SwitchPreferenceCompat
+            app:key="@string/global_edit_enable_key"
+            app:title="@string/global_edit_title"
+            app:summary="@string/global_edit_desc"/>
+
+        <SwitchPreferenceCompat
+            app:key="@string/edit_persistent_key"
+            app:title="@string/edit_persistent_title"
+            app:summary="@string/edit_persistent_desc"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:title="@string/about">
+
+        <Preference
+            app:key="@string/about_key"
+            app:title="@string/about"
+            app:summary="@string/about_desc"/>
+    </PreferenceCategory>
+
+</PreferenceScreen>

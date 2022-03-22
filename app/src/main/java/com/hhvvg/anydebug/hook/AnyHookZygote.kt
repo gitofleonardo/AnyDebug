@@ -3,6 +3,8 @@ package com.hhvvg.anydebug.hook
 import android.content.res.Resources
 import android.content.res.XModuleResources
 import de.robv.android.xposed.IXposedHookZygoteInit
+import de.robv.android.xposed.XSharedPreferences
+import de.robv.android.xposed.XposedBridge
 
 /**
  * @author hhvvg
@@ -10,10 +12,7 @@ import de.robv.android.xposed.IXposedHookZygoteInit
  * Hook zygote and get resources.
  */
 class AnyHookZygote : IXposedHookZygoteInit {
-    override fun initZygote(p0: IXposedHookZygoteInit.StartupParam?) {
-        if (p0 == null) {
-            return
-        }
+    override fun initZygote(p0: IXposedHookZygoteInit.StartupParam) {
         modulePath = p0.modulePath
         moduleRes = getModuleRes(modulePath)
     }

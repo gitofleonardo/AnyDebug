@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_nav"
+    app:startDestination="@id/settingsFragment">
+
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.hhvvg.anydebug.ui.fragment.SettingsFragment"
+        android:label="SettingsFragment" >
+        <action
+            app:enterAnim="@anim/anim_frag_open_enter"
+            app:exitAnim="@anim/anim_frag_open_exit"
+            app:popEnterAnim="@anim/anim_frag_close_enter"
+            app:popExitAnim="@anim/anim_frag_close_exit"
+            android:id="@+id/action_setting_fragment_to_about_fragment"
+            app:destination="@id/aboutFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/aboutFragment"
+        android:name="com.hhvvg.anydebug.ui.fragment.AboutFragment"
+        android:label="fragment_about"
+        tools:layout="@layout/fragment_about" >
+    </fragment>
+
+</navigation>
