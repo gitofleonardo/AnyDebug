@@ -1,5 +1,9 @@
 # AnyDebug
 
+> This software is still unstable, and code structure might be changed frequently.
+> 
+> 本软件还未稳定，代码结构等可能还会变化得比较多。
+
 Change your view attributes without restarting your application.
 
 不需要重启应用，就可以更改View的参数。
