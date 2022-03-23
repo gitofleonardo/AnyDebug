@@ -4,8 +4,6 @@ import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.preference.PreferenceFragment
-import android.preference.PreferenceScreen
 import com.hhvvg.anydebug.databinding.ActivityMainBinding
 import com.hhvvg.anydebug.util.GITHUB_PAGE_URL
 

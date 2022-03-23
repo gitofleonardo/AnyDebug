@@ -18,14 +18,11 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage
 /**
  * @author hhvvg
  *
- * Hook to send notification for global enable control.
+ * Hook for listening config change broadcast.
  */
 class GlobalControlHooker : IHooker {
     override fun onHook(param: XC_LoadPackage.LoadPackageParam) {
-        if (!param.isFirstApplication) {
-            return
-        }
-        val methodHook = OnAppCreateMethodHook(param)
+        val methodHook = OnAppCreateMethodHook()
         val method = XposedHelpers.findMethodBestMatch(
             Application::class.java,
             "onCreate",
@@ -36,12 +33,8 @@ class GlobalControlHooker : IHooker {
     }
 }
 
-private class OnAppCreateMethodHook(private val packageParam: XC_LoadPackage.LoadPackageParam) :
-    XC_MethodHook() {
+private class OnAppCreateMethodHook : XC_MethodHook() {
     override fun afterHookedMethod(param: MethodHookParam) {
-        if (!packageParam.isFirstApplication) {
-            return
-        }
         val app = param.thisObject as Application
         // Disable by default
         app.injectField(APP_FIELD_GLOBAL_CONTROL_ENABLED, false)
@@ -115,7 +108,6 @@ private class GlobalEnableReceiver(private val activity: Activity) : BroadcastRe
             }
         }
         setGlobalEnable(decorView, enabled)
-        XposedBridge.log("Global enable changed: $enabled")
     }
 
     private fun setGlobalEnable(decorView: View, enabled: Boolean) {
@@ -140,6 +132,5 @@ private class PersistentEnableReceiver : BroadcastReceiver() {
         }
         val app = AndroidAppHelper.currentApplication()
         app.injectField(APP_FIELD_PERSISTENT_ENABLE, enabled)
-        XposedBridge.log("Persistent changed: $enabled")
     }
 }
