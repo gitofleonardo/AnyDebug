@@ -10,7 +10,7 @@ import android.widget.ImageView
 import com.hhvvg.anydebug.R
 import com.hhvvg.anydebug.databinding.LayoutImageViewAttrBinding
 import com.hhvvg.anydebug.glide.GlideApp
-import com.hhvvg.anydebug.hook.AnyHookZygote.Companion.moduleRes
+import com.hhvvg.anydebug.hook.AnyHookFramework.Companion.moduleRes
 import com.hhvvg.anydebug.ui.BaseAttributeDialog
 
 /**

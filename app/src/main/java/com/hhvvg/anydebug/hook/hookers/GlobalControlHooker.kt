@@ -5,12 +5,8 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.os.Build
 import android.os.Bundle
 import android.view.View
-import androidx.annotation.RequiresApi
-import com.hhvvg.anydebug.R
-import com.hhvvg.anydebug.hook.AnyHookZygote.Companion.moduleRes
 import com.hhvvg.anydebug.hook.IHooker
 import com.hhvvg.anydebug.ui.fragment.*
 import com.hhvvg.anydebug.util.*

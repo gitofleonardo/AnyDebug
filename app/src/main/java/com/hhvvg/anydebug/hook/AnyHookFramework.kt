@@ -1,16 +1,19 @@
 package com.hhvvg.anydebug.hook
 
+import android.content.res.Resources
+import android.content.res.XModuleResources
 import com.hhvvg.anydebug.BuildConfig
 import com.hhvvg.anydebug.hook.hookers.*
 import de.robv.android.xposed.IXposedHookLoadPackage
+import de.robv.android.xposed.IXposedHookZygoteInit
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 
 /**
- * Class for package hook.
+ * Class for application hook.
  *
  * @author hhvvg
  */
-class AnyHookPackage : IXposedHookLoadPackage {
+class AnyHookFramework : IXposedHookLoadPackage, IXposedHookZygoteInit {
     private val hookers: ArrayList<IHooker> = arrayListOf(
         GlobalSettingsLoaderHooker(),
         ViewInitHooker(),
@@ -27,6 +30,23 @@ class AnyHookPackage : IXposedHookLoadPackage {
         }
         hookers.forEach {
             it.onHook(param = p0)
+        }
+    }
+
+    override fun initZygote(p0: IXposedHookZygoteInit.StartupParam) {
+        modulePath = p0.modulePath
+        moduleRes = getModuleRes(modulePath)
+    }
+
+    companion object {
+        @JvmStatic
+        lateinit var moduleRes: Resources
+        @JvmStatic
+        lateinit var modulePath: String
+
+        @JvmStatic
+        fun getModuleRes(path: String): Resources {
+            return XModuleResources.createInstance(path, null)
         }
     }
 }

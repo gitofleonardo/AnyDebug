@@ -20,5 +20,4 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
--keep class com.hhvvg.anydebug.hook.AnyHookPackage
--keep class com.hhvvg.anydebug.hook.AnyHookZygote
+-keep class com.hhvvg.anydebug.hook.AnyHookFramework

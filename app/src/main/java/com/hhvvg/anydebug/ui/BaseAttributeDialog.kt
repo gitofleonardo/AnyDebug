@@ -26,7 +26,7 @@ import com.hhvvg.anydebug.ViewDispatcher
 import com.hhvvg.anydebug.databinding.LayoutBaseAttributeDialogBinding
 import com.hhvvg.anydebug.databinding.LayoutImageBinding
 import com.hhvvg.anydebug.glide.GlideApp
-import com.hhvvg.anydebug.hook.AnyHookZygote.Companion.moduleRes
+import com.hhvvg.anydebug.hook.AnyHookFramework.Companion.moduleRes
 import com.hhvvg.anydebug.ui.adapter.ViewItemListAdapter
 import com.hhvvg.anydebug.util.*
 

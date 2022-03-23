@@ -12,7 +12,7 @@ import com.hhvvg.anydebug.R
 import com.hhvvg.anydebug.databinding.LayoutImageBinding
 import com.hhvvg.anydebug.databinding.LayoutViewPreviewItemBinding
 import com.hhvvg.anydebug.glide.GlideApp
-import com.hhvvg.anydebug.hook.AnyHookZygote
+import com.hhvvg.anydebug.hook.AnyHookFramework.Companion.moduleRes
 
 class ViewItemListAdapter(private val views: List<View>) : BaseAdapter() {
 
@@ -27,7 +27,7 @@ class ViewItemListAdapter(private val views: List<View>) : BaseAdapter() {
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
         val view = views[position]
         val itemView: View = if (convertView == null) {
-            val layout = AnyHookZygote.moduleRes.getLayout(R.layout.layout_view_preview_item)
+            val layout = moduleRes.getLayout(R.layout.layout_view_preview_item)
             val inflater = LayoutInflater.from(view.context)
             inflater.inflate(layout, null, false)
         } else {
@@ -49,7 +49,7 @@ class ViewItemListAdapter(private val views: List<View>) : BaseAdapter() {
     }
 
     private fun showViewImageDialog(view: View) {
-        val layout = AnyHookZygote.moduleRes.getLayout(R.layout.layout_image)
+        val layout = moduleRes.getLayout(R.layout.layout_image)
         val inflater = LayoutInflater.from(view.context)
         val itemView = inflater.inflate(layout, null, false)
         val binding = LayoutImageBinding.bind(itemView)

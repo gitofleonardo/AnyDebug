@@ -7,7 +7,7 @@ import android.view.View
 import android.widget.TextView
 import com.hhvvg.anydebug.R
 import com.hhvvg.anydebug.databinding.LayoutTextViewAttrBinding
-import com.hhvvg.anydebug.hook.AnyHookZygote.Companion.moduleRes
+import com.hhvvg.anydebug.hook.AnyHookFramework.Companion.moduleRes
 import com.hhvvg.anydebug.ui.BaseAttributeDialog
 import com.hhvvg.anydebug.util.sp
 

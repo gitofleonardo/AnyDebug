@@ -2,7 +2,7 @@ package com.hhvvg.anydebug.hook.hookers
 
 import android.app.Application
 import com.hhvvg.anydebug.R
-import com.hhvvg.anydebug.hook.AnyHookZygote.Companion.moduleRes
+import com.hhvvg.anydebug.hook.AnyHookFramework.Companion.moduleRes
 import com.hhvvg.anydebug.hook.IHooker
 import com.hhvvg.anydebug.util.APP_FIELD_GLOBAL_CONTROL_ENABLED
 import com.hhvvg.anydebug.util.APP_FIELD_PERSISTENT_ENABLE
