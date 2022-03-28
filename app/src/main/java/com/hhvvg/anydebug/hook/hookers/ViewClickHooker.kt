@@ -18,7 +18,7 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage
 /**
  * @author hhvvg
  *
- * Hooks TextView.
+ * Hooks {@link View#seOnClickListener}, replace listener with our own custom one if necessary.
  */
 class ViewClickHooker : IHooker {
     override fun onHook(param: XC_LoadPackage.LoadPackageParam) {

@@ -13,7 +13,7 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage
 /**
  * @author hhvvg
  *
- * Hooks PupupWindow.
+ * Hooks PupupWindow, disable all click hooks on all popups.
  */
 class PupupWindowHooker : IHooker {
     override fun onHook(param: XC_LoadPackage.LoadPackageParam) {

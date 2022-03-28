@@ -9,8 +9,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <service
-            android:name=".service.ConfigService"
+        <provider
+            android:name=".config.ConfigContentProvider"
+            android:authorities="com.hhvvg.anydebug.config"
             android:enabled="true"
             android:exported="true"/>
 
