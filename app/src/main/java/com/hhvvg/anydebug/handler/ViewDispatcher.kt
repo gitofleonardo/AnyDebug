@@ -1,11 +1,8 @@
-package com.hhvvg.anydebug
+package com.hhvvg.anydebug.handler
 
 import android.view.View
-import com.hhvvg.anydebug.handler.DefaultViewDispatchHandler
-import com.hhvvg.anydebug.handler.ViewDispatchHandler
 import com.hhvvg.anydebug.handler.imageview.ImageViewDispatchHandler
 import com.hhvvg.anydebug.handler.textview.TextViewDispatchHandler
-import com.hhvvg.anydebug.util.getOnClickListener
 import kotlin.reflect.KClass
 
 /**

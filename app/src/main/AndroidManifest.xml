@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.hhvvg.anydebug">
 
     <application
@@ -13,20 +14,21 @@
             android:name=".config.ConfigContentProvider"
             android:authorities="com.hhvvg.anydebug.config"
             android:enabled="true"
-            android:exported="true"/>
+            android:exported="true"
+            tools:ignore="ExportedContentProvider" />
 
         <meta-data
             android:name="xposedmodule"
             android:value="true" />
         <meta-data
             android:name="xposeddescription"
-            android:value="Debug your app, change view attributes." />
+            android:value="Debug your views, change attributes of views." />
         <meta-data
             android:name="xposedminversion"
             android:value="53" />
 
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

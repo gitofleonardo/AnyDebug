@@ -7,11 +7,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.hhvvg.anydebug.IGNORE_HOOK
 import com.hhvvg.anydebug.R
 import com.hhvvg.anydebug.databinding.LayoutImageBinding
 import com.hhvvg.anydebug.databinding.LayoutViewPreviewItemBinding
 import com.hhvvg.anydebug.glide.GlideApp
+import com.hhvvg.anydebug.handler.ViewClickWrapper.Companion.IGNORE_HOOK
 import com.hhvvg.anydebug.hook.AnyHookFramework.Companion.moduleRes
 
 class ViewItemListAdapter(private val views: List<View>) : BaseAdapter() {

@@ -1,4 +1,4 @@
-package com.hhvvg.anydebug
+package com.hhvvg.anydebug.ui
 
 import android.content.Intent
 import android.net.Uri

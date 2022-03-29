@@ -3,8 +3,8 @@ package com.hhvvg.anydebug.util
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.children
-import com.hhvvg.anydebug.IGNORE_HOOK
-import com.hhvvg.anydebug.ViewClickWrapper
+import com.hhvvg.anydebug.handler.ViewClickWrapper
+import com.hhvvg.anydebug.handler.ViewClickWrapper.Companion.IGNORE_HOOK
 import de.robv.android.xposed.XposedHelpers
 
 fun View.replaceOnClickListener(
@@ -76,4 +76,13 @@ fun View.setAllViewsHookClick(
     for (child in children) {
         child.setAllViewsHookClick(enabled, traversalChildren, forceClickable)
     }
+}
+
+fun Any.injectField(name: String, value: Any?) {
+    XposedHelpers.setAdditionalInstanceField(this, name, value)
+}
+
+fun <T> Any.getInjectedField(name: String, defaultValue: T? = null): T? {
+    val value = XposedHelpers.getAdditionalInstanceField(this, name) ?: defaultValue
+    return value as T?
 }

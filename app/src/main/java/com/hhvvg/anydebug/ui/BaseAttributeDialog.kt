@@ -19,13 +19,13 @@ import androidx.core.view.children
 import androidx.core.view.drawToBitmap
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
-import com.hhvvg.anydebug.IGNORE_HOOK
 import com.hhvvg.anydebug.R
-import com.hhvvg.anydebug.ViewClickWrapper
-import com.hhvvg.anydebug.ViewDispatcher
+import com.hhvvg.anydebug.handler.ViewDispatcher
 import com.hhvvg.anydebug.databinding.LayoutBaseAttributeDialogBinding
 import com.hhvvg.anydebug.databinding.LayoutImageBinding
 import com.hhvvg.anydebug.glide.GlideApp
+import com.hhvvg.anydebug.handler.ViewClickWrapper
+import com.hhvvg.anydebug.handler.ViewClickWrapper.Companion.IGNORE_HOOK
 import com.hhvvg.anydebug.hook.AnyHookFramework.Companion.moduleRes
 import com.hhvvg.anydebug.ui.adapter.ViewItemListAdapter
 import com.hhvvg.anydebug.util.*
@@ -60,6 +60,11 @@ open class BaseAttributeDialog(protected val itemView: View) : AlertDialog(itemV
         m[View.GONE] = 2
         m
     }
+    private val visibilityArray = arrayOf(
+        View.VISIBLE,
+        View.INVISIBLE,
+        View.GONE
+    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

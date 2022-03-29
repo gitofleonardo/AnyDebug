@@ -1,7 +1,6 @@
 package com.hhvvg.anydebug.handler
 
 import android.view.View
-import com.hhvvg.anydebug.ViewClickWrapper
 
 /**
  * @author hhvvg
