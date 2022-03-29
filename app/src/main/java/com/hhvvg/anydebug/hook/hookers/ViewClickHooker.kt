@@ -5,8 +5,7 @@ import android.view.View
 import com.hhvvg.anydebug.handler.ViewClickWrapper
 import com.hhvvg.anydebug.handler.ViewClickWrapper.Companion.IGNORE_HOOK
 import com.hhvvg.anydebug.hook.IHooker
-import com.hhvvg.anydebug.util.APP_FIELD_GLOBAL_CONTROL_ENABLED
-import com.hhvvg.anydebug.util.getInjectedField
+import com.hhvvg.anydebug.util.isGlobalEditEnabled
 import com.hhvvg.anydebug.util.replaceOnClickListener
 import de.robv.android.xposed.XC_MethodHook
 import de.robv.android.xposed.XposedBridge
@@ -40,7 +39,7 @@ class ViewClickHooker : IHooker {
                 return
             }
             val app = AndroidAppHelper.currentApplication()
-            val enabled = app.getInjectedField(APP_FIELD_GLOBAL_CONTROL_ENABLED, false) ?: false
+            val enabled = app.isGlobalEditEnabled
             if (enabled) {
                 view.replaceOnClickListener { origin ->
                     if (origin is ViewClickWrapper) {

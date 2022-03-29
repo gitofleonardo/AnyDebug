@@ -1,5 +1,6 @@
 package com.hhvvg.anydebug.util
 
+import android.app.AndroidAppHelper
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.children
@@ -22,13 +23,19 @@ fun View.getOnClickListener(): View.OnClickListener? {
     return XposedHelpers.getObjectField(info, "mOnClickListener") as View.OnClickListener?
 }
 
-fun View.drawLayoutBounds(drawEnabled: Boolean, traversalChildren: Boolean, invalidate: Boolean = true) {
+fun View.updateDrawLayoutBounds(
+    drawEnabled: Boolean? = null,
+    traversalChildren: Boolean = true,
+    invalidate: Boolean = true
+) {
+    val app = AndroidAppHelper.currentApplication()
+    val isDrawEnabled = drawEnabled ?: app.isShowBounds
     val attachInfo = XposedHelpers.getObjectField(this, "mAttachInfo") ?: return
-    XposedHelpers.setBooleanField(attachInfo, "mDebugLayout", drawEnabled)
+    XposedHelpers.setBooleanField(attachInfo, "mDebugLayout", isDrawEnabled)
     if (traversalChildren && this is ViewGroup) {
         val children = this.children
         for (child in children) {
-            child.drawLayoutBounds(drawEnabled, true, invalidate)
+            child.updateDrawLayoutBounds(isDrawEnabled, traversalChildren, invalidate)
         }
     }
     if (invalidate) {
@@ -36,16 +43,19 @@ fun View.drawLayoutBounds(drawEnabled: Boolean, traversalChildren: Boolean, inva
     }
 }
 
-fun View.setAllViewsHookClick(
-    enabled: Boolean,
-    traversalChildren: Boolean = true,
-    forceClickable: Boolean = false
+fun View.updateViewHookClick(
+    enabled: Boolean? = null,
+    forceClickable: Boolean? = null,
+    traversalChildren: Boolean = true
 ) {
     if (tag == IGNORE_HOOK) {
         return
     }
+    val app = AndroidAppHelper.currentApplication()
+    val editEnabled = enabled ?: app.isGlobalEditEnabled
+    val isForceClickable = forceClickable ?: app.isForceClickable
     replaceOnClickListener { origin ->
-        if (enabled) {
+        if (editEnabled) {
             // Replace with my custom one
             if (origin is ViewClickWrapper) {
                 origin
@@ -61,7 +71,7 @@ fun View.setAllViewsHookClick(
             }
         }
     }
-    if (forceClickable) {
+    if (isForceClickable) {
         isClickable = true
     } else {
         val listener = getOnClickListener()
@@ -74,7 +84,11 @@ fun View.setAllViewsHookClick(
     }
     val children = this.children
     for (child in children) {
-        child.setAllViewsHookClick(enabled, traversalChildren, forceClickable)
+        child.updateViewHookClick(
+            enabled = editEnabled,
+            forceClickable = isForceClickable,
+            traversalChildren = traversalChildren
+        )
     }
 }
 

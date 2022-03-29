@@ -13,12 +13,13 @@ import com.hhvvg.anydebug.ui.fragment.SettingsFragment.Companion.ACTION_GLOBAL_E
 import com.hhvvg.anydebug.ui.fragment.SettingsFragment.Companion.ACTION_PERSISTENT_ENABLE
 import com.hhvvg.anydebug.ui.fragment.SettingsFragment.Companion.EXTRA_CONTROL_ACTION
 import com.hhvvg.anydebug.util.ACTIVITY_FIELD_GLOBAL_ENABLE
-import com.hhvvg.anydebug.util.APP_FIELD_FORCE_CLICKABLE
-import com.hhvvg.anydebug.util.APP_FIELD_GLOBAL_CONTROL_ENABLED
-import com.hhvvg.anydebug.util.APP_FIELD_PERSISTENT_ENABLE
 import com.hhvvg.anydebug.util.getInjectedField
 import com.hhvvg.anydebug.util.injectField
-import com.hhvvg.anydebug.util.setAllViewsHookClick
+import com.hhvvg.anydebug.util.isForceClickable
+import com.hhvvg.anydebug.util.isGlobalEditEnabled
+import com.hhvvg.anydebug.util.isPersistentEnabled
+import com.hhvvg.anydebug.util.registerMyActivityLifecycleCallbacks
+import com.hhvvg.anydebug.util.updateViewHookClick
 import de.robv.android.xposed.XC_MethodHook
 import de.robv.android.xposed.XposedBridge
 import de.robv.android.xposed.XposedHelpers
@@ -45,10 +46,10 @@ class GlobalControlHooker : IHooker {
         override fun afterHookedMethod(param: MethodHookParam) {
             val app = param.thisObject as Application
             // Disable by default
-            app.injectField(APP_FIELD_GLOBAL_CONTROL_ENABLED, false)
-            app.injectField(APP_FIELD_PERSISTENT_ENABLE, false)
+            app.isGlobalEditEnabled = false
+            app.isPersistentEnabled = false
 
-            registerReceiverForActivity(app)
+            app.registerMyActivityLifecycleCallbacks(ActivityCallback())
             registerReceiverForApp(app)
         }
 
@@ -56,14 +57,6 @@ class GlobalControlHooker : IHooker {
             val persistentEnableReceiver = PersistentEnableReceiver()
             val filter = IntentFilter(ACTION_PERSISTENT_ENABLE)
             app.registerReceiver(persistentEnableReceiver, filter)
-        }
-
-        private fun registerReceiverForActivity(app: Application) {
-            val callback =
-                XposedHelpers.findField(Application::class.java, "mActivityLifecycleCallbacks")
-            val callbackArray =
-                callback.get(app) as ArrayList<Application.ActivityLifecycleCallbacks>
-            callbackArray.add(ActivityCallback())
         }
     }
 
@@ -120,13 +113,8 @@ class GlobalControlHooker : IHooker {
 
         private fun setGlobalEnable(decorView: View, enabled: Boolean) {
             val app = AndroidAppHelper.currentApplication()
-            app.injectField(APP_FIELD_GLOBAL_CONTROL_ENABLED, enabled)
-            val forceClick = app.getInjectedField(APP_FIELD_FORCE_CLICKABLE, false) ?: false
-            decorView.setAllViewsHookClick(
-                enabled = enabled,
-                traversalChildren = true,
-                forceClickable = forceClick
-            )
+            app.isGlobalEditEnabled = enabled
+            decorView.updateViewHookClick()
         }
     }
 
@@ -139,7 +127,7 @@ class GlobalControlHooker : IHooker {
                 else -> false
             }
             val app = AndroidAppHelper.currentApplication()
-            app.injectField(APP_FIELD_PERSISTENT_ENABLE, enabled)
+            app.isPersistentEnabled = enabled
         }
     }
 }

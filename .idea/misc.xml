@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="../../../../layout/custom_preview.xml" value="0.2791666666666667" />
         <entry key="../../Android/platforms/android-31/data/res/layout/simple_spinner_dropdown_item.xml" value="0.35052083333333334" />
         <entry key="../../Android/platforms/android-31/data/res/layout/simple_spinner_item.xml" value="0.35052083333333334" />
         <entry key="app/src/main/res/drawable-v24/ic_baseline_find_in_page_24.xml" value="0.1925" />
@@ -10,7 +11,7 @@
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_about.xml" value="0.3546875" />
         <entry key="app/src/main/res/layout/layout_base_attr_dialog.xml" value="0.2073170731707317" />
-        <entry key="app/src/main/res/layout/layout_base_attribute_dialog.xml" value="0.35104166666666664" />
+        <entry key="app/src/main/res/layout/layout_base_attribute_dialog.xml" value="0.25" />
         <entry key="app/src/main/res/layout/layout_base_view_attr.xml" value="0.35052083333333334" />
         <entry key="app/src/main/res/layout/layout_image.xml" value="0.22" />
         <entry key="app/src/main/res/layout/layout_image_view_attr.xml" value="0.328125" />
@@ -18,6 +19,7 @@
         <entry key="app/src/main/res/layout/layout_scene_small.xml" value="0.35104166666666664" />
         <entry key="app/src/main/res/layout/layout_text_view_attr.xml" value="0.35052083333333334" />
         <entry key="app/src/main/res/layout/layout_view_preview_item.xml" value="0.35052083333333334" />
+        <entry key="app/src/main/res/layout/layout_view_rule_item.xml" value="0.2786458333333333" />
         <entry key="app/src/main/res/layout/settings_activity.xml" value="0.25" />
         <entry key="app/src/main/res/xml/root_preferences.xml" value="0.33" />
       </map>

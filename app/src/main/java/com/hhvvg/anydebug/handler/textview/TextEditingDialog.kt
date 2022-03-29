@@ -8,8 +8,14 @@ import android.widget.TextView
 import com.hhvvg.anydebug.R
 import com.hhvvg.anydebug.databinding.LayoutTextViewAttrBinding
 import com.hhvvg.anydebug.hook.AnyHookFramework.Companion.moduleRes
+import com.hhvvg.anydebug.persistent.AppDatabase
+import com.hhvvg.anydebug.persistent.RuleType
+import com.hhvvg.anydebug.persistent.ViewRule
 import com.hhvvg.anydebug.ui.BaseAttributeDialog
+import com.hhvvg.anydebug.util.isPersistentEnabled
 import com.hhvvg.anydebug.util.sp
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
 
 /**
  * @author hhvvg
@@ -27,6 +33,13 @@ class TextEditingDialog(private val view: TextView) : BaseAttributeDialog(view) 
     private val binding by lazy {
         LayoutTextViewAttrBinding.bind(rootView)
     }
+
+    private val currentText
+        get() = binding.editText.text.toString()
+    private val currentMaxLine
+        get() = binding.textMaxLine.text.toString().toIntOrNull()
+    private val currentTextSize
+        get() = binding.textSizeInput.text.toString().toFloatOrNull()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,17 +67,89 @@ class TextEditingDialog(private val view: TextView) : BaseAttributeDialog(view) 
     }
 
     private val attrData: TextViewAttribute
-        get() = TextViewAttribute(
-            binding.editText.text.toString(),
-            binding.textMaxLine.text.toString().toIntOrNull() ?: view.maxLines,
-            binding.textSizeInput.text.toString().toFloatOrNull() ?: view.textSize.sp()
-        )
+        get() {
+            val text = if (currentText == view.text.toString()) {
+                null
+            } else {
+                currentText
+            }
+            val maxLines = if (currentMaxLine == view.maxLines) {
+                null
+            } else {
+                currentMaxLine
+            }
+            val textSize = if (currentTextSize == view.textSize.sp()) {
+                null
+            } else {
+                currentTextSize
+            }
+            return TextViewAttribute(
+                text,
+                maxLines,
+                textSize
+            )
+        }
 
     override fun onApply() {
         super.onApply()
         val data = attrData
-        view.text = SpannableString(data.text)
-        view.maxLines = data.maxLine
-        view.textSize = data.textSizeInSp
+        val persistent = application.isPersistentEnabled
+        if (persistent) {
+            val rules = makeRules(data)
+            runBlocking(context = Dispatchers.IO) {
+                AppDatabase.viewRuleDao.insertAll(rules)
+            }
+        }
+
+        data.text?.let {
+            view.text = SpannableString(it)
+        }
+        data.maxLine?.let {
+            view.maxLines = it
+        }
+        data.textSizeInSp?.let {
+            view.textSize = it
+        }
+    }
+
+    private fun makeRules(data: TextViewAttribute): List<ViewRule> {
+        val rules = mutableListOf<ViewRule>()
+        val parent = itemView.parent
+        val parentId = if (parent is View) {
+            parent.id
+        } else {
+            View.NO_ID
+        }
+        data.text?.let {
+            val textRule = ViewRule(
+                className = itemView::class.java.name,
+                viewParentId = parentId,
+                viewId = itemView.id,
+                ruleType = RuleType.Text,
+                viewRule = it,
+            )
+            rules.add(textRule)
+        }
+        data.textSizeInSp?.let {
+            val textSizeRule = ViewRule(
+                className = itemView::class.java.name,
+                viewParentId = parentId,
+                viewId = itemView.id,
+                ruleType = RuleType.TextSize,
+                viewRule = it.toString(),
+            )
+            rules.add(textSizeRule)
+        }
+        data.maxLine?.let {
+            val textMaxLineRule = ViewRule(
+                className = itemView::class.java.name,
+                viewParentId = parentId,
+                viewId = itemView.id,
+                ruleType = RuleType.TextMaxLine,
+                viewRule = it.toString(),
+            )
+            rules.add(textMaxLineRule)
+        }
+        return rules
     }
 }

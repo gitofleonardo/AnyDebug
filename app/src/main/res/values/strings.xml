@@ -45,6 +45,10 @@
     <string name="current_enable_state">Current state: %s</string>
     <string name="enabled">Enabled</string>
     <string name="disabled">Disabled</string>
+    <string name="view_id_text">View ID: %s</string>
+    <string name="view_parent_id_text">Parent ID: %s</string>
+    <string name="view_rule_type">Rule type: %s</string>
+    <string name="view_rule_content">Content: %s</string>
 
     <!-- Preferences strings -->
     <string name="global_edit_enable_key" translatable="false">key_global_edit_enable</string>
@@ -59,4 +63,5 @@
 
     <string name="about_desc">Show information about this application.</string>
     <string name="function">Function</string>
+    <string name="rules">Rules</string>
 </resources>

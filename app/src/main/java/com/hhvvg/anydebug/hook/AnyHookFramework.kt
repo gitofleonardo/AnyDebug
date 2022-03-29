@@ -15,11 +15,15 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage
  */
 class AnyHookFramework : IXposedHookLoadPackage, IXposedHookZygoteInit {
     private val hookers: ArrayList<IHooker> = arrayListOf(
-        GlobalSettingsLoaderHooker(),
+        GlobalSettingsLoader(),
         ViewInitHooker(),
         ViewClickHooker(),
         PupupWindowHooker(),
         GlobalControlHooker(),
+        ViewRulesLoader(),
+        ViewVisibilityHooker(),
+        ViewAddingHooker(),
+        SetTextHooker(),
     )
 
     override fun handleLoadPackage(p0: XC_LoadPackage.LoadPackageParam) {

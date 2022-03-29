@@ -263,6 +263,15 @@
         android:orientation="horizontal">
 
         <Button
+            android:id="@+id/rules_button"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:tag="ANYDEBUG_IGNORE_HOOK"
+            android:text="@string/rules" />
+
+        <Button
             android:id="@+id/origin_click_button"
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -288,5 +297,6 @@
             android:layout_weight="1"
             android:tag="ANYDEBUG_IGNORE_HOOK"
             android:text="@string/apply" />
+
     </LinearLayout>
 </LinearLayout>

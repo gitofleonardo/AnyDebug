@@ -41,18 +41,11 @@ class ViewDataFetcher(private val view: View) : DataFetcher<Bitmap>, HandlerCall
     override fun onHandleMessage(msg: Message) {
         try {
             // Disable bounds
-            view.drawLayoutBounds(drawEnabled = false, traversalChildren = true, invalidate = false)
+            view.updateDrawLayoutBounds(drawEnabled = false, traversalChildren = true, invalidate = true)
             val bitmap = view.drawToBitmap()
 
             //Restore origin bounds state
-            val drawBounds = AndroidAppHelper.currentApplication().getInjectedField(
-                APP_FIELD_SHOW_BOUNDS, false
-            ) ?: false
-            view.drawLayoutBounds(
-                drawEnabled = drawBounds,
-                traversalChildren = true,
-                invalidate = false
-            )
+            view.updateDrawLayoutBounds()
             callback?.onDataReady(bitmap)
         } catch (e: Exception) {
             callback?.onLoadFailed(e)

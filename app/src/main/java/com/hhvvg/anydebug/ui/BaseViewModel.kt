@@ -6,7 +6,7 @@ import com.hhvvg.anydebug.util.px
 import com.hhvvg.anydebug.util.specOrPx
 
 class BaseViewModel {
-    var visibility: Int = 0
+    var visibility: Int? = null
 
     var width: Int = 0
     var height: Int = 0

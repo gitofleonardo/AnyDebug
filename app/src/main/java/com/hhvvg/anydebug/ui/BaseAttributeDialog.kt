@@ -2,6 +2,7 @@ package com.hhvvg.anydebug.ui
 
 import android.app.AlertDialog
 import android.app.AndroidAppHelper
+import android.app.Application
 import android.os.Bundle
 import android.text.SpannableString
 import android.view.LayoutInflater
@@ -20,6 +21,7 @@ import androidx.core.view.drawToBitmap
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import com.hhvvg.anydebug.R
+import com.hhvvg.anydebug.data.BaseViewAttribute
 import com.hhvvg.anydebug.handler.ViewDispatcher
 import com.hhvvg.anydebug.databinding.LayoutBaseAttributeDialogBinding
 import com.hhvvg.anydebug.databinding.LayoutImageBinding
@@ -27,8 +29,13 @@ import com.hhvvg.anydebug.glide.GlideApp
 import com.hhvvg.anydebug.handler.ViewClickWrapper
 import com.hhvvg.anydebug.handler.ViewClickWrapper.Companion.IGNORE_HOOK
 import com.hhvvg.anydebug.hook.AnyHookFramework.Companion.moduleRes
+import com.hhvvg.anydebug.persistent.AppDatabase
+import com.hhvvg.anydebug.persistent.RuleType
+import com.hhvvg.anydebug.persistent.ViewRule
 import com.hhvvg.anydebug.ui.adapter.ViewItemListAdapter
 import com.hhvvg.anydebug.util.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
 
 /**
  * @author hhvvg
@@ -44,7 +51,7 @@ open class BaseAttributeDialog(protected val itemView: View) : AlertDialog(itemV
         view.tag = IGNORE_HOOK
         LayoutBaseAttributeDialogBinding.bind(view)
     }
-    private val application by lazy {
+    protected val application: Application by lazy {
         AndroidAppHelper.currentApplication()
     }
     private val viewSpecSelectionMap by lazy {
@@ -87,7 +94,9 @@ open class BaseAttributeDialog(protected val itemView: View) : AlertDialog(itemV
         binding.visibilitySpinner.onItemSelectedListener =
             object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(p0: AdapterView<*>?, p1: View?, pos: Int, p3: Long) {
-                    viewModel.visibility = visibilityArray[pos]
+                    if (visibilityArray[pos] != itemView.visibility) {
+                        viewModel.visibility = visibilityArray[pos]
+                    }
                 }
 
                 override fun onNothingSelected(p0: AdapterView<*>?) {
@@ -179,6 +188,7 @@ open class BaseAttributeDialog(protected val itemView: View) : AlertDialog(itemV
         binding.originClickButton.text = getString(R.string.perform_origin_click)
         binding.cancelButton.text = getString(R.string.cancel)
         binding.applyButton.text = getString(R.string.apply)
+        binding.rulesButton.text = moduleRes.getString(R.string.rules)
     }
 
     @CallSuper
@@ -264,9 +274,13 @@ open class BaseAttributeDialog(protected val itemView: View) : AlertDialog(itemV
     }
 
     private fun setListeners() {
+        binding.rulesButton.setOnClickListener {
+            val dialog = RulePreviewDialog(context)
+            dialog.show()
+        }
         binding.showLayoutBoundsSwitch.setOnCheckedChangeListener { _, checked ->
-            application.injectField(APP_FIELD_SHOW_BOUNDS, checked)
-            itemView.rootView.drawLayoutBounds(checked, true)
+            application.isShowBounds = checked
+            itemView.rootView.updateDrawLayoutBounds()
             renderPreview()
             GlideApp.get(context).clearMemory()
         }
@@ -438,6 +452,16 @@ open class BaseAttributeDialog(protected val itemView: View) : AlertDialog(itemV
     @CallSuper
     protected open fun onApply() {
         val data = viewModel.getData()
+
+        // Save settings if persistent is enabled
+        val persistentEnabled = application.isPersistentEnabled
+        if (persistentEnabled) {
+            val rules = makeRules(data)
+            runBlocking(context = Dispatchers.IO) {
+                AppDatabase.viewRuleDao.insertAll(rules)
+            }
+        }
+
         val params = itemView.layoutParams
         params.width = data.width
         params.height = data.height
@@ -451,10 +475,32 @@ open class BaseAttributeDialog(protected val itemView: View) : AlertDialog(itemV
             data.paddingRight,
             data.paddingBottom
         )
-        itemView.visibility = data.visibility
-        application.injectField(APP_FIELD_FORCE_CLICKABLE, data.forceClickable)
-        val enabled = application.getInjectedField(APP_FIELD_GLOBAL_CONTROL_ENABLED, true) ?: true
-        itemView.rootView.setAllViewsHookClick(enabled = enabled, traversalChildren = true, data.forceClickable)
+        data.visibility?.let {
+            itemView.visibility = it
+        }
+        application.isForceClickable = data.forceClickable
+        itemView.rootView.updateViewHookClick()
+    }
+
+    private fun makeRules(data: BaseViewAttribute): List<ViewRule> {
+        val rules = mutableListOf<ViewRule>()
+        data.visibility?.let {
+            val parent = itemView.parent
+            val parentId = if (parent is View) {
+                parent.id
+            } else {
+                View.NO_ID
+            }
+            val visibilityRule = ViewRule(
+                className = itemView::class.java.name,
+                viewId = itemView.id,
+                ruleType = RuleType.Visibility,
+                viewRule = it.toString(),
+                viewParentId = parentId
+            )
+            rules.add(visibilityRule)
+        }
+        return rules
     }
 
     /**
@@ -477,8 +523,8 @@ open class BaseAttributeDialog(protected val itemView: View) : AlertDialog(itemV
     @CallSuper
     protected open fun onLoadViewAttributes(view: View) {
         val params = view.layoutParams
-        val showBounds = application.getInjectedField(APP_FIELD_SHOW_BOUNDS, false) ?: false
-        val forceClickable = application.getInjectedField(APP_FIELD_FORCE_CLICKABLE, false) ?: false
+        val showBounds = application.isShowBounds
+        val forceClickable = application.isForceClickable
         val width = params.width.specOrDp()
         val height = params.height.specOrDp()
         val visibility = view.visibility
@@ -514,7 +560,6 @@ open class BaseAttributeDialog(protected val itemView: View) : AlertDialog(itemV
 
         viewModel.width = width
         viewModel.height = height
-        viewModel.visibility = visibility
         viewModel.paddingLeft.data = paddingLeft
         viewModel.paddingRight.data = paddingRight
         viewModel.paddingTop.data = paddingTop

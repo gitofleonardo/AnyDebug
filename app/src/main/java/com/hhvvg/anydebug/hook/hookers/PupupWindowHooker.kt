@@ -4,7 +4,7 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.PopupWindow
 import com.hhvvg.anydebug.hook.IHooker
-import com.hhvvg.anydebug.util.setAllViewsHookClick
+import com.hhvvg.anydebug.util.updateViewHookClick
 import de.robv.android.xposed.XC_MethodHook
 import de.robv.android.xposed.XposedBridge
 import de.robv.android.xposed.XposedHelpers
@@ -33,7 +33,11 @@ class PupupWindowHooker : IHooker {
             }
             val decorView =
                 XposedHelpers.getObjectField(param.thisObject, "mDecorView") as ViewGroup
-            decorView.setAllViewsHookClick(enabled = false)
+            decorView.updateViewHookClick(
+                enabled = false,
+                forceClickable = false,
+                traversalChildren = true
+            )
         }
     }
 }

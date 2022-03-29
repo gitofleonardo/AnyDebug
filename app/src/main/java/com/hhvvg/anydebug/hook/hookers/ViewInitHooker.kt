@@ -31,11 +31,7 @@ class ViewInitHooker : IHooker {
                 return
             }
             val app = AndroidAppHelper.currentApplication()
-            val appClazz = app::class.java
-            val callback = XposedHelpers.findField(appClazz, "mActivityLifecycleCallbacks")
-            val callbackArray =
-                callback.get(app) as ArrayList<Application.ActivityLifecycleCallbacks>
-            callbackArray.add(ActivityCallback())
+            app.registerMyActivityLifecycleCallbacks(ActivityCallback())
         }
     }
 
@@ -44,15 +40,8 @@ class ViewInitHooker : IHooker {
             val contentView = activity.window.decorView as ViewGroup
             contentView.viewTreeObserver.addOnGlobalLayoutListener {
                 val app = AndroidAppHelper.currentApplication()
-                val showBounds = app.getInjectedField(APP_FIELD_SHOW_BOUNDS, false) ?: false
-                val forceClickable = app.getInjectedField(APP_FIELD_FORCE_CLICKABLE, false) ?: false
-                val globalEnabled = app.getInjectedField(APP_FIELD_GLOBAL_CONTROL_ENABLED, true) ?: true
-                contentView.drawLayoutBounds(showBounds, true)
-                contentView.setAllViewsHookClick(
-                    enabled = globalEnabled,
-                    traversalChildren = true,
-                    forceClickable
-                )
+                contentView.updateDrawLayoutBounds()
+                contentView.updateViewHookClick()
             }
         }
 
@@ -65,13 +54,9 @@ class ViewInitHooker : IHooker {
         }
 
         override fun onActivityResumed(activity: Activity) {
-            val app = AndroidAppHelper.currentApplication()
-            val showBounds = app.getInjectedField(APP_FIELD_SHOW_BOUNDS, false) ?: false
-            val forceClickable = app.getInjectedField(APP_FIELD_FORCE_CLICKABLE, false) ?: false
-            val enabled = app.getInjectedField(APP_FIELD_GLOBAL_CONTROL_ENABLED, false) ?: false
             val decor = activity.window.decorView as ViewGroup
-            decor.drawLayoutBounds(showBounds, true)
-            decor.setAllViewsHookClick(enabled = enabled, traversalChildren = true, forceClickable)
+            decor.updateDrawLayoutBounds()
+            decor.updateViewHookClick()
         }
 
         override fun onActivityPaused(activity: Activity) {
