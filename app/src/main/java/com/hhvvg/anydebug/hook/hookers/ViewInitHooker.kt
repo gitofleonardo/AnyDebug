@@ -39,7 +39,6 @@ class ViewInitHooker : IHooker {
         override fun onActivityPostCreated(activity: Activity, savedInstanceState: Bundle?) {
             val contentView = activity.window.decorView as ViewGroup
             contentView.viewTreeObserver.addOnGlobalLayoutListener {
-                val app = AndroidAppHelper.currentApplication()
                 contentView.updateDrawLayoutBounds()
                 contentView.updateViewHookClick()
             }

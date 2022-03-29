@@ -3,6 +3,7 @@ package com.hhvvg.anydebug.hook.hookers
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.children
+import com.hhvvg.anydebug.handler.ViewClickWrapper.Companion.IGNORE_HOOK
 import com.hhvvg.anydebug.hook.IHooker
 import de.robv.android.xposed.XC_MethodHook
 import de.robv.android.xposed.XposedBridge
@@ -29,6 +30,9 @@ class ViewAddingHooker : IHooker {
         }
 
         private fun dfsSetVisibility(view: View) {
+            if (view.tag == IGNORE_HOOK) {
+                return
+            }
             // Manually set visibility again to update visibility
             view.visibility = view.visibility
             if (view !is ViewGroup) {

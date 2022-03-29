@@ -7,6 +7,8 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
 import android.view.View
+import com.hhvvg.anydebug.config.ConfigDbHelper
+import com.hhvvg.anydebug.config.ConfigPreferences
 import com.hhvvg.anydebug.hook.IHooker
 import com.hhvvg.anydebug.ui.fragment.SettingsFragment.Companion.ACTION_ENABLE
 import com.hhvvg.anydebug.ui.fragment.SettingsFragment.Companion.ACTION_GLOBAL_ENABLE
@@ -45,9 +47,12 @@ class GlobalControlHooker : IHooker {
     private class OnAppCreateMethodHook : XC_MethodHook() {
         override fun afterHookedMethod(param: MethodHookParam) {
             val app = param.thisObject as Application
-            // Disable by default
-            app.isGlobalEditEnabled = false
-            app.isPersistentEnabled = false
+            // Read from module
+            val sp = ConfigPreferences(app.applicationContext)
+            val editEnabled = sp.getBoolean(ConfigDbHelper.CONFIG_EDIT_ENABLED_COLUMN, false)
+            val persistentEnabled = sp.getBoolean(ConfigDbHelper.CONFIG_PERSISTENT_ENABLED_COLUMN, false)
+            app.isGlobalEditEnabled = editEnabled
+            app.isPersistentEnabled = persistentEnabled
 
             app.registerMyActivityLifecycleCallbacks(ActivityCallback())
             registerReceiverForApp(app)

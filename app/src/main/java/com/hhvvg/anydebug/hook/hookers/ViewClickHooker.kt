@@ -29,11 +29,7 @@ class ViewClickHooker : IHooker {
     }
 
     private class ViewSetOnClickListenerMethodHook : XC_MethodHook() {
-        override fun afterHookedMethod(param: MethodHookParam?) {
-            if (param == null) {
-                return
-            }
-
+        override fun afterHookedMethod(param: MethodHookParam) {
             val view = param.thisObject as View
             if (view.tag == IGNORE_HOOK) {
                 return

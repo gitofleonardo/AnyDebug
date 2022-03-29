@@ -57,7 +57,7 @@ class ViewRulesLoader : IHooker {
     }
 
     private class ActivityCallbacks: Application.ActivityLifecycleCallbacks {
-        override fun onActivityPostResumed(activity: Activity){
+        override fun onActivityPostResumed(activity: Activity) {
             val app = activity.application
             val rules = app.rules
             val viewIdRulesMap = rules.groupBy {
@@ -70,8 +70,9 @@ class ViewRulesLoader : IHooker {
         private fun applyRules(view: View, rulesMap: Map<Int, List<ViewRule>>) {
             val rules = rulesMap[view.id] ?: emptyList()
             for (rule in rules) {
-                // In the same context, having same class name and view id
-                // We consider them as the same views
+                // In the same context, having same class name and view id and parent id
+                // We consider them as the same views.
+                // Notice that this is not accurate, a better way needed.
                 val parent = view.parent
                 val parentId = if (parent is View) parent.id else View.NO_ID
                 if (rule.viewParentId != parentId ||

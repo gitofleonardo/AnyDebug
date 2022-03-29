@@ -20,12 +20,24 @@ var Application.isForceClickable
     get() = getInjectedField(APP_FIELD_FORCE_CLICKABLE, defaultValue = false)!!
     set(value) = injectField(APP_FIELD_FORCE_CLICKABLE, value)
 
-var Application.rules
-    get() = getInjectedField<List<ViewRule>>(APP_FIELD_PERSISTENT_RULES, defaultValue = emptyList())!!
+var Application.rules: List<ViewRule>
+    get() {
+        return if (isPersistentEnabled) {
+            getInjectedField(APP_FIELD_PERSISTENT_RULES, defaultValue = emptyList())!!
+        } else {
+            emptyList()
+        }
+    }
     set(value) = injectField(APP_FIELD_PERSISTENT_RULES, value)
 
-var Application.rulesMap
-    get() = getInjectedField<Map<Int, List<ViewRule>>>(APP_FIELD_PERSISTENT_RULES_MAP, defaultValue = emptyMap())!!
+var Application.rulesMap: Map<Int, List<ViewRule>>
+    get() {
+        return if (isPersistentEnabled) {
+            getInjectedField(APP_FIELD_PERSISTENT_RULES_MAP, defaultValue = emptyMap())!!
+        } else {
+            emptyMap()
+        }
+    }
     set(value) = injectField(APP_FIELD_PERSISTENT_RULES_MAP, value)
 
 fun Application.registerMyActivityLifecycleCallbacks(callback: Application.ActivityLifecycleCallbacks) {

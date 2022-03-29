@@ -15,7 +15,6 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage
  */
 class AnyHookFramework : IXposedHookLoadPackage, IXposedHookZygoteInit {
     private val hookers: ArrayList<IHooker> = arrayListOf(
-        GlobalSettingsLoader(),
         ViewInitHooker(),
         ViewClickHooker(),
         PupupWindowHooker(),

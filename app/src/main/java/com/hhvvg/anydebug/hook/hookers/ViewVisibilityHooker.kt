@@ -2,6 +2,7 @@ package com.hhvvg.anydebug.hook.hookers
 
 import android.app.AndroidAppHelper
 import android.view.View
+import com.hhvvg.anydebug.handler.ViewClickWrapper.Companion.IGNORE_HOOK
 import com.hhvvg.anydebug.hook.IHooker
 import com.hhvvg.anydebug.persistent.RuleType
 import com.hhvvg.anydebug.util.rulesMap
@@ -18,7 +19,7 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage
 class ViewVisibilityHooker : IHooker {
     override fun onHook(param: XC_LoadPackage.LoadPackageParam) {
         val clazz = View::class.java
-        val method = XposedHelpers.findMethodBestMatch(clazz, "setVisibility", Int::class.java)
+        val method = XposedHelpers.findMethodBestMatch(clazz, "setFlags", Int::class.java, Int::class.java)
         val methodHook = SetVisibilityMethodHook()
         XposedBridge.hookMethod(method, methodHook)
     }
@@ -26,6 +27,13 @@ class ViewVisibilityHooker : IHooker {
     private class SetVisibilityMethodHook : XC_MethodHook() {
         override fun beforeHookedMethod(param: MethodHookParam) {
             val view = param.thisObject as View
+            if (view.tag == IGNORE_HOOK) {
+                return
+            }
+            val mask = XposedHelpers.getStaticIntField(View::class.java, "VISIBILITY_MASK")
+            if (param.args[1] != mask) {
+                return
+            }
             val viewId = view.id
             val parent = view.parent
             val parentId = if (parent is View) parent.id else View.NO_ID
