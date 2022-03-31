@@ -13,6 +13,8 @@ class RuleTypeConverter {
         return when(type) {
             1 -> RuleType.Visibility
             2 -> RuleType.Text
+            3 -> RuleType.TextSize
+            4 -> RuleType.TextMaxLine
             else -> RuleType.None
         }
     }
