@@ -64,4 +64,6 @@
     <string name="about_desc">Show information about this application.</string>
     <string name="function">Function</string>
     <string name="rules">Rules</string>
+    <string name="subtitle" translatable="false">subtitle</string>
+    <string name="details">details</string>
 </resources>

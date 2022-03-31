@@ -9,12 +9,12 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        android:scrollbars="none">
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="10dp">
+            android:layout_height="wrap_content">
 
             <ImageView
                 android:id="@+id/preview_image"
@@ -22,15 +22,6 @@
                 android:layout_height="54dp"
                 android:layout_alignParentTop="true"
                 android:tag="ANYDEBUG_IGNORE_HOOK" />
-
-            <TextView
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:id="@+id/title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:layout_toEndOf="@id/preview_image" />
 
             <Switch
                 android:id="@+id/show_layout_bounds_switch"
@@ -40,6 +31,9 @@
                 android:layout_marginTop="5dp"
                 android:tag="ANYDEBUG_IGNORE_HOOK"
                 android:text="@string/show_global_layout_bounds"
+                android:textColor="@android:color/black"
+                android:textSize="16sp"
+                android:textStyle="bold"
                 tools:ignore="UseSwitchCompatOrMaterialXml" />
 
             <Switch
@@ -50,60 +44,57 @@
                 android:layout_marginTop="5dp"
                 android:tag="ANYDEBUG_IGNORE_HOOK"
                 android:text="@string/force_clickable"
+                android:textColor="@android:color/black"
+                android:textSize="16sp"
+                android:textStyle="bold"
                 tools:ignore="UseSwitchCompatOrMaterialXml" />
 
-            <Button
+            <com.hhvvg.anydebug.ui.view.TileButton
                 android:id="@+id/ancestor_button"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/force_widgets_clickable"
                 android:layout_alignParentStart="true"
                 android:layout_marginTop="5dp"
-                android:tag="ANYDEBUG_IGNORE_HOOK"
-                android:text="@string/ancestors" />
+                android:tag="ANYDEBUG_IGNORE_HOOK" />
 
-            <Button
+            <com.hhvvg.anydebug.ui.view.TileButton
                 android:id="@+id/children_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/force_widgets_clickable"
-                android:layout_marginStart="5dp"
-                android:layout_marginTop="5dp"
-                android:layout_toEndOf="@id/ancestor_button"
-                android:tag="ANYDEBUG_IGNORE_HOOK"
-                android:text="@string/children" />
-
-            <TextView
-                android:id="@+id/visibility_spinner_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/children_button"
-                android:layout_marginTop="5dp"
-                android:text="@string/visibility" />
-
-            <Spinner
-                android:tag="ANYDEBUG_IGNORE_HOOK"
-                android:id="@+id/visibility_spinner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/visibility_spinner_title"
+                android:layout_below="@id/ancestor_button"
+                android:layout_marginTop="5dp"
+                android:tag="ANYDEBUG_IGNORE_HOOK" />
+
+            <com.hhvvg.anydebug.ui.view.TileButton
+                android:id="@+id/rules_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/children_button"
+                android:layout_marginTop="5dp" />
+
+            <com.hhvvg.anydebug.ui.view.TileButton
+                android:id="@+id/visibility_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/rules_button"
                 android:layout_marginTop="5dp" />
 
             <TextView
                 android:id="@+id/width_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/visibility_spinner"
+                android:layout_below="@id/visibility_button"
                 android:layout_marginTop="5dp"
                 android:text="@string/width" />
 
             <Spinner
-                android:tag="ANYDEBUG_IGNORE_HOOK"
                 android:id="@+id/width_spinner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/width_title"
-                android:layout_marginTop="5dp" />
+                android:layout_marginTop="5dp"
+                android:tag="ANYDEBUG_IGNORE_HOOK" />
 
             <EditText
                 android:id="@+id/width_input"
@@ -121,12 +112,12 @@
                 android:text="@string/height" />
 
             <Spinner
-                android:tag="ANYDEBUG_IGNORE_HOOK"
                 android:id="@+id/height_spinner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/height_title"
-                android:layout_marginTop="5dp" />
+                android:layout_marginTop="5dp"
+                android:tag="ANYDEBUG_IGNORE_HOOK" />
 
             <EditText
                 android:id="@+id/height_input"
@@ -136,17 +127,17 @@
                 android:hint="@string/height" />
 
             <com.hhvvg.anydebug.ui.view.LtrbView
-                android:visibility="gone"
                 android:id="@+id/ltrb_margin_inputs"
-                android:layout_below="@id/height_input"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:layout_below="@id/height_input"
+                android:visibility="gone" />
 
             <com.hhvvg.anydebug.ui.view.LtrbView
                 android:id="@+id/ltrb_padding_input"
-                android:layout_below="@id/ltrb_margin_inputs"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:layout_below="@id/ltrb_margin_inputs" />
 
             <LinearLayout
                 android:id="@+id/additional_panel_container"
@@ -157,48 +148,4 @@
                 android:orientation="vertical" />
         </RelativeLayout>
     </ScrollView>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/rules_button"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_margin="5dp"
-            android:layout_weight="1"
-            android:tag="ANYDEBUG_IGNORE_HOOK"
-            android:text="@string/rules" />
-
-        <Button
-            android:id="@+id/origin_click_button"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_margin="5dp"
-            android:layout_weight="1"
-            android:tag="ANYDEBUG_IGNORE_HOOK"
-            android:text="@string/perform_origin_click" />
-
-        <Button
-            android:id="@+id/cancel_button"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_margin="5dp"
-            android:layout_weight="1"
-            android:tag="ANYDEBUG_IGNORE_HOOK"
-            android:text="@string/cancel" />
-
-        <Button
-            android:id="@+id/apply_button"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_margin="5dp"
-            android:layout_weight="1"
-            android:tag="ANYDEBUG_IGNORE_HOOK"
-            android:text="@string/apply" />
-
-    </LinearLayout>
 </LinearLayout>

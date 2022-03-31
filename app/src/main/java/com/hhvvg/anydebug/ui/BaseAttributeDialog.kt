@@ -1,13 +1,11 @@
 package com.hhvvg.anydebug.ui
 
-import android.app.AlertDialog
 import android.app.AndroidAppHelper
 import android.app.Application
 import android.os.Bundle
 import android.text.SpannableString
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.LinearLayout
@@ -25,7 +23,6 @@ import com.hhvvg.anydebug.databinding.LayoutBaseAttributeDialogBinding
 import com.hhvvg.anydebug.databinding.LayoutImageBinding
 import com.hhvvg.anydebug.glide.GlideApp
 import com.hhvvg.anydebug.handler.ViewClickWrapper
-import com.hhvvg.anydebug.handler.ViewClickWrapper.Companion.IGNORE_HOOK
 import com.hhvvg.anydebug.handler.ViewDispatcher
 import com.hhvvg.anydebug.hook.AnyHookFramework.Companion.moduleRes
 import com.hhvvg.anydebug.persistent.AppDatabase
@@ -38,6 +35,7 @@ import com.hhvvg.anydebug.util.inflater.MyLayoutInflater
 import com.hhvvg.anydebug.util.isForceClickable
 import com.hhvvg.anydebug.util.isPersistentEnabled
 import com.hhvvg.anydebug.util.isShowBounds
+import com.hhvvg.anydebug.util.setIgnoreTagRecursively
 import com.hhvvg.anydebug.util.specOrDp
 import com.hhvvg.anydebug.util.specOrPx
 import com.hhvvg.anydebug.util.updateDrawLayoutBounds
@@ -50,13 +48,10 @@ import kotlinx.coroutines.runBlocking
  *
  * Base dialog for editing basic view attributes.
  */
-open class BaseAttributeDialog(protected val itemView: View) : AlertDialog(itemView.context) {
+open class BaseAttributeDialog(protected val itemView: View) : BaseDialog(itemView.context) {
     private val viewModel = BaseViewModel()
     private val binding by lazy {
-        val layout = moduleRes.getLayout(R.layout.layout_base_attribute_dialog)
-        val inflater = MyLayoutInflater.from(context)
-        val view = inflater.inflate(layout, null)
-        LayoutBaseAttributeDialogBinding.bind(view)
+        LayoutBaseAttributeDialogBinding.bind(dialogContentView)
     }
     protected val application: Application by lazy {
         AndroidAppHelper.currentApplication()
@@ -80,9 +75,10 @@ open class BaseAttributeDialog(protected val itemView: View) : AlertDialog(itemV
         View.GONE
     )
 
+    override val fitScreen = true
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(binding.root)
         onSetObserves()
         setSpinners()
         onLoadViewAttributes(itemView)
@@ -93,24 +89,9 @@ open class BaseAttributeDialog(protected val itemView: View) : AlertDialog(itemV
     }
 
     private fun setSpinners() {
-        binding.visibilitySpinner.adapter = ArrayAdapter(
-            context,
-            android.R.layout.simple_spinner_dropdown_item,
-            moduleRes.getStringArray(R.array.visibility)
-        )
-        binding.visibilitySpinner.onItemSelectedListener =
-            object : AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(p0: AdapterView<*>?, p1: View?, pos: Int, p3: Long) {
-                    if (visibilityArray[pos] != itemView.visibility) {
-                        viewModel.visibility = visibilityArray[pos]
-                    }
-                }
+        binding.visibilityButton.setOnClickListener {
 
-                override fun onNothingSelected(p0: AdapterView<*>?) {
-                    // Do nothing
-                }
-
-            }
+        }
         binding.widthSpinner.adapter = ArrayAdapter(
             context,
             android.R.layout.simple_spinner_dropdown_item,
@@ -173,17 +154,14 @@ open class BaseAttributeDialog(protected val itemView: View) : AlertDialog(itemV
     protected open fun onSetupDialogText() {
         binding.showLayoutBoundsSwitch.text = getString(R.string.show_global_layout_bounds)
         binding.forceWidgetsClickable.text = getString(R.string.force_clickable)
-        binding.ancestorButton.text = getString(R.string.ancestors)
-        binding.childrenButton.text = getString(R.string.children)
-        binding.visibilitySpinnerTitle.text = getString(R.string.visibility)
+        binding.ancestorButton.title = getString(R.string.ancestors)
+        binding.childrenButton.title = getString(R.string.children)
+        binding.visibilityButton.title = getString(R.string.visibility)
         binding.widthTitle.text = getString(R.string.width)
         binding.heightTitle.text = getString(R.string.height)
         binding.heightInput.hint = getString(R.string.height)
         binding.widthInput.hint = getString(R.string.width)
-        binding.originClickButton.text = getString(R.string.perform_origin_click)
-        binding.cancelButton.text = getString(R.string.cancel)
-        binding.applyButton.text = getString(R.string.apply)
-        binding.rulesButton.text = moduleRes.getString(R.string.rules)
+        binding.rulesButton.title = moduleRes.getString(R.string.rules)
         binding.ltrbMarginInputs.setTitle(getString(R.string.margin_title))
         binding.ltrbPaddingInput.setTitle(moduleRes.getString(R.string.padding_title))
     }
@@ -204,10 +182,7 @@ open class BaseAttributeDialog(protected val itemView: View) : AlertDialog(itemV
             dialog.show()
         }
         binding.showLayoutBoundsSwitch.setOnCheckedChangeListener { _, checked ->
-            application.isShowBounds = checked
-            itemView.rootView.updateDrawLayoutBounds()
-            renderPreview()
-            GlideApp.get(context).clearMemory()
+            viewModel.showBounds = checked
         }
         binding.forceWidgetsClickable.setOnCheckedChangeListener { _, checked ->
             viewModel.forceClickable = checked
@@ -218,22 +193,6 @@ open class BaseAttributeDialog(protected val itemView: View) : AlertDialog(itemV
         binding.childrenButton.setOnClickListener {
             showViewsDialog(getString(R.string.select_children), findChildren())
         }
-        binding.originClickButton.setOnClickListener {
-            val listener = itemView.getOnClickListener()
-            if (listener is ViewClickWrapper) {
-                listener.performOriginClick()
-            } else {
-                listener?.onClick(itemView)
-            }
-            dismiss()
-        }
-        binding.cancelButton.setOnClickListener {
-            dismiss()
-        }
-        binding.applyButton.setOnClickListener {
-            onApply()
-            dismiss()
-        }
         binding.previewImage.setOnClickListener {
             showViewPreviewDialog(itemView)
         }
@@ -242,6 +201,22 @@ open class BaseAttributeDialog(protected val itemView: View) : AlertDialog(itemV
         }
         binding.heightInput.addTextChangedListener {
             viewModel.height = it.toString().toIntOrNull() ?: viewModel.height
+        }
+        setApplyButton(moduleRes.getString(R.string.apply)) {
+            onApply()
+            dismiss()
+        }
+        setCancelButton(moduleRes.getString(R.string.cancel)) {
+            dismiss()
+        }
+        setDetailsButton(moduleRes.getString(R.string.perform_origin_click)) {
+            val listener = itemView.getOnClickListener()
+            if (listener is ViewClickWrapper) {
+                listener.performOriginClick()
+            } else {
+                listener?.onClick(itemView)
+            }
+            dismiss()
         }
     }
 
@@ -291,6 +266,7 @@ open class BaseAttributeDialog(protected val itemView: View) : AlertDialog(itemV
             binding.ltrbMarginInputs.bottomValue,
             viewModel.visibility,
             viewModel.forceClickable,
+            viewModel.showBounds,
         )
     }
 
@@ -327,7 +303,13 @@ open class BaseAttributeDialog(protected val itemView: View) : AlertDialog(itemV
             itemView.visibility = it
         }
         application.isForceClickable = data.forceClickable
-        itemView.rootView.updateViewHookClick()
+        itemView.rootView.updateViewHookClick(forceClickable = data.forceClickable)
+
+        if (data.showBounds != application.isShowBounds) {
+            application.isShowBounds = data.showBounds
+            itemView.rootView.updateDrawLayoutBounds(drawEnabled = data.showBounds)
+            GlideApp.get(context).clearMemory()
+        }
     }
 
     private fun makeRules(data: BaseViewAttribute): List<ViewRule> {
@@ -361,9 +343,7 @@ open class BaseAttributeDialog(protected val itemView: View) : AlertDialog(itemV
         binding.previewImage.setImageBitmap(itemView.drawToBitmap())
     }
 
-    override fun setTitle(title: CharSequence?) {
-        binding.title.text = itemView.javaClass.name
-    }
+    override fun onInflateLayout(): Int = R.layout.layout_base_attribute_dialog
 
     /**
      * Load current attributes of view into dialog interface.
@@ -402,7 +382,9 @@ open class BaseAttributeDialog(protected val itemView: View) : AlertDialog(itemV
         }
         binding.widthSpinner.setSelection(viewSpecSelectionMap[width] ?: 2)
         binding.heightSpinner.setSelection(viewSpecSelectionMap[height] ?: 2)
-        binding.visibilitySpinner.setSelection(viewVisibilitySelectionMap[visibility] ?: 0)
+        binding.visibilityButton.subtitle =
+            moduleRes.getStringArray(R.array.visibility)[viewVisibilitySelectionMap[visibility]
+                ?: 0]
         binding.widthInput.setText(width.toString())
         binding.heightInput.setText(height.toString())
 
@@ -426,9 +408,8 @@ open class BaseAttributeDialog(protected val itemView: View) : AlertDialog(itemV
             }
         }
 
-        val viewListener = itemView.getOnClickListener()
-        binding.originClickButton.isVisible =
-            !(viewListener == null || (viewListener is ViewClickWrapper && viewListener.originListener == null))
+        viewModel.showBounds = application.isShowBounds
+        viewModel.forceClickable = application.isForceClickable
     }
 
     /**
@@ -462,6 +443,7 @@ open class BaseAttributeDialog(protected val itemView: View) : AlertDialog(itemV
      * @param view Additional settings view
      */
     protected fun appendAttributePanelView(view: View) {
+        view.setIgnoreTagRecursively()
         val param = LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.MATCH_PARENT,
             LinearLayout.LayoutParams.WRAP_CONTENT
@@ -479,18 +461,8 @@ open class BaseAttributeDialog(protected val itemView: View) : AlertDialog(itemV
         val layout = moduleRes.getLayout(resId)
         val inflater = MyLayoutInflater.from(context)
         val view = inflater.inflate(layout, null, false)
+        view.setIgnoreTagRecursively()
         appendAttributePanelView(view)
         return view
-    }
-
-    /**
-     * Show this dialog, additionally setup soft input flags.
-     */
-    override fun show() {
-        super.show()
-        window?.apply {
-            clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM)
-            setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
-        }
     }
 }

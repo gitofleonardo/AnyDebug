@@ -4,47 +4,50 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.MainActivity"
-    android:fitsSystemWindows="true">
+    android:fitsSystemWindows="true"
+    tools:context=".ui.MainActivity">
+
     <com.google.android.material.appbar.AppBarLayout
-        android:background="?attr/colorPrimary"
         android:id="@+id/app_bar"
         android:layout_width="match_parent"
-        android:layout_height="120dp">
+        android:layout_height="120dp"
+        android:background="?attr/colorPrimary">
+
         <com.google.android.material.appbar.CollapsingToolbarLayout
-            app:contentScrim="?attr/colorPrimary"
-            android:fitsSystemWindows="true"
-            app:titleEnabled="true"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+            android:fitsSystemWindows="true"
+            app:contentScrim="?attr/colorPrimary"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            app:titleEnabled="true">
+
             <androidx.appcompat.widget.Toolbar
-                app:title="@string/app_name"
-                app:layout_collapseMode="pin"
-                app:titleTextColor="?attr/colorOnPrimary"
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"/>
+                android:layout_height="?attr/actionBarSize"
+                app:layout_collapseMode="pin"
+                app:title="@string/app_name"
+                app:titleTextColor="?attr/colorOnPrimary" />
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.fragment.app.FragmentContainerView
-        android:name="androidx.navigation.fragment.NavHostFragment"
         android:id="@+id/content_fragment_container"
-        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
+        android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:defaultNavHost="true"
-        app:navGraph="@navigation/main_nav"/>
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
+        app:navGraph="@navigation/main_nav" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/getCodeFab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/github"
+        android:layout_margin="12dp"
         android:src="@drawable/ic_baseline_find_in_page_24"
-        android:id="@+id/getCodeFab"
+        android:text="@string/github"
         app:layout_anchor="@id/app_bar"
         app:layout_anchorGravity="bottom|end"
-        android:layout_margin="12dp"
-        app:layout_behavior="com.google.android.material.floatingactionbutton.FloatingActionButton$Behavior"/>
+        app:layout_behavior="com.google.android.material.floatingactionbutton.FloatingActionButton$Behavior" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

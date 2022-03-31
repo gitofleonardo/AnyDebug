@@ -3,7 +3,6 @@ package com.hhvvg.anydebug.util
 import android.app.Activity
 import android.app.Application
 import android.os.Bundle
-import android.view.View
 import com.hhvvg.anydebug.persistent.ViewRule
 import de.robv.android.xposed.XposedHelpers
 
@@ -19,7 +18,6 @@ var Application.isShowBounds
     get() = getInjectedField(APP_FIELD_SHOW_BOUNDS, defaultValue = false)!!
     set(value) {
         injectField(APP_FIELD_SHOW_BOUNDS, value)
-        View::class.setShowLayoutBounds(value)
     }
 
 var Application.isForceClickable

@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.core.view.children
 import com.hhvvg.anydebug.handler.ViewClickWrapper.Companion.IGNORE_HOOK
 import com.hhvvg.anydebug.ui.view.LtrbView
+import com.hhvvg.anydebug.ui.view.TileButton
 import kotlin.reflect.KClass
 
 /**
@@ -18,6 +19,7 @@ import kotlin.reflect.KClass
 class CustomFactory2 : LayoutInflater.Factory2 {
     private val customViewRegistry = arrayListOf<KClass<*>>(
         LtrbView::class,
+        TileButton::class
     )
 
     override fun onCreateView(
@@ -32,20 +34,21 @@ class CustomFactory2 : LayoutInflater.Factory2 {
                 val constructor = it.java.getDeclaredConstructor(Context::class.java, AttributeSet::class.java)
                 view = constructor.newInstance(context, attrs) as View
                 view?.apply {
-                    fun dfsSetTag(view: View, tag: String) {
-                        view.tag = tag
-                        if (view is ViewGroup) {
-                            view.children.forEach { child ->
-                                dfsSetTag(child, tag)
-                            }
-                        }
-                    }
                     dfsSetTag(this, IGNORE_HOOK)
                 }
                 return@forEach
             }
         }
         return view
+    }
+
+    private fun dfsSetTag(view: View, tag: String) {
+        view.tag = tag
+        if (view is ViewGroup) {
+            view.children.forEach { child ->
+                dfsSetTag(child, tag)
+            }
+        }
     }
 
     override fun onCreateView(name: String, context: Context, attrs: AttributeSet): View? {

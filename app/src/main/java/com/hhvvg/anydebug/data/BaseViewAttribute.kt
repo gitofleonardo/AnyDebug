@@ -18,6 +18,7 @@ open class BaseViewAttribute(
     val marginBottom: Int,
     val visibility: Int?,
     val forceClickable: Boolean,
+    val showBounds: Boolean,
 ) {
     constructor(data: BaseViewAttribute) : this(
         data.width,
@@ -31,6 +32,7 @@ open class BaseViewAttribute(
         data.marginRight,
         data.marginBottom,
         data.visibility,
-        data.forceClickable
+        data.forceClickable,
+        data.showBounds,
     )
 }

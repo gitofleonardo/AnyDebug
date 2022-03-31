@@ -3,39 +3,45 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
+
     <TextView
         android:id="@+id/text_content_title"
-        android:text="@string/text_content"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:text="@string/text_content" />
+
     <EditText
-        android:layout_marginTop="10dp"
         android:id="@+id/edit_text"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp" />
+
     <TextView
-        android:layout_marginTop="10dp"
         android:id="@+id/text_max_line_title"
-        android:text="@string/max_line"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-    <EditText
-        android:inputType="number"
+        android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
+        android:text="@string/max_line" />
+
+    <EditText
         android:id="@+id/text_max_line"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:inputType="number" />
+
     <TextView
-        android:layout_marginTop="10dp"
         android:id="@+id/text_size_title"
-        android:text="@string/text_size"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-    <EditText
-        android:inputType="number"
-        android:hint="@string/sp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
+        android:text="@string/text_size" />
+
+    <EditText
         android:id="@+id/text_size_input"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:hint="@string/sp"
+        android:inputType="number" />
 </LinearLayout>

@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name">AnyDebug</string>
     <string name="apply">应用</string>
-    <string name="perform_origin_click">触发原点击</string>
+    <string name="perform_origin_click">原点击</string>
     <string name="successfully_modified">成功修改</string>
     <string name="anytext_working_now">AnyText运行中</string>
     <string name="about">关于</string>
@@ -60,4 +60,5 @@
     <string name="about_desc">更多关于此应用的信息</string>
     <string name="function">功能</string>
     <string name="rules">规则</string>
+    <string name="details">详情</string>
 </resources>

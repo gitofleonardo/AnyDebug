@@ -10,7 +10,10 @@
         android:layout_height="wrap_content"
         android:layout_alignBottom="@id/ltrb_identical_checkbox"
         android:layout_alignParentTop="true"
-        android:gravity="center" />
+        android:gravity="center"
+        android:textColor="@android:color/black"
+        android:textSize="16sp"
+        android:textStyle="bold" />
 
     <Switch
         android:id="@+id/ltrb_identical_checkbox"
@@ -30,13 +33,13 @@
         android:orientation="horizontal">
 
         <EditText
-            android:tag="ANYDEBUG_IGNORE_HOOK"
             android:id="@+id/left"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:hint="@string/left"
-            android:inputType="number" />
+            android:inputType="number"
+            android:tag="ANYDEBUG_IGNORE_HOOK" />
 
         <EditText
             android:id="@+id/top"

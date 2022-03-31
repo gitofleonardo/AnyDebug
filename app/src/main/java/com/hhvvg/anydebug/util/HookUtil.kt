@@ -32,23 +32,15 @@ fun View.updateDrawLayoutBounds(
 ) {
     val app = AndroidAppHelper.currentApplication()
     val isDrawEnabled = drawEnabled ?: app.isShowBounds
-    View::class.setShowLayoutBounds(isDrawEnabled)
-    if (invalidate) {
-        fun dfsInvalidate(view: View) {
-            view.invalidate()
-            if (view !is ViewGroup) {
-                return
-            }
-            for (child in view.children) {
-                dfsInvalidate(child)
-            }
+    setShowLayoutBounds(isDrawEnabled)
+    if (this is ViewGroup) {
+        children.forEach {
+            it.updateDrawLayoutBounds(isDrawEnabled, invalidate)
         }
-        dfsInvalidate(this)
     }
-}
-
-fun KClass<View>.setShowLayoutBounds(enabled: Boolean) {
-    XposedHelpers.setStaticBooleanField(this.java, "DEBUG_DRAW", enabled)
+    if (invalidate) {
+        invalidate()
+    }
 }
 
 fun View.updateViewHookClick(
@@ -83,7 +75,7 @@ fun View.updateViewHookClick(
         isClickable = true
     } else {
         val listener = getOnClickListener()
-        if (listener != null && listener is ViewClickWrapper) {
+        if (listener is ViewClickWrapper) {
             isClickable = listener.originClickable
         }
     }
@@ -135,4 +127,18 @@ fun KClass<*>.doAfterConstructor(vararg params: Class<*>, callback: (XC_MethodHo
             callback.invoke(param)
         }
     })
+}
+
+fun View.setShowLayoutBounds(show: Boolean) {
+    val attachInfo = XposedHelpers.getObjectField(this, "mAttachInfo") ?: return
+    XposedHelpers.setBooleanField(attachInfo, "mDebugLayout", show)
+}
+
+fun View.setIgnoreTagRecursively() {
+    tag = IGNORE_HOOK
+    if (this is ViewGroup) {
+        children.forEach {
+            it.setIgnoreTagRecursively()
+        }
+    }
 }

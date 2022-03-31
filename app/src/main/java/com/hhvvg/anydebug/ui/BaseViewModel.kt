@@ -12,4 +12,6 @@ class BaseViewModel {
     val heightInputVisible = ObservableField(false)
 
     var forceClickable = false
+
+    var showBounds = false
 }

@@ -4,22 +4,22 @@
     android:layout_height="wrap_content">
 
     <TextView
-        android:gravity="center"
+        android:id="@+id/scale_type_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignTop="@id/scale_type_spinner"
         android:layout_alignBottom="@id/scale_type_spinner"
-        android:id="@+id/scale_type_title"
+        android:gravity="center"
         android:text="@string/scale_type"
-        android:textSize="16sp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:textSize="16sp" />
 
     <Spinner
-        android:tag="ANYDEBUG_IGNORE_HOOK"
         android:id="@+id/scale_type_spinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
-        android:layout_toEndOf="@id/scale_type_title" />
+        android:layout_toEndOf="@id/scale_type_title"
+        android:tag="ANYDEBUG_IGNORE_HOOK" />
 
     <TextView
         android:id="@+id/image_url_title"

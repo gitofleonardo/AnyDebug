@@ -3,7 +3,13 @@ package com.hhvvg.anydebug.hook
 import android.content.res.Resources
 import android.content.res.XModuleResources
 import com.hhvvg.anydebug.BuildConfig
-import com.hhvvg.anydebug.hook.hookers.*
+import com.hhvvg.anydebug.hook.hookers.GlobalControlReceiverHooker
+import com.hhvvg.anydebug.hook.hookers.PupupWindowHooker
+import com.hhvvg.anydebug.hook.hookers.TextViewHooker
+import com.hhvvg.anydebug.hook.hookers.ViewBoundsHooker
+import com.hhvvg.anydebug.hook.hookers.ViewClickHooker
+import com.hhvvg.anydebug.hook.hookers.ViewRulesLoader
+import com.hhvvg.anydebug.hook.hookers.ViewVisibilityHooker
 import de.robv.android.xposed.IXposedHookLoadPackage
 import de.robv.android.xposed.IXposedHookZygoteInit
 import de.robv.android.xposed.callbacks.XC_LoadPackage
@@ -15,14 +21,13 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage
  */
 class AnyHookFramework : IXposedHookLoadPackage, IXposedHookZygoteInit {
     private val hookers: ArrayList<IHooker> = arrayListOf(
-        ViewInvalidateHooker(),
         ViewClickHooker(),
         PupupWindowHooker(),
         GlobalControlReceiverHooker(),
         ViewRulesLoader(),
         ViewVisibilityHooker(),
-        ViewAddingHooker(),
         TextViewHooker(),
+        ViewBoundsHooker(),
     )
 
     override fun handleLoadPackage(p0: XC_LoadPackage.LoadPackageParam) {
@@ -44,6 +49,7 @@ class AnyHookFramework : IXposedHookLoadPackage, IXposedHookZygoteInit {
     companion object {
         @JvmStatic
         lateinit var moduleRes: Resources
+
         @JvmStatic
         lateinit var modulePath: String
 
