@@ -2,7 +2,6 @@ package com.hhvvg.anydebug.handler.textview
 
 import android.os.Bundle
 import android.text.SpannableString
-import android.view.LayoutInflater
 import android.view.View
 import android.widget.TextView
 import com.hhvvg.anydebug.R
@@ -12,6 +11,7 @@ import com.hhvvg.anydebug.persistent.AppDatabase
 import com.hhvvg.anydebug.persistent.RuleType
 import com.hhvvg.anydebug.persistent.ViewRule
 import com.hhvvg.anydebug.ui.BaseAttributeDialog
+import com.hhvvg.anydebug.util.inflater.MyLayoutInflater
 import com.hhvvg.anydebug.util.isPersistentEnabled
 import com.hhvvg.anydebug.util.sp
 import kotlinx.coroutines.Dispatchers
@@ -26,7 +26,7 @@ class TextEditingDialog(private val view: TextView) : BaseAttributeDialog(view) 
 
     private val rootView by lazy {
         val layout = moduleRes.getLayout(R.layout.layout_text_view_attr)
-        val inflater = LayoutInflater.from(context)
+        val inflater = MyLayoutInflater.from(context)
         inflater.inflate(layout, null)
     }
 

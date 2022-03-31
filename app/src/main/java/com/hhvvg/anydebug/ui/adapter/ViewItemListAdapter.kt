@@ -2,7 +2,6 @@ package com.hhvvg.anydebug.ui.adapter
 
 import android.app.AlertDialog
 import android.text.SpannableString
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
@@ -13,6 +12,7 @@ import com.hhvvg.anydebug.databinding.LayoutViewPreviewItemBinding
 import com.hhvvg.anydebug.glide.GlideApp
 import com.hhvvg.anydebug.handler.ViewClickWrapper.Companion.IGNORE_HOOK
 import com.hhvvg.anydebug.hook.AnyHookFramework.Companion.moduleRes
+import com.hhvvg.anydebug.util.inflater.MyLayoutInflater
 
 class ViewItemListAdapter(private val views: List<View>) : BaseAdapter() {
 
@@ -28,7 +28,7 @@ class ViewItemListAdapter(private val views: List<View>) : BaseAdapter() {
         val view = views[position]
         val itemView: View = if (convertView == null) {
             val layout = moduleRes.getLayout(R.layout.layout_view_preview_item)
-            val inflater = LayoutInflater.from(view.context)
+            val inflater = MyLayoutInflater.from(view.context)
             inflater.inflate(layout, null, false)
         } else {
             convertView
@@ -50,7 +50,7 @@ class ViewItemListAdapter(private val views: List<View>) : BaseAdapter() {
 
     private fun showViewImageDialog(view: View) {
         val layout = moduleRes.getLayout(R.layout.layout_image)
-        val inflater = LayoutInflater.from(view.context)
+        val inflater = MyLayoutInflater.from(view.context)
         val itemView = inflater.inflate(layout, null, false)
         val binding = LayoutImageBinding.bind(itemView)
 

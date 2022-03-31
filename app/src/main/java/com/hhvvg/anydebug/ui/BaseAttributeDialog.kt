@@ -5,7 +5,6 @@ import android.app.AndroidAppHelper
 import android.app.Application
 import android.os.Bundle
 import android.text.SpannableString
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
@@ -22,18 +21,27 @@ import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import com.hhvvg.anydebug.R
 import com.hhvvg.anydebug.data.BaseViewAttribute
-import com.hhvvg.anydebug.handler.ViewDispatcher
 import com.hhvvg.anydebug.databinding.LayoutBaseAttributeDialogBinding
 import com.hhvvg.anydebug.databinding.LayoutImageBinding
 import com.hhvvg.anydebug.glide.GlideApp
 import com.hhvvg.anydebug.handler.ViewClickWrapper
 import com.hhvvg.anydebug.handler.ViewClickWrapper.Companion.IGNORE_HOOK
+import com.hhvvg.anydebug.handler.ViewDispatcher
 import com.hhvvg.anydebug.hook.AnyHookFramework.Companion.moduleRes
 import com.hhvvg.anydebug.persistent.AppDatabase
 import com.hhvvg.anydebug.persistent.RuleType
 import com.hhvvg.anydebug.persistent.ViewRule
 import com.hhvvg.anydebug.ui.adapter.ViewItemListAdapter
-import com.hhvvg.anydebug.util.*
+import com.hhvvg.anydebug.util.dp
+import com.hhvvg.anydebug.util.getOnClickListener
+import com.hhvvg.anydebug.util.inflater.MyLayoutInflater
+import com.hhvvg.anydebug.util.isForceClickable
+import com.hhvvg.anydebug.util.isPersistentEnabled
+import com.hhvvg.anydebug.util.isShowBounds
+import com.hhvvg.anydebug.util.specOrDp
+import com.hhvvg.anydebug.util.specOrPx
+import com.hhvvg.anydebug.util.updateDrawLayoutBounds
+import com.hhvvg.anydebug.util.updateViewHookClick
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 
@@ -46,9 +54,8 @@ open class BaseAttributeDialog(protected val itemView: View) : AlertDialog(itemV
     private val viewModel = BaseViewModel()
     private val binding by lazy {
         val layout = moduleRes.getLayout(R.layout.layout_base_attribute_dialog)
-        val inflater = LayoutInflater.from(context)
+        val inflater = MyLayoutInflater.from(context)
         val view = inflater.inflate(layout, null)
-        view.tag = IGNORE_HOOK
         LayoutBaseAttributeDialogBinding.bind(view)
     }
     protected val application: Application by lazy {
@@ -171,24 +178,14 @@ open class BaseAttributeDialog(protected val itemView: View) : AlertDialog(itemV
         binding.visibilitySpinnerTitle.text = getString(R.string.visibility)
         binding.widthTitle.text = getString(R.string.width)
         binding.heightTitle.text = getString(R.string.height)
-        binding.marginTitle.text = getString(R.string.margin_title)
-        binding.paddingTitle.text = getString(R.string.padding_title)
-        binding.marginLeft.hint = getString(R.string.left)
-        binding.marginTop.hint = getString(R.string.top)
-        binding.marginRight.hint = getString(R.string.right)
-        binding.marginBottom.hint = getString(R.string.bottom)
-        binding.paddingLeft.hint = getString(R.string.left)
-        binding.paddingTop.hint = getString(R.string.top)
-        binding.paddingRight.hint = getString(R.string.right)
-        binding.paddingBottom.hint = getString(R.string.bottom)
         binding.heightInput.hint = getString(R.string.height)
         binding.widthInput.hint = getString(R.string.width)
-        binding.paddingIdenticalCheckbox.text = getString(R.string.identical)
-        binding.marginIdenticalCheckbox.text = getString(R.string.identical)
         binding.originClickButton.text = getString(R.string.perform_origin_click)
         binding.cancelButton.text = getString(R.string.cancel)
         binding.applyButton.text = getString(R.string.apply)
         binding.rulesButton.text = moduleRes.getString(R.string.rules)
+        binding.ltrbMarginInputs.setTitle(getString(R.string.margin_title))
+        binding.ltrbPaddingInput.setTitle(moduleRes.getString(R.string.padding_title))
     }
 
     @CallSuper
@@ -198,78 +195,6 @@ open class BaseAttributeDialog(protected val itemView: View) : AlertDialog(itemV
         }
         viewModel.widthInputVisible.observe {
             binding.widthInput.isVisible = it
-        }
-        viewModel.marginAvailable.observe {
-            binding.marginTitle.isVisible = it
-            binding.marginInputs.isVisible = it
-        }
-        viewModel.margin.observe {
-            viewModel.marginTop.data = it
-            viewModel.marginLeft.data = it
-            viewModel.marginRight.data = it
-            viewModel.marginBottom.data = it
-        }
-        viewModel.padding.observe {
-            viewModel.paddingTop.data = it
-            viewModel.paddingLeft.data = it
-            viewModel.paddingRight.data = it
-            viewModel.paddingBottom.data = it
-        }
-        viewModel.marginTop.observe {
-            binding.marginTop.apply {
-                if (!hasFocus()) {
-                    setText(it.toString())
-                }
-            }
-        }
-        viewModel.marginLeft.observe {
-            binding.marginLeft.apply {
-                if (!hasFocus()) {
-                    setText(it.toString())
-                }
-            }
-        }
-        viewModel.marginRight.observe {
-            binding.marginRight.apply {
-                if (!hasFocus()) {
-                    setText(it.toString())
-                }
-            }
-        }
-        viewModel.marginBottom.observe {
-            binding.marginBottom.apply {
-                if (!hasFocus()) {
-                    setText(it.toString())
-                }
-            }
-        }
-        viewModel.paddingLeft.observe {
-            binding.paddingLeft.apply {
-                if (!hasFocus()) {
-                    setText(it.toString())
-                }
-            }
-        }
-        viewModel.paddingTop.observe {
-            binding.paddingTop.apply {
-                if (!hasFocus()) {
-                    setText(it.toString())
-                }
-            }
-        }
-        viewModel.paddingRight.observe {
-            binding.paddingRight.apply {
-                if (!hasFocus()) {
-                    setText(it.toString())
-                }
-            }
-        }
-        viewModel.paddingBottom.observe {
-            binding.paddingBottom.apply {
-                if (!hasFocus()) {
-                    setText(it.toString())
-                }
-            }
         }
     }
 
@@ -293,12 +218,6 @@ open class BaseAttributeDialog(protected val itemView: View) : AlertDialog(itemV
         binding.childrenButton.setOnClickListener {
             showViewsDialog(getString(R.string.select_children), findChildren())
         }
-        binding.marginIdenticalCheckbox.setOnCheckedChangeListener { _, checked ->
-            viewModel.marginIdentical = checked
-        }
-        binding.paddingIdenticalCheckbox.setOnCheckedChangeListener { _, checked ->
-            viewModel.paddingIdentical = checked
-        }
         binding.originClickButton.setOnClickListener {
             val listener = itemView.getOnClickListener()
             if (listener is ViewClickWrapper) {
@@ -317,94 +236,6 @@ open class BaseAttributeDialog(protected val itemView: View) : AlertDialog(itemV
         }
         binding.previewImage.setOnClickListener {
             showViewPreviewDialog(itemView)
-        }
-        binding.marginLeft.addTextChangedListener {
-            if (!binding.marginLeft.hasFocus()) {
-                return@addTextChangedListener
-            }
-            val value = it.toString().toIntOrNull() ?: 0
-            if (viewModel.marginIdentical) {
-                viewModel.margin.data = value
-            } else {
-                viewModel.marginLeft.data = value
-            }
-        }
-        binding.marginTop.addTextChangedListener {
-            if (!binding.marginTop.hasFocus()) {
-                return@addTextChangedListener
-            }
-            val value = it.toString().toIntOrNull() ?: 0
-            if (viewModel.marginIdentical) {
-                viewModel.margin.data = value
-            } else {
-                viewModel.marginTop.data = value
-            }
-        }
-        binding.marginRight.addTextChangedListener {
-            if (!binding.marginRight.hasFocus()) {
-                return@addTextChangedListener
-            }
-            val value = it.toString().toIntOrNull() ?: 0
-            if (viewModel.marginIdentical) {
-                viewModel.margin.data = value
-            } else {
-                viewModel.marginRight.data = value
-            }
-        }
-        binding.marginBottom.addTextChangedListener {
-            if (!binding.marginBottom.hasFocus()) {
-                return@addTextChangedListener
-            }
-            val value = it.toString().toIntOrNull() ?: 0
-            if (viewModel.marginIdentical) {
-                viewModel.margin.data = value
-            } else {
-                viewModel.marginBottom.data = value
-            }
-        }
-        binding.paddingLeft.addTextChangedListener {
-            if (!binding.paddingLeft.hasFocus()) {
-                return@addTextChangedListener
-            }
-            val value = it.toString().toIntOrNull() ?: 0
-            if (viewModel.paddingIdentical) {
-                viewModel.padding.data = value
-            } else {
-                viewModel.paddingLeft.data = value
-            }
-        }
-        binding.paddingTop.addTextChangedListener {
-            if (!binding.paddingTop.hasFocus()) {
-                return@addTextChangedListener
-            }
-            val value = it.toString().toIntOrNull() ?: 0
-            if (viewModel.paddingIdentical) {
-                viewModel.padding.data = value
-            } else {
-                viewModel.paddingTop.data = value
-            }
-        }
-        binding.paddingRight.addTextChangedListener {
-            if (!binding.paddingRight.hasFocus()) {
-                return@addTextChangedListener
-            }
-            val value = it.toString().toIntOrNull() ?: 0
-            if (viewModel.paddingIdentical) {
-                viewModel.padding.data = value
-            } else {
-                viewModel.paddingRight.data = value
-            }
-        }
-        binding.paddingBottom.addTextChangedListener {
-            if (!binding.paddingBottom.hasFocus()) {
-                return@addTextChangedListener
-            }
-            val value = it.toString().toIntOrNull() ?: 0
-            if (viewModel.paddingIdentical) {
-                viewModel.padding.data = value
-            } else {
-                viewModel.paddingBottom.data = value
-            }
         }
         binding.widthInput.addTextChangedListener {
             viewModel.width = it.toString().toIntOrNull() ?: viewModel.width
@@ -430,7 +261,7 @@ open class BaseAttributeDialog(protected val itemView: View) : AlertDialog(itemV
 
     private fun showViewPreviewDialog(view: View) {
         val layout = moduleRes.getLayout(R.layout.layout_image)
-        val inflater = LayoutInflater.from(view.context)
+        val inflater = MyLayoutInflater.from(view.context)
         val itemView = inflater.inflate(layout, null, false)
         val binding = LayoutImageBinding.bind(itemView)
         Builder(view.context)
@@ -446,12 +277,29 @@ open class BaseAttributeDialog(protected val itemView: View) : AlertDialog(itemV
         return SpannableString(moduleRes.getString(id))
     }
 
+    private fun getData(): BaseViewAttribute {
+        return BaseViewAttribute(
+            viewModel.width.specOrPx(),
+            viewModel.height.specOrPx(),
+            binding.ltrbPaddingInput.leftValue,
+            binding.ltrbPaddingInput.topValue,
+            binding.ltrbPaddingInput.rightValue,
+            binding.ltrbPaddingInput.bottomValue,
+            binding.ltrbMarginInputs.leftValue,
+            binding.ltrbMarginInputs.topValue,
+            binding.ltrbMarginInputs.rightValue,
+            binding.ltrbMarginInputs.bottomValue,
+            viewModel.visibility,
+            viewModel.forceClickable,
+        )
+    }
+
     /**
      * Invoked when user clicks confirm button.
      */
     @CallSuper
     protected open fun onApply() {
-        val data = viewModel.getData()
+        val data = getData()
 
         // Save settings if persistent is enabled
         val persistentEnabled = application.isPersistentEnabled
@@ -560,16 +408,22 @@ open class BaseAttributeDialog(protected val itemView: View) : AlertDialog(itemV
 
         viewModel.width = width
         viewModel.height = height
-        viewModel.paddingLeft.data = paddingLeft
-        viewModel.paddingRight.data = paddingRight
-        viewModel.paddingTop.data = paddingTop
-        viewModel.paddingBottom.data = paddingBottom
+
+        binding.ltrbPaddingInput.apply {
+            leftValue = paddingLeft
+            topValue = paddingTop
+            rightValue = paddingRight
+            bottomValue = paddingBottom
+        }
 
         if (params is ViewGroup.MarginLayoutParams) {
-            viewModel.marginLeft.data = params.leftMargin.dp()
-            viewModel.marginRight.data = params.rightMargin.dp()
-            viewModel.marginTop.data = params.topMargin.dp()
-            viewModel.marginBottom.data = params.bottomMargin.dp()
+            binding.ltrbMarginInputs.isVisible = true
+            binding.ltrbMarginInputs.apply {
+                leftValue = params.leftMargin
+                topValue = params.topMargin
+                rightValue = params.rightMargin
+                bottomValue = params.bottomMargin
+            }
         }
 
         val viewListener = itemView.getOnClickListener()
@@ -623,7 +477,7 @@ open class BaseAttributeDialog(protected val itemView: View) : AlertDialog(itemV
      */
     protected fun appendAttributePanelView(@LayoutRes resId: Int): View {
         val layout = moduleRes.getLayout(resId)
-        val inflater = LayoutInflater.from(context)
+        val inflater = MyLayoutInflater.from(context)
         val view = inflater.inflate(layout, null, false)
         appendAttributePanelView(view)
         return view

@@ -1,25 +1,25 @@
 package com.hhvvg.anydebug.hook.hookers
 
-import android.app.Activity
+import android.app.AndroidAppHelper
 import android.app.Application
-import android.os.Bundle
 import android.text.SpannableString
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.view.children
+import com.hhvvg.anydebug.handler.ViewClickWrapper.Companion.IGNORE_HOOK
 import com.hhvvg.anydebug.hook.IHooker
 import com.hhvvg.anydebug.persistent.AppDatabase
 import com.hhvvg.anydebug.persistent.RuleType
 import com.hhvvg.anydebug.persistent.ViewRule
 import com.hhvvg.anydebug.util.doAfter
-import com.hhvvg.anydebug.util.registerMyActivityLifecycleCallbacks
+import com.hhvvg.anydebug.util.doOnActivityResumed
 import com.hhvvg.anydebug.util.rules
 import com.hhvvg.anydebug.util.rulesMap
 import com.hhvvg.anydebug.util.sp
 import de.robv.android.xposed.callbacks.XC_LoadPackage
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
@@ -32,8 +32,7 @@ class ViewRulesLoader : IHooker {
     override fun onHook(param: XC_LoadPackage.LoadPackageParam) {
         Application::class.doAfter("onCreate") {
             val app = it.thisObject as Application
-            app.registerMyActivityLifecycleCallbacks(ActivityCallbacks())
-            GlobalScope.launch(context = Dispatchers.IO) {
+            CoroutineScope(context = Dispatchers.IO).launch {
                 val rulesFlow = AppDatabase.viewRuleDao.queryAllRules()
                 rulesFlow.collect { list ->
                     app.rules = list
@@ -41,82 +40,56 @@ class ViewRulesLoader : IHooker {
                 }
             }
         }
+        View::class.doAfter("onAttachedToWindow") {
+            val view = it.thisObject as View
+            if (view.tag == IGNORE_HOOK) {
+                return@doAfter
+            }
+            applyRules(view, applyForChildren = false)
+        }
     }
 
-    private class ActivityCallbacks : Application.ActivityLifecycleCallbacks {
-        override fun onActivityPostResumed(activity: Activity) {
-            val app = activity.application
-            val rules = app.rules
-            val viewIdRulesMap = rules.groupBy {
-                it.viewId
+    private fun applyRules(view: View, applyForChildren: Boolean = true) {
+        val rules = AndroidAppHelper.currentApplication().rulesMap[view.id] ?: emptyList()
+        for (rule in rules) {
+            // In the same context, having same class name and view id and parent id
+            // We consider them as the same views.
+            // Notice that this is not accurate, a better way needed.
+            val parent = view.parent
+            val parentId = if (parent is View) parent.id else View.NO_ID
+            if (rule.viewParentId != parentId ||
+                rule.className != view::class.java.name
+            ) {
+                continue
             }
-            val decorView = activity.window.decorView
-            applyRules(decorView, viewIdRulesMap)
-        }
-
-        private fun applyRules(view: View, rulesMap: Map<Int, List<ViewRule>>) {
-            val rules = rulesMap[view.id] ?: emptyList()
-            for (rule in rules) {
-                // In the same context, having same class name and view id and parent id
-                // We consider them as the same views.
-                // Notice that this is not accurate, a better way needed.
-                val parent = view.parent
-                val parentId = if (parent is View) parent.id else View.NO_ID
-                if (rule.viewParentId != parentId ||
-                    rule.className != view::class.java.name
-                ) {
-                    continue
+            when (rule.ruleType) {
+                RuleType.Visibility -> {
+                    view.visibility = rule.viewRule.toIntOrNull() ?: View.VISIBLE
                 }
-                when (rule.ruleType) {
-                    RuleType.Visibility -> {
-                        view.visibility = rule.viewRule.toIntOrNull() ?: View.VISIBLE
+                RuleType.Text -> {
+                    if (view is TextView) {
+                        view.text = SpannableString(rule.viewRule)
                     }
-                    RuleType.Text -> {
-                        if (view is TextView) {
-                            view.text = SpannableString(rule.viewRule)
-                        }
-                    }
-                    RuleType.TextMaxLine -> {
-                        if (view is TextView) {
-                            view.maxLines = rule.viewRule.toIntOrNull() ?: view.maxLines
-                        }
-                    }
-                    RuleType.TextSize -> {
-                        if (view is TextView) {
-                            view.textSize = rule.viewRule.toFloatOrNull() ?: view.textSize.sp()
-                        }
-                    }
-                    else -> {}
                 }
+                RuleType.TextMaxLine -> {
+                    if (view is TextView) {
+                        view.maxLines = rule.viewRule.toIntOrNull() ?: view.maxLines
+                    }
+                }
+                RuleType.TextSize -> {
+                    if (view is TextView) {
+                        view.textSize = rule.viewRule.toFloatOrNull() ?: view.textSize.sp()
+                    }
+                }
+                else -> {}
             }
-            if (view !is ViewGroup) {
-                return
-            }
-            val children = view.children
-            for (child in children) {
-                applyRules(child, rulesMap)
-            }
         }
-
-        override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
+        if (view !is ViewGroup || !applyForChildren) {
+            return
         }
-
-        override fun onActivityStarted(activity: Activity) {
-        }
-
-        override fun onActivityResumed(activity: Activity) {
-        }
-
-        override fun onActivityPaused(activity: Activity) {
-        }
-
-        override fun onActivityStopped(activity: Activity) {
-        }
-
-        override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {
-        }
-
-        override fun onActivityDestroyed(activity: Activity) {
+        val children = view.children
+        for (child in children) {
+            applyRules(child)
         }
     }
 }

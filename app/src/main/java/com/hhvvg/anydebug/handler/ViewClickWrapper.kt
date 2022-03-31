@@ -15,6 +15,10 @@ class ViewClickWrapper(
         if (v == null) {
             return
         }
+        if (v.tag == IGNORE_HOOK) {
+            performOriginClick()
+            return
+        }
         val dispatched = ViewDispatcher.dispatch(v)
         if (!dispatched) {
             performOriginClick()

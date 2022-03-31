@@ -14,7 +14,6 @@ import com.hhvvg.anydebug.persistent.ViewRule
 import com.hhvvg.anydebug.ui.adapter.RuleItemAdapter
 import com.hhvvg.anydebug.util.rules
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.runBlocking
 
 /**
@@ -48,7 +47,8 @@ class RulePreviewDialog(context: Context) : AlertDialog(context) {
         ruleAdapter.notifyItemRangeChanged(0, rules.size)
     }
 
-    private inner class ItemTouchHelperCallback(private val adapter: RuleItemAdapter) : ItemTouchHelper.Callback() {
+    private inner class ItemTouchHelperCallback(private val adapter: RuleItemAdapter) :
+        ItemTouchHelper.Callback() {
         override fun getMovementFlags(
             recyclerView: RecyclerView,
             viewHolder: RecyclerView.ViewHolder

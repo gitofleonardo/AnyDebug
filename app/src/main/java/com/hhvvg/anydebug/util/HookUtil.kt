@@ -28,22 +28,27 @@ fun View.getOnClickListener(): View.OnClickListener? {
 
 fun View.updateDrawLayoutBounds(
     drawEnabled: Boolean? = null,
-    traversalChildren: Boolean = true,
     invalidate: Boolean = true
 ) {
     val app = AndroidAppHelper.currentApplication()
     val isDrawEnabled = drawEnabled ?: app.isShowBounds
-    val attachInfo = XposedHelpers.getObjectField(this, "mAttachInfo") ?: return
-    XposedHelpers.setBooleanField(attachInfo, "mDebugLayout", isDrawEnabled)
-    if (traversalChildren && this is ViewGroup) {
-        val children = this.children
-        for (child in children) {
-            child.updateDrawLayoutBounds(isDrawEnabled, traversalChildren, invalidate)
-        }
-    }
+    View::class.setShowLayoutBounds(isDrawEnabled)
     if (invalidate) {
-        this.invalidate()
+        fun dfsInvalidate(view: View) {
+            view.invalidate()
+            if (view !is ViewGroup) {
+                return
+            }
+            for (child in view.children) {
+                dfsInvalidate(child)
+            }
+        }
+        dfsInvalidate(this)
     }
+}
+
+fun KClass<View>.setShowLayoutBounds(enabled: Boolean) {
+    XposedHelpers.setStaticBooleanField(this.java, "DEBUG_DRAW", enabled)
 }
 
 fun View.updateViewHookClick(
@@ -104,8 +109,8 @@ fun <T> Any.getInjectedField(name: String, defaultValue: T? = null): T? {
     return value as T?
 }
 
-fun KClass<*>.doBefore(methodName: String, vararg methodParams: Any, callback: (XC_MethodHook.MethodHookParam) -> Unit) {
-    val method = XposedHelpers.findMethodBestMatch(this.java, methodName, methodParams)
+fun KClass<*>.doBefore(methodName: String, vararg methodParams: Class<*>, callback: (XC_MethodHook.MethodHookParam) -> Unit) {
+    val method = XposedHelpers.findMethodBestMatch(this.java, methodName, *methodParams)
     val methodHook = object : XC_MethodHook() {
         override fun beforeHookedMethod(param: MethodHookParam) {
             callback.invoke(param)
@@ -114,12 +119,20 @@ fun KClass<*>.doBefore(methodName: String, vararg methodParams: Any, callback: (
     XposedBridge.hookMethod(method, methodHook)
 }
 
-fun KClass<*>.doAfter(methodName: String, vararg methodParams: Any, callback: (XC_MethodHook.MethodHookParam) -> Unit) {
-    val method = XposedHelpers.findMethodBestMatch(this.java, methodName, methodParams)
+fun KClass<*>.doAfter(methodName: String, vararg methodParams: Class<*>, callback: (XC_MethodHook.MethodHookParam) -> Unit) {
+    val method = XposedHelpers.findMethodBestMatch(this.java, methodName, *methodParams)
     val methodHook = object : XC_MethodHook() {
         override fun afterHookedMethod(param: MethodHookParam) {
             callback.invoke(param)
         }
     }
     XposedBridge.hookMethod(method, methodHook)
+}
+
+fun KClass<*>.doAfterConstructor(vararg params: Class<*>, callback: (XC_MethodHook.MethodHookParam) -> Unit) {
+    XposedHelpers.findAndHookConstructor(this.java, *params, object : XC_MethodHook() {
+        override fun afterHookedMethod(param: MethodHookParam) {
+            callback.invoke(param)
+        }
+    })
 }

@@ -13,14 +13,14 @@
         android:tag="ANYDEBUG_IGNORE_HOOK" />
 
     <TextView
-        android:gravity="center"
-        android:layout_alignTop="@id/view_image"
-        android:layout_alignBottom="@id/view_image"
+        android:tag="ANYDEBUG_IGNORE_HOOK"
         android:id="@+id/view_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignTop="@id/view_image"
+        android:layout_alignBottom="@id/view_image"
         android:layout_marginStart="10dp"
         android:layout_toEndOf="@id/view_image"
-        android:text="com.example.CustomView"
+        android:gravity="center"
         android:textSize="16sp" />
 </RelativeLayout>

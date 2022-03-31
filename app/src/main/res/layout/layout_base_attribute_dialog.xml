@@ -38,6 +38,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/preview_image"
                 android:layout_marginTop="5dp"
+                android:tag="ANYDEBUG_IGNORE_HOOK"
                 android:text="@string/show_global_layout_bounds"
                 tools:ignore="UseSwitchCompatOrMaterialXml" />
 
@@ -47,6 +48,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/show_layout_bounds_switch"
                 android:layout_marginTop="5dp"
+                android:tag="ANYDEBUG_IGNORE_HOOK"
                 android:text="@string/force_clickable"
                 tools:ignore="UseSwitchCompatOrMaterialXml" />
 
@@ -80,6 +82,7 @@
                 android:text="@string/visibility" />
 
             <Spinner
+                android:tag="ANYDEBUG_IGNORE_HOOK"
                 android:id="@+id/visibility_spinner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -95,6 +98,7 @@
                 android:text="@string/width" />
 
             <Spinner
+                android:tag="ANYDEBUG_IGNORE_HOOK"
                 android:id="@+id/width_spinner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -117,6 +121,7 @@
                 android:text="@string/height" />
 
             <Spinner
+                android:tag="ANYDEBUG_IGNORE_HOOK"
                 android:id="@+id/height_spinner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -130,127 +135,24 @@
                 android:layout_below="@id/height_spinner"
                 android:hint="@string/height" />
 
-            <TextView
-                android:id="@+id/margin_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            <com.hhvvg.anydebug.ui.view.LtrbView
+                android:visibility="gone"
+                android:id="@+id/ltrb_margin_inputs"
                 android:layout_below="@id/height_input"
-                android:layout_marginTop="5dp"
-                android:text="@string/margin_title" />
-
-            <Switch
-                android:id="@+id/margin_identical_checkbox"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignTop="@id/margin_title"
-                android:layout_alignParentEnd="true"
-                android:text="@string/identical"
-                tools:ignore="UseSwitchCompatOrMaterialXml" />
-
-            <LinearLayout
-                android:id="@+id/margin_inputs"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/margin_title"
-                android:layout_marginTop="5dp"
-                android:orientation="horizontal">
+                android:layout_height="wrap_content"/>
 
-                <EditText
-                    android:id="@+id/margin_left"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:hint="@string/left"
-                    android:inputType="number" />
-
-                <EditText
-                    android:id="@+id/margin_top"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:hint="@string/top"
-                    android:inputType="number" />
-
-                <EditText
-                    android:id="@+id/margin_right"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:hint="@string/right"
-                    android:inputType="number" />
-
-                <EditText
-                    android:id="@+id/margin_bottom"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:hint="@string/bottom"
-                    android:inputType="number" />
-            </LinearLayout>
-
-            <TextView
-                android:id="@+id/padding_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/margin_inputs"
-                android:layout_marginTop="5dp"
-                android:text="@string/padding_title" />
-
-            <Switch
-                android:id="@+id/padding_identical_checkbox"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignTop="@id/padding_title"
-                android:layout_alignParentEnd="true"
-                android:text="@string/identical"
-                tools:ignore="UseSwitchCompatOrMaterialXml" />
-
-            <LinearLayout
-                android:id="@+id/padding_inputs"
+            <com.hhvvg.anydebug.ui.view.LtrbView
+                android:id="@+id/ltrb_padding_input"
+                android:layout_below="@id/ltrb_margin_inputs"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/padding_title"
-                android:layout_marginTop="5dp"
-                android:orientation="horizontal">
-
-                <EditText
-                    android:id="@+id/padding_left"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:hint="@string/left"
-                    android:inputType="number" />
-
-                <EditText
-                    android:id="@+id/padding_top"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:hint="@string/top"
-                    android:inputType="number" />
-
-                <EditText
-                    android:id="@+id/padding_right"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:hint="@string/right"
-                    android:inputType="number" />
-
-                <EditText
-                    android:id="@+id/padding_bottom"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:hint="@string/bottom"
-                    android:inputType="number" />
-            </LinearLayout>
+                android:layout_height="wrap_content"/>
 
             <LinearLayout
                 android:id="@+id/additional_panel_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/padding_inputs"
+                android:layout_below="@id/ltrb_padding_input"
                 android:layout_marginTop="5dp"
                 android:orientation="vertical" />
         </RelativeLayout>

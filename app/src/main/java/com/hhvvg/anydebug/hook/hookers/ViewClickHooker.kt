@@ -25,11 +25,12 @@ class ViewClickHooker : IHooker {
             val app = AndroidAppHelper.currentApplication()
             val enabled = app.isGlobalEditEnabled
             if (enabled) {
+                val listener = it.args[0] as View.OnClickListener?
                 view.replaceOnClickListener { origin ->
                     if (origin is ViewClickWrapper) {
-                        origin
+                        ViewClickWrapper(listener, origin.originClickable, view)
                     } else {
-                        ViewClickWrapper(origin, view.isClickable, view)
+                        ViewClickWrapper(listener, view.isClickable, view)
                     }
                 }
             }

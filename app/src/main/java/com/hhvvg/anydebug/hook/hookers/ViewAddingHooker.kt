@@ -1,11 +1,12 @@
 package com.hhvvg.anydebug.hook.hookers
 
+import android.content.Context
 import android.view.View
-import android.view.ViewGroup
-import androidx.core.view.children
 import com.hhvvg.anydebug.handler.ViewClickWrapper.Companion.IGNORE_HOOK
 import com.hhvvg.anydebug.hook.IHooker
-import com.hhvvg.anydebug.util.doBefore
+import com.hhvvg.anydebug.util.doAfter
+import com.hhvvg.anydebug.util.doAfterConstructor
+import com.hhvvg.anydebug.util.updateViewHookClick
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 
 /**
@@ -15,29 +16,17 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage
  */
 class ViewAddingHooker : IHooker {
     override fun onHook(param: XC_LoadPackage.LoadPackageParam) {
-        ViewGroup::class.doBefore(
-            "addView",
-            View::class.java,
-            Int::class.java,
-            ViewGroup.LayoutParams::class.java
-        ) {
-            val view = it.args[0] as View
-            dfsSetVisibility(view)
+        // Sets hook click.
+        View::class.doAfterConstructor(Context::class.java) { methodHookParam ->
+            val view = methodHookParam.thisObject as View
+            view.updateViewHookClick(traversalChildren = false)
         }
-    }
-
-    private fun dfsSetVisibility(view: View) {
-        if (view.tag == IGNORE_HOOK) {
-            return
-        }
-        // Manually set visibility again to update visibility
-        view.visibility = view.visibility
-        if (view !is ViewGroup) {
-            return
-        }
-        val children = view.children
-        for (child in children) {
-            dfsSetVisibility(child)
+        View::class.doAfter("setTag", Any::class.java) {
+            val view = it.thisObject as View
+            val tag = it.args[0]
+            if (tag == IGNORE_HOOK) {
+                view.updateViewHookClick(enabled = false, traversalChildren = false)
+            }
         }
     }
 }

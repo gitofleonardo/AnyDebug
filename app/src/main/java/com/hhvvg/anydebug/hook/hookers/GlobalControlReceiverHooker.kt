@@ -7,7 +7,6 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.os.Bundle
 import android.view.View
 import com.hhvvg.anydebug.config.ConfigDbHelper
 import com.hhvvg.anydebug.config.ConfigPreferences
@@ -18,11 +17,12 @@ import com.hhvvg.anydebug.ui.fragment.SettingsFragment.Companion.ACTION_PERSISTE
 import com.hhvvg.anydebug.ui.fragment.SettingsFragment.Companion.EXTRA_CONTROL_ACTION
 import com.hhvvg.anydebug.util.ACTIVITY_FIELD_GLOBAL_ENABLE_RECEIVER
 import com.hhvvg.anydebug.util.doAfter
+import com.hhvvg.anydebug.util.doOnActivityDestroyed
+import com.hhvvg.anydebug.util.doOnActivityPostCreated
 import com.hhvvg.anydebug.util.getInjectedField
 import com.hhvvg.anydebug.util.injectField
 import com.hhvvg.anydebug.util.isGlobalEditEnabled
 import com.hhvvg.anydebug.util.isPersistentEnabled
-import com.hhvvg.anydebug.util.registerMyActivityLifecycleCallbacks
 import com.hhvvg.anydebug.util.updateViewHookClick
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 
@@ -31,7 +31,7 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage
  *
  * Hook for listening config change broadcast.
  */
-class GlobalControlHooker : IHooker {
+class GlobalControlReceiverHooker : IHooker {
     override fun onHook(param: XC_LoadPackage.LoadPackageParam) {
         Application::class.doAfter("onCreate") {
             val app = it.thisObject as Application
@@ -42,8 +42,21 @@ class GlobalControlHooker : IHooker {
                 sp.getBoolean(ConfigDbHelper.CONFIG_PERSISTENT_ENABLED_COLUMN, false)
             app.isGlobalEditEnabled = editEnabled
             app.isPersistentEnabled = persistentEnabled
-            app.registerMyActivityLifecycleCallbacks(ActivityCallback())
             registerReceiverForApp(app)
+            app.doOnActivityPostCreated { activity, _ ->
+                // Register this receiver for every activity
+                val receiver = GlobalEnableReceiver(activity)
+                activity.injectField(ACTIVITY_FIELD_GLOBAL_ENABLE_RECEIVER, receiver)
+                val filter = IntentFilter(ACTION_GLOBAL_ENABLE)
+                activity.registerReceiver(receiver, filter)
+            }
+            app.doOnActivityDestroyed { activity ->
+                // Don't forget to release it.
+                activity.getInjectedField<BroadcastReceiver>(ACTIVITY_FIELD_GLOBAL_ENABLE_RECEIVER)
+                    ?.let { receiver ->
+                        activity.unregisterReceiver(receiver)
+                    }
+            }
         }
     }
 
@@ -51,42 +64,6 @@ class GlobalControlHooker : IHooker {
         val persistentEnableReceiver = PersistentEnableReceiver()
         val filter = IntentFilter(ACTION_PERSISTENT_ENABLE)
         app.registerReceiver(persistentEnableReceiver, filter)
-    }
-
-    private class ActivityCallback : Application.ActivityLifecycleCallbacks {
-        override fun onActivityPostCreated(activity: Activity, savedInstanceState: Bundle?) {
-            // Register this receiver for every activity
-            val receiver = GlobalEnableReceiver(activity)
-            activity.injectField(ACTIVITY_FIELD_GLOBAL_ENABLE_RECEIVER, receiver)
-            val filter = IntentFilter(ACTION_GLOBAL_ENABLE)
-            activity.registerReceiver(receiver, filter)
-        }
-
-        override fun onActivityCreated(p0: Activity, p1: Bundle?) {
-        }
-
-        override fun onActivityStarted(p0: Activity) {
-        }
-
-        override fun onActivityResumed(activity: Activity) {
-        }
-
-        override fun onActivityPaused(p0: Activity) {
-        }
-
-        override fun onActivityStopped(p0: Activity) {
-        }
-
-        override fun onActivitySaveInstanceState(p0: Activity, p1: Bundle) {
-        }
-
-        override fun onActivityDestroyed(activity: Activity) {
-            // Don't forget to release it.
-            activity.getInjectedField<BroadcastReceiver>(ACTIVITY_FIELD_GLOBAL_ENABLE_RECEIVER)?.let {
-                activity.unregisterReceiver(it)
-            }
-        }
-
     }
 
     private class GlobalEnableReceiver(private val activity: Activity) : BroadcastReceiver() {

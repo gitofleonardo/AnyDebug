@@ -14,7 +14,7 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage
  *
  * Prevent from setting text.
  */
-class SetTextHooker : IHooker {
+class TextViewHooker : IHooker {
     override fun onHook(param: XC_LoadPackage.LoadPackageParam) {
         TextView::class.doBefore(
             "setText",

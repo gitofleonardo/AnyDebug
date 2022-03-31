@@ -14,11 +14,12 @@
         android:layout_height="wrap_content"/>
 
     <Spinner
-        android:layout_marginStart="10dp"
-        android:layout_toEndOf="@id/scale_type_title"
+        android:tag="ANYDEBUG_IGNORE_HOOK"
         android:id="@+id/scale_type_spinner"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_toEndOf="@id/scale_type_title" />
 
     <TextView
         android:id="@+id/image_url_title"

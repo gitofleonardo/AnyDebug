@@ -2,7 +2,6 @@ package com.hhvvg.anydebug.handler.imageview
 
 import android.os.Bundle
 import android.text.SpannableString
-import android.view.LayoutInflater
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -12,6 +11,7 @@ import com.hhvvg.anydebug.databinding.LayoutImageViewAttrBinding
 import com.hhvvg.anydebug.glide.GlideApp
 import com.hhvvg.anydebug.hook.AnyHookFramework.Companion.moduleRes
 import com.hhvvg.anydebug.ui.BaseAttributeDialog
+import com.hhvvg.anydebug.util.inflater.MyLayoutInflater
 
 /**
  * @author hhvvg
@@ -24,7 +24,7 @@ class ImageViewAttrDialog(private val view: ImageView) : BaseAttributeDialog(vie
 
     private val binding by lazy {
         val layout = moduleRes.getLayout(R.layout.layout_image_view_attr)
-        val inflater = LayoutInflater.from(context)
+        val inflater = MyLayoutInflater.from(context)
         val view = inflater.inflate(layout, null)
         LayoutImageViewAttrBinding.bind(view)
     }
