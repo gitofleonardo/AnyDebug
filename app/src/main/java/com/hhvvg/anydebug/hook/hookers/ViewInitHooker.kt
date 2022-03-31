@@ -1,15 +1,14 @@
 package com.hhvvg.anydebug.hook.hookers
 
 import android.app.Activity
-import android.app.AndroidAppHelper
 import android.app.Application
 import android.os.Bundle
 import android.view.ViewGroup
 import com.hhvvg.anydebug.hook.IHooker
-import com.hhvvg.anydebug.util.*
-import de.robv.android.xposed.XC_MethodHook
-import de.robv.android.xposed.XposedBridge
-import de.robv.android.xposed.XposedHelpers
+import com.hhvvg.anydebug.util.doAfter
+import com.hhvvg.anydebug.util.registerMyActivityLifecycleCallbacks
+import com.hhvvg.anydebug.util.updateDrawLayoutBounds
+import com.hhvvg.anydebug.util.updateViewHookClick
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 
 /**
@@ -19,18 +18,8 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage
  */
 class ViewInitHooker : IHooker {
     override fun onHook(param: XC_LoadPackage.LoadPackageParam) {
-        val appClazz = Application::class.java
-        val onCreateHook = ApplicationOnCreateMethodHook()
-        val method = XposedHelpers.findMethodBestMatch(appClazz, "onCreate", arrayOf(), arrayOf())
-        XposedBridge.hookMethod(method, onCreateHook)
-    }
-
-    private class ApplicationOnCreateMethodHook : XC_MethodHook() {
-        override fun afterHookedMethod(param: MethodHookParam?) {
-            if (param == null) {
-                return
-            }
-            val app = AndroidAppHelper.currentApplication()
+        Application::class.doAfter("onCreate") {
+            val app = it.thisObject as Application
             app.registerMyActivityLifecycleCallbacks(ActivityCallback())
         }
     }

@@ -5,11 +5,9 @@ import android.view.View
 import com.hhvvg.anydebug.handler.ViewClickWrapper
 import com.hhvvg.anydebug.handler.ViewClickWrapper.Companion.IGNORE_HOOK
 import com.hhvvg.anydebug.hook.IHooker
+import com.hhvvg.anydebug.util.doAfter
 import com.hhvvg.anydebug.util.isGlobalEditEnabled
 import com.hhvvg.anydebug.util.replaceOnClickListener
-import de.robv.android.xposed.XC_MethodHook
-import de.robv.android.xposed.XposedBridge
-import de.robv.android.xposed.XposedHelpers
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 
 /**
@@ -19,20 +17,10 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage
  */
 class ViewClickHooker : IHooker {
     override fun onHook(param: XC_LoadPackage.LoadPackageParam) {
-        val clickMethodHook = ViewSetOnClickListenerMethodHook()
-        val clickMethod = XposedHelpers.findMethodBestMatch(
-            View::class.java,
-            "setOnClickListener",
-            View.OnClickListener::class.java
-        )
-        XposedBridge.hookMethod(clickMethod, clickMethodHook)
-    }
-
-    private class ViewSetOnClickListenerMethodHook : XC_MethodHook() {
-        override fun afterHookedMethod(param: MethodHookParam) {
-            val view = param.thisObject as View
+        View::class.doAfter("setOnClickListener", View.OnClickListener::class.java) {
+            val view = it.thisObject as View
             if (view.tag == IGNORE_HOOK) {
-                return
+                return@doAfter
             }
             val app = AndroidAppHelper.currentApplication()
             val enabled = app.isGlobalEditEnabled

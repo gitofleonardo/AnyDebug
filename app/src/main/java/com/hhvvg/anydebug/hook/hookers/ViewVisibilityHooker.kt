@@ -5,9 +5,8 @@ import android.view.View
 import com.hhvvg.anydebug.handler.ViewClickWrapper.Companion.IGNORE_HOOK
 import com.hhvvg.anydebug.hook.IHooker
 import com.hhvvg.anydebug.persistent.RuleType
+import com.hhvvg.anydebug.util.doBefore
 import com.hhvvg.anydebug.util.rulesMap
-import de.robv.android.xposed.XC_MethodHook
-import de.robv.android.xposed.XposedBridge
 import de.robv.android.xposed.XposedHelpers
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 
@@ -18,21 +17,14 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage
  */
 class ViewVisibilityHooker : IHooker {
     override fun onHook(param: XC_LoadPackage.LoadPackageParam) {
-        val clazz = View::class.java
-        val method = XposedHelpers.findMethodBestMatch(clazz, "setFlags", Int::class.java, Int::class.java)
-        val methodHook = SetVisibilityMethodHook()
-        XposedBridge.hookMethod(method, methodHook)
-    }
-
-    private class SetVisibilityMethodHook : XC_MethodHook() {
-        override fun beforeHookedMethod(param: MethodHookParam) {
-            val view = param.thisObject as View
+        View::class.doBefore("setFlags", Int::class.java, Int::class.java) {
+            val view = it.thisObject as View
             if (view.tag == IGNORE_HOOK) {
-                return
+                return@doBefore
             }
             val mask = XposedHelpers.getStaticIntField(View::class.java, "VISIBILITY_MASK")
-            if (param.args[1] != mask) {
-                return
+            if (it.args[1] != mask) {
+                return@doBefore
             }
             val viewId = view.id
             val parent = view.parent
@@ -41,7 +33,7 @@ class ViewVisibilityHooker : IHooker {
             val rules = app.rulesMap[viewId] ?: emptyList()
             for (rule in rules) {
                 if (rule.ruleType == RuleType.Visibility && parentId == rule.viewParentId && view::class.java.name == rule.className) {
-                    param.args[0] = rule.viewRule.toIntOrNull() ?: param.args[0]
+                    it.args[0] = rule.viewRule.toIntOrNull() ?: it.args[0]
                     break
                 }
             }

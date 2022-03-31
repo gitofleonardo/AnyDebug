@@ -12,13 +12,11 @@ import com.hhvvg.anydebug.hook.IHooker
 import com.hhvvg.anydebug.persistent.AppDatabase
 import com.hhvvg.anydebug.persistent.RuleType
 import com.hhvvg.anydebug.persistent.ViewRule
+import com.hhvvg.anydebug.util.doAfter
 import com.hhvvg.anydebug.util.registerMyActivityLifecycleCallbacks
 import com.hhvvg.anydebug.util.rules
 import com.hhvvg.anydebug.util.rulesMap
 import com.hhvvg.anydebug.util.sp
-import de.robv.android.xposed.XC_MethodHook
-import de.robv.android.xposed.XposedBridge
-import de.robv.android.xposed.XposedHelpers
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -32,31 +30,20 @@ import kotlinx.coroutines.launch
  */
 class ViewRulesLoader : IHooker {
     override fun onHook(param: XC_LoadPackage.LoadPackageParam) {
-        val methodHook = AppOnCreateMethodHook()
-        val method = XposedHelpers.findMethodBestMatch(
-            Application::class.java,
-            "onCreate",
-            arrayOf(),
-            arrayOf()
-        )
-        XposedBridge.hookMethod(method, methodHook)
-    }
-
-    private class AppOnCreateMethodHook : XC_MethodHook() {
-        override fun afterHookedMethod(param: MethodHookParam) {
-            val app = param.thisObject as Application
+        Application::class.doAfter("onCreate") {
+            val app = it.thisObject as Application
             app.registerMyActivityLifecycleCallbacks(ActivityCallbacks())
             GlobalScope.launch(context = Dispatchers.IO) {
                 val rulesFlow = AppDatabase.viewRuleDao.queryAllRules()
-                rulesFlow.collect {
-                    app.rules = it
-                    app.rulesMap = it.groupBy { rule -> rule.viewId }
+                rulesFlow.collect { list ->
+                    app.rules = list
+                    app.rulesMap = list.groupBy { rule -> rule.viewId }
                 }
             }
         }
     }
 
-    private class ActivityCallbacks: Application.ActivityLifecycleCallbacks {
+    private class ActivityCallbacks : Application.ActivityLifecycleCallbacks {
         override fun onActivityPostResumed(activity: Activity) {
             val app = activity.application
             val rules = app.rules
@@ -76,7 +63,8 @@ class ViewRulesLoader : IHooker {
                 val parent = view.parent
                 val parentId = if (parent is View) parent.id else View.NO_ID
                 if (rule.viewParentId != parentId ||
-                    rule.className != view::class.java.name) {
+                    rule.className != view::class.java.name
+                ) {
                     continue
                 }
                 when (rule.ruleType) {

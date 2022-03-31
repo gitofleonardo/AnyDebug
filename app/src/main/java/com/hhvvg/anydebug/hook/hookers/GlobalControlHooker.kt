@@ -1,6 +1,8 @@
 package com.hhvvg.anydebug.hook.hookers
 
-import android.app.*
+import android.app.Activity
+import android.app.AndroidAppHelper
+import android.app.Application
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -14,17 +16,14 @@ import com.hhvvg.anydebug.ui.fragment.SettingsFragment.Companion.ACTION_ENABLE
 import com.hhvvg.anydebug.ui.fragment.SettingsFragment.Companion.ACTION_GLOBAL_ENABLE
 import com.hhvvg.anydebug.ui.fragment.SettingsFragment.Companion.ACTION_PERSISTENT_ENABLE
 import com.hhvvg.anydebug.ui.fragment.SettingsFragment.Companion.EXTRA_CONTROL_ACTION
-import com.hhvvg.anydebug.util.ACTIVITY_FIELD_GLOBAL_ENABLE
+import com.hhvvg.anydebug.util.ACTIVITY_FIELD_GLOBAL_ENABLE_RECEIVER
+import com.hhvvg.anydebug.util.doAfter
 import com.hhvvg.anydebug.util.getInjectedField
 import com.hhvvg.anydebug.util.injectField
-import com.hhvvg.anydebug.util.isForceClickable
 import com.hhvvg.anydebug.util.isGlobalEditEnabled
 import com.hhvvg.anydebug.util.isPersistentEnabled
 import com.hhvvg.anydebug.util.registerMyActivityLifecycleCallbacks
 import com.hhvvg.anydebug.util.updateViewHookClick
-import de.robv.android.xposed.XC_MethodHook
-import de.robv.android.xposed.XposedBridge
-import de.robv.android.xposed.XposedHelpers
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 
 /**
@@ -34,42 +33,31 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage
  */
 class GlobalControlHooker : IHooker {
     override fun onHook(param: XC_LoadPackage.LoadPackageParam) {
-        val methodHook = OnAppCreateMethodHook()
-        val method = XposedHelpers.findMethodBestMatch(
-            Application::class.java,
-            "onCreate",
-            arrayOf(),
-            arrayOf()
-        )
-        XposedBridge.hookMethod(method, methodHook)
-    }
-
-    private class OnAppCreateMethodHook : XC_MethodHook() {
-        override fun afterHookedMethod(param: MethodHookParam) {
-            val app = param.thisObject as Application
+        Application::class.doAfter("onCreate") {
+            val app = it.thisObject as Application
             // Read from module
             val sp = ConfigPreferences(app.applicationContext)
             val editEnabled = sp.getBoolean(ConfigDbHelper.CONFIG_EDIT_ENABLED_COLUMN, false)
-            val persistentEnabled = sp.getBoolean(ConfigDbHelper.CONFIG_PERSISTENT_ENABLED_COLUMN, false)
+            val persistentEnabled =
+                sp.getBoolean(ConfigDbHelper.CONFIG_PERSISTENT_ENABLED_COLUMN, false)
             app.isGlobalEditEnabled = editEnabled
             app.isPersistentEnabled = persistentEnabled
-
             app.registerMyActivityLifecycleCallbacks(ActivityCallback())
             registerReceiverForApp(app)
         }
+    }
 
-        private fun registerReceiverForApp(app: Application) {
-            val persistentEnableReceiver = PersistentEnableReceiver()
-            val filter = IntentFilter(ACTION_PERSISTENT_ENABLE)
-            app.registerReceiver(persistentEnableReceiver, filter)
-        }
+    private fun registerReceiverForApp(app: Application) {
+        val persistentEnableReceiver = PersistentEnableReceiver()
+        val filter = IntentFilter(ACTION_PERSISTENT_ENABLE)
+        app.registerReceiver(persistentEnableReceiver, filter)
     }
 
     private class ActivityCallback : Application.ActivityLifecycleCallbacks {
         override fun onActivityPostCreated(activity: Activity, savedInstanceState: Bundle?) {
             // Register this receiver for every activity
             val receiver = GlobalEnableReceiver(activity)
-            activity.injectField(ACTIVITY_FIELD_GLOBAL_ENABLE, receiver)
+            activity.injectField(ACTIVITY_FIELD_GLOBAL_ENABLE_RECEIVER, receiver)
             val filter = IntentFilter(ACTION_GLOBAL_ENABLE)
             activity.registerReceiver(receiver, filter)
         }
@@ -94,9 +82,8 @@ class GlobalControlHooker : IHooker {
 
         override fun onActivityDestroyed(activity: Activity) {
             // Don't forget to release it.
-            val receiver = activity.getInjectedField<BroadcastReceiver>(ACTIVITY_FIELD_GLOBAL_ENABLE)
-            receiver?.let {
-                activity.unregisterReceiver(receiver)
+            activity.getInjectedField<BroadcastReceiver>(ACTIVITY_FIELD_GLOBAL_ENABLE_RECEIVER)?.let {
+                activity.unregisterReceiver(it)
             }
         }
 

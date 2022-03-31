@@ -6,7 +6,10 @@ import android.view.ViewGroup
 import androidx.core.view.children
 import com.hhvvg.anydebug.handler.ViewClickWrapper
 import com.hhvvg.anydebug.handler.ViewClickWrapper.Companion.IGNORE_HOOK
+import de.robv.android.xposed.XC_MethodHook
+import de.robv.android.xposed.XposedBridge
 import de.robv.android.xposed.XposedHelpers
+import kotlin.reflect.KClass
 
 fun View.replaceOnClickListener(
     listenerGeneratorCallback: (origin: View.OnClickListener?) -> View.OnClickListener?
@@ -99,4 +102,24 @@ fun Any.injectField(name: String, value: Any?) {
 fun <T> Any.getInjectedField(name: String, defaultValue: T? = null): T? {
     val value = XposedHelpers.getAdditionalInstanceField(this, name) ?: defaultValue
     return value as T?
+}
+
+fun KClass<*>.doBefore(methodName: String, vararg methodParams: Any, callback: (XC_MethodHook.MethodHookParam) -> Unit) {
+    val method = XposedHelpers.findMethodBestMatch(this.java, methodName, methodParams)
+    val methodHook = object : XC_MethodHook() {
+        override fun beforeHookedMethod(param: MethodHookParam) {
+            callback.invoke(param)
+        }
+    }
+    XposedBridge.hookMethod(method, methodHook)
+}
+
+fun KClass<*>.doAfter(methodName: String, vararg methodParams: Any, callback: (XC_MethodHook.MethodHookParam) -> Unit) {
+    val method = XposedHelpers.findMethodBestMatch(this.java, methodName, methodParams)
+    val methodHook = object : XC_MethodHook() {
+        override fun afterHookedMethod(param: MethodHookParam) {
+            callback.invoke(param)
+        }
+    }
+    XposedBridge.hookMethod(method, methodHook)
 }
