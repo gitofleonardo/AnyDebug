@@ -69,4 +69,7 @@
     <string name="ok">OK</string>
     <string name="delete">Delete</string>
     <string name="preview">Preview</string>
+    <string name="visible" translatable="false">Visible</string>
+    <string name="invisible" translatable="false">Invisible</string>
+    <string name="gone" translatable="false">Gone</string>
 </resources>

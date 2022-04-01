@@ -13,6 +13,7 @@
         android:tag="ANYDEBUG_IGNORE_HOOK" />
 
     <TextView
+        android:textColor="@android:color/black"
         android:id="@+id/view_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

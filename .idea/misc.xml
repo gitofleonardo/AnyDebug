@@ -34,6 +34,7 @@
         <entry key="app/src/main/res/layout/layout_tile_button.xml" value="0.25" />
         <entry key="app/src/main/res/layout/layout_view_preview_item.xml" value="0.35052083333333334" />
         <entry key="app/src/main/res/layout/layout_view_rule_item.xml" value="0.2786458333333333" />
+        <entry key="app/src/main/res/layout/layout_visibility_dialog.xml" value="0.33" />
         <entry key="app/src/main/res/layout/settings_activity.xml" value="0.25" />
         <entry key="app/src/main/res/xml/root_preferences.xml" value="0.33" />
       </map>

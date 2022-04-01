@@ -85,9 +85,6 @@ open class BaseAttributeDialog(protected val itemView: View) : BaseDialog(itemVi
     }
 
     private fun setSpinners() {
-        binding.visibilityButton.setOnClickListener {
-
-        }
         binding.widthSpinner.adapter = ArrayAdapter(
             context,
             android.R.layout.simple_spinner_dropdown_item,
@@ -173,6 +170,15 @@ open class BaseAttributeDialog(protected val itemView: View) : BaseDialog(itemVi
     }
 
     private fun setListeners() {
+        binding.visibilityButton.setOnClickListener {
+            VisibilityDialog(
+                context,
+                viewModel.visibility ?: itemView.visibility
+            ) { visibility, text ->
+                viewModel.visibility = visibility
+                binding.visibilityButton.subtitle = text
+            }.show()
+        }
         binding.rulesButton.setOnClickListener {
             val dialog = RulePreviewDialog(context)
             dialog.show()
