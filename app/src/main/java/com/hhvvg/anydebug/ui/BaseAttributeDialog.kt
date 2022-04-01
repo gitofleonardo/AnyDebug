@@ -18,17 +18,13 @@ import androidx.core.view.drawToBitmap
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import com.hhvvg.anydebug.R
-import com.hhvvg.anydebug.data.BaseViewAttribute
 import com.hhvvg.anydebug.databinding.LayoutBaseAttributeDialogBinding
-import com.hhvvg.anydebug.databinding.LayoutImageBinding
 import com.hhvvg.anydebug.glide.GlideApp
 import com.hhvvg.anydebug.handler.ViewClickWrapper
-import com.hhvvg.anydebug.handler.ViewDispatcher
 import com.hhvvg.anydebug.hook.AnyHookFramework.Companion.moduleRes
 import com.hhvvg.anydebug.persistent.AppDatabase
 import com.hhvvg.anydebug.persistent.RuleType
 import com.hhvvg.anydebug.persistent.ViewRule
-import com.hhvvg.anydebug.ui.adapter.ViewItemListAdapter
 import com.hhvvg.anydebug.util.dp
 import com.hhvvg.anydebug.util.getOnClickListener
 import com.hhvvg.anydebug.util.inflater.MyLayoutInflater
@@ -222,29 +218,13 @@ open class BaseAttributeDialog(protected val itemView: View) : BaseDialog(itemVi
 
     private fun showViewsDialog(title: CharSequence, views: List<View>) {
         GlideApp.get(context).clearMemory()
-        Builder(context)
-            .setTitle(title)
-            .setAdapter(ViewItemListAdapter(views)) { d, which ->
-                d.dismiss()
-                val selected = views[which]
-                ViewDispatcher.dispatch(selected)
-                dismiss()
-            }
-            .create()
-            .show()
+        val dialog = ViewsDialog(context, views)
+        dialog.show()
+        dialog.setTitle(title)
     }
 
     private fun showViewPreviewDialog(view: View) {
-        val layout = moduleRes.getLayout(R.layout.layout_image)
-        val inflater = MyLayoutInflater.from(view.context)
-        val itemView = inflater.inflate(layout, null, false)
-        val binding = LayoutImageBinding.bind(itemView)
-        Builder(view.context)
-            .setTitle(view::class.java.name)
-            .setView(itemView)
-            .create()
-            .show()
-        GlideApp.with(view).load(view).into(binding.previewImage)
+        ViewRenderPreviewDialog(context, view).show()
     }
 
 
@@ -464,5 +444,40 @@ open class BaseAttributeDialog(protected val itemView: View) : BaseDialog(itemVi
         view.setIgnoreTagRecursively()
         appendAttributePanelView(view)
         return view
+    }
+
+    /**
+     * Holding information for view.
+     */
+    open class BaseViewAttribute(
+        val width: Int,
+        val height: Int,
+        val paddingLeft: Int,
+        val paddingTop: Int,
+        val paddingRight: Int,
+        val paddingBottom: Int,
+        val marginLeft: Int,
+        val marginTop: Int,
+        val marginRight: Int,
+        val marginBottom: Int,
+        val visibility: Int?,
+        val forceClickable: Boolean,
+        val showBounds: Boolean,
+    ) {
+        constructor(data: BaseViewAttribute) : this(
+            data.width,
+            data.height,
+            data.paddingLeft,
+            data.paddingTop,
+            data.paddingRight,
+            data.paddingBottom,
+            data.marginLeft,
+            data.marginTop,
+            data.marginRight,
+            data.marginBottom,
+            data.visibility,
+            data.forceClickable,
+            data.showBounds,
+        )
     }
 }

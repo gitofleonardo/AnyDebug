@@ -61,4 +61,7 @@
     <string name="function">功能</string>
     <string name="rules">规则</string>
     <string name="details">详情</string>
+    <string name="ok">确定</string>
+    <string name="delete">删除</string>
+    <string name="preview">预览</string>
 </resources>

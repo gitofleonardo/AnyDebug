@@ -66,4 +66,7 @@
     <string name="rules">Rules</string>
     <string name="subtitle" translatable="false">subtitle</string>
     <string name="details">details</string>
+    <string name="ok">OK</string>
+    <string name="delete">Delete</string>
+    <string name="preview">Preview</string>
 </resources>

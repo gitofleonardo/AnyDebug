@@ -1,20 +1,22 @@
 package com.hhvvg.anydebug.ui.adapter
 
-import android.app.AlertDialog
 import android.text.SpannableString
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.hhvvg.anydebug.R
-import com.hhvvg.anydebug.databinding.LayoutImageBinding
 import com.hhvvg.anydebug.databinding.LayoutViewPreviewItemBinding
 import com.hhvvg.anydebug.glide.GlideApp
 import com.hhvvg.anydebug.handler.ViewClickWrapper.Companion.IGNORE_HOOK
 import com.hhvvg.anydebug.hook.AnyHookFramework.Companion.moduleRes
+import com.hhvvg.anydebug.ui.ViewRenderPreviewDialog
 import com.hhvvg.anydebug.util.inflater.MyLayoutInflater
 
-class ViewItemListAdapter(private val views: List<View>) : BaseAdapter() {
+class ViewItemListAdapter(
+    private val views: List<View>,
+    private val onClickListener: ((Int) -> Unit)? = null
+) : BaseAdapter() {
 
     override fun getCount(): Int = views.size
 
@@ -45,21 +47,13 @@ class ViewItemListAdapter(private val views: List<View>) : BaseAdapter() {
             showViewImageDialog(view)
         }
         binding.viewName.text = SpannableString(view::class.java.name)
+        binding.root.setOnClickListener {
+            onClickListener?.invoke(position)
+        }
         return itemView
     }
 
     private fun showViewImageDialog(view: View) {
-        val layout = moduleRes.getLayout(R.layout.layout_image)
-        val inflater = MyLayoutInflater.from(view.context)
-        val itemView = inflater.inflate(layout, null, false)
-        val binding = LayoutImageBinding.bind(itemView)
-
-        val dialog = AlertDialog.Builder(view.context)
-            .setTitle(view::class.java.name)
-            .setView(itemView)
-            .create()
-        dialog.show()
-
-        GlideApp.with(view).load(view).into(binding.previewImage)
+        ViewRenderPreviewDialog(view.context, view).show()
     }
 }

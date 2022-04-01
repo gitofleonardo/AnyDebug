@@ -21,9 +21,13 @@
         <entry key="app/src/main/res/layout/layout_base_attribute_dialog.xml" value="0.25" />
         <entry key="app/src/main/res/layout/layout_base_dialog.xml" value="0.2" />
         <entry key="app/src/main/res/layout/layout_base_view_attr.xml" value="0.35052083333333334" />
+        <entry key="app/src/main/res/layout/layout_empty_dialog.xml" value="0.334375" />
         <entry key="app/src/main/res/layout/layout_image.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/layout_image_item.xml" value="0.334375" />
         <entry key="app/src/main/res/layout/layout_image_view_attr.xml" value="0.328125" />
+        <entry key="app/src/main/res/layout/layout_listview_dialog.xml" value="0.334375" />
         <entry key="app/src/main/res/layout/layout_ltrb_view.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/layout_preview_dialog.xml" value="0.334375" />
         <entry key="app/src/main/res/layout/layout_scene_large.xml" value="0.35104166666666664" />
         <entry key="app/src/main/res/layout/layout_scene_small.xml" value="0.35104166666666664" />
         <entry key="app/src/main/res/layout/layout_text_view_attr.xml" value="0.35052083333333334" />

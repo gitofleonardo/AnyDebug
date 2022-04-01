@@ -86,6 +86,7 @@ abstract class BaseDialog(context: Context) : AlertDialog(context) {
                 val wm = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
                 val metrics = DisplayMetrics()
                 wm.defaultDisplay.getMetrics(metrics)
+                param.width = WindowManager.LayoutParams.WRAP_CONTENT
                 param.height = (metrics.heightPixels * .9F).toInt()
                 this.attributes = param
             }
