@@ -5,6 +5,7 @@ import android.content.Context
 import android.text.SpannableString
 import android.util.AttributeSet
 import android.widget.RelativeLayout
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
 import com.hhvvg.anydebug.R
 import com.hhvvg.anydebug.databinding.LayoutTileButtonBinding
@@ -25,6 +26,8 @@ class TileButton(context: Context, attributeSet: AttributeSet?) :
     init {
         binding = getBindingInternal()
         binding.arrowImage.setImageDrawable(moduleRes.getDrawable(R.drawable.ic_baseline_arrow_right_24, null))
+        binding.root.background =
+            ResourcesCompat.getDrawable(moduleRes, R.drawable.ripple_button_background, null)
     }
 
     private fun getBindingInternal(): LayoutTileButtonBinding {

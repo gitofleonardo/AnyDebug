@@ -40,8 +40,12 @@ abstract class BaseDialog(context: Context) : AlertDialog(context) {
     }
 
     private fun setBackground() {
-        baseBinding.root.background =
-            ResourcesCompat.getDrawable(moduleRes, R.drawable.backgroun_dialog, null)
+        baseBinding.apply {
+            root.background = ResourcesCompat.getDrawable(moduleRes, R.drawable.backgroun_dialog, null)
+            detailButton.background = ResourcesCompat.getDrawable(moduleRes, R.drawable.ripple_button_background, null)
+            cancelButton.background = ResourcesCompat.getDrawable(moduleRes, R.drawable.ripple_button_background, null)
+            applyButton.background = ResourcesCompat.getDrawable(moduleRes, R.drawable.ripple_button_background, null)
+        }
     }
 
     override fun setTitle(title: CharSequence?) {

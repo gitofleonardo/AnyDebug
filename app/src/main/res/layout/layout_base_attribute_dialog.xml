@@ -17,6 +17,7 @@
             android:layout_height="wrap_content">
 
             <ImageView
+                android:layout_margin="10dp"
                 android:id="@+id/preview_image"
                 android:layout_width="54dp"
                 android:layout_height="54dp"
@@ -24,6 +25,7 @@
                 android:tag="ANYDEBUG_IGNORE_HOOK" />
 
             <Switch
+                android:layout_margin="10dp"
                 android:id="@+id/show_layout_bounds_switch"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -37,11 +39,11 @@
                 tools:ignore="UseSwitchCompatOrMaterialXml" />
 
             <Switch
+                android:layout_margin="10dp"
                 android:id="@+id/force_widgets_clickable"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/show_layout_bounds_switch"
-                android:layout_marginTop="5dp"
                 android:tag="ANYDEBUG_IGNORE_HOOK"
                 android:text="@string/force_clickable"
                 android:textColor="@android:color/black"
@@ -55,7 +57,6 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/force_widgets_clickable"
                 android:layout_alignParentStart="true"
-                android:layout_marginTop="5dp"
                 android:tag="ANYDEBUG_IGNORE_HOOK" />
 
             <com.hhvvg.anydebug.ui.view.TileButton
@@ -63,22 +64,19 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/ancestor_button"
-                android:layout_marginTop="5dp"
                 android:tag="ANYDEBUG_IGNORE_HOOK" />
 
             <com.hhvvg.anydebug.ui.view.TileButton
                 android:id="@+id/rules_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/children_button"
-                android:layout_marginTop="5dp" />
+                android:layout_below="@id/children_button" />
 
             <com.hhvvg.anydebug.ui.view.TileButton
                 android:id="@+id/visibility_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/rules_button"
-                android:layout_marginTop="5dp" />
+                android:layout_below="@id/rules_button" />
 
             <TextView
                 android:id="@+id/width_title"

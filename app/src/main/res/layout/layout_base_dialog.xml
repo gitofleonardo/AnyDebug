@@ -3,12 +3,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:paddingLeft="10dp"
-    android:paddingTop="10dp"
-    android:paddingRight="10dp"
-    android:paddingBottom="5dp">
+    android:padding="5dp" >
 
     <TextView
+        android:layout_margin="10dp"
         android:id="@+id/dialog_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -32,38 +30,44 @@
         android:layout_marginTop="5dp">
 
         <Button
+            style="?android:borderlessButtonStyle"
+            android:elevation="0dp"
+            android:shadowColor="@android:color/transparent"
             android:id="@+id/detail_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
             android:tag="ANYDEBUG_IGNORE_HOOK"
             android:text="@string/details"
             android:textColor="#673AB7"
-            android:textSize="16sp"
+            android:textSize="14sp"
             android:visibility="gone" />
 
         <Button
+            style="?android:borderlessButtonStyle"
+            android:elevation="0dp"
+            android:shadowColor="@android:color/transparent"
             android:id="@+id/apply_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:background="@android:color/transparent"
             android:tag="ANYDEBUG_IGNORE_HOOK"
             android:text="@string/apply"
             android:textColor="#673AB7"
-            android:textSize="16sp"
+            android:textSize="14sp"
             android:visibility="gone" />
 
         <Button
+            style="?android:borderlessButtonStyle"
+            android:elevation="0dp"
+            android:shadowColor="@android:color/transparent"
             android:id="@+id/cancel_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toStartOf="@id/apply_button"
-            android:background="@android:color/transparent"
             android:tag="ANYDEBUG_IGNORE_HOOK"
             android:text="@string/cancel"
             android:textColor="#673AB7"
-            android:textSize="16sp"
+            android:textSize="14sp"
             android:visibility="gone" />
     </RelativeLayout>
 </LinearLayout>
