@@ -7,6 +7,7 @@
     android:tag="ANYDEBUG_IGNORE_HOOK">
 
     <ScrollView
+        android:overScrollMode="always"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
@@ -78,60 +79,30 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/rules_button" />
 
-            <TextView
-                android:id="@+id/width_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            <com.hhvvg.anydebug.ui.view.TileButton
+                android:id="@+id/width_spec_button"
                 android:layout_below="@id/visibility_button"
-                android:layout_marginTop="5dp"
-                android:text="@string/width" />
-
-            <Spinner
-                android:id="@+id/width_spinner"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/width_title"
-                android:layout_marginTop="5dp"
-                android:tag="ANYDEBUG_IGNORE_HOOK" />
+                android:layout_height="wrap_content"/>
 
-            <EditText
-                android:id="@+id/width_input"
+            <com.hhvvg.anydebug.ui.view.TileButton
+                android:layout_below="@id/width_spec_button"
+                android:id="@+id/height_spec_button"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/width_spinner"
-                android:hint="@string/width" />
-
-            <TextView
-                android:id="@+id/height_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/width_input"
-                android:layout_marginTop="5dp"
-                android:text="@string/height" />
-
-            <Spinner
-                android:id="@+id/height_spinner"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/height_title"
-                android:layout_marginTop="5dp"
-                android:tag="ANYDEBUG_IGNORE_HOOK" />
-
-            <EditText
-                android:id="@+id/height_input"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/height_spinner"
-                android:hint="@string/height" />
+                android:layout_height="wrap_content"/>
 
             <com.hhvvg.anydebug.ui.view.LtrbView
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
                 android:id="@+id/ltrb_margin_inputs"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/height_input"
+                android:layout_below="@id/height_spec_button"
                 android:visibility="gone" />
 
             <com.hhvvg.anydebug.ui.view.LtrbView
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
                 android:id="@+id/ltrb_padding_input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

@@ -16,13 +16,13 @@
         android:textStyle="bold" />
 
     <Switch
-        android:textColor="@android:color/black"
         android:id="@+id/ltrb_identical_checkbox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:text="@string/identical"
+        android:textColor="@android:color/black"
         tools:ignore="UseSwitchCompatOrMaterialXml" />
 
     <LinearLayout
@@ -37,7 +37,10 @@
             android:id="@+id/left"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
             android:layout_weight="1"
+            android:background="@drawable/input_background"
             android:hint="@string/left"
             android:inputType="number"
             android:tag="ANYDEBUG_IGNORE_HOOK" />
@@ -46,7 +49,10 @@
             android:id="@+id/top"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
             android:layout_weight="1"
+            android:background="@drawable/input_background"
             android:hint="@string/top"
             android:inputType="number" />
 
@@ -54,7 +60,10 @@
             android:id="@+id/right"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
             android:layout_weight="1"
+            android:background="@drawable/input_background"
             android:hint="@string/right"
             android:inputType="number" />
 
@@ -62,7 +71,10 @@
             android:id="@+id/bottom"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
             android:layout_weight="1"
+            android:background="@drawable/input_background"
             android:hint="@string/bottom"
             android:inputType="number" />
     </LinearLayout>

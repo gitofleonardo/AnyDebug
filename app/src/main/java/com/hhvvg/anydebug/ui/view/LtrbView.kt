@@ -5,6 +5,7 @@ import android.text.SpannableString
 import android.util.AttributeSet
 import android.widget.EditText
 import android.widget.RelativeLayout
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.children
 import androidx.core.widget.addTextChangedListener
 import com.hhvvg.anydebug.R
@@ -52,6 +53,16 @@ class LtrbView(context: Context, attributeSet: AttributeSet?) : RelativeLayout(c
     init {
         setupText()
         setListeners()
+        setBackgrounds()
+    }
+
+    private fun setBackgrounds() {
+        binding.apply {
+            left.background = ResourcesCompat.getDrawable(moduleRes, R.drawable.input_background, null)
+            top.background = ResourcesCompat.getDrawable(moduleRes, R.drawable.input_background, null)
+            right.background = ResourcesCompat.getDrawable(moduleRes, R.drawable.input_background, null)
+            bottom.background = ResourcesCompat.getDrawable(moduleRes, R.drawable.input_background, null)
+        }
     }
 
     private fun setListeners() {

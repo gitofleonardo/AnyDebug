@@ -13,6 +13,7 @@
         <entry key="app/src/main/res/drawable/ic_baseline_arrow_drop_up_24.xml" value="0.181" />
         <entry key="app/src/main/res/drawable/ic_baseline_arrow_right_24.xml" value="0.2575" />
         <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.181" />
+        <entry key="app/src/main/res/drawable/input_background.xml" value="0.1965" />
         <entry key="app/src/main/res/drawable/tile_button_background.xml" value="0.173" />
         <entry key="app/src/main/res/drawable/white_button_background.xml" value="0.173" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.25" />
@@ -30,6 +31,7 @@
         <entry key="app/src/main/res/layout/layout_preview_dialog.xml" value="0.334375" />
         <entry key="app/src/main/res/layout/layout_scene_large.xml" value="0.35104166666666664" />
         <entry key="app/src/main/res/layout/layout_scene_small.xml" value="0.35104166666666664" />
+        <entry key="app/src/main/res/layout/layout_spec_dialog.xml" value="0.334375" />
         <entry key="app/src/main/res/layout/layout_text_view_attr.xml" value="0.35052083333333334" />
         <entry key="app/src/main/res/layout/layout_tile_button.xml" value="0.25" />
         <entry key="app/src/main/res/layout/layout_view_preview_item.xml" value="0.35052083333333334" />

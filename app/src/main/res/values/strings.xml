@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">AnyDebug</string>
+    <string name="app_subtitle">Change your views as you wish</string>
     <string name="apply">Apply</string>
     <string name="perform_origin_click">Original Click</string>
     <string name="successfully_modified">Successfully modified</string>
@@ -72,4 +73,7 @@
     <string name="visible" translatable="false">Visible</string>
     <string name="invisible" translatable="false">Invisible</string>
     <string name="gone" translatable="false">Gone</string>
+    <string name="match_parent" translatable="false">MATCH_PARENT</string>
+    <string name="wrap_content" translatable="false">WRAP_CONTENT</string>
+    <string name="dp_input_hint">Value in dp</string>
 </resources>

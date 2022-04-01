@@ -52,92 +52,17 @@ open class BaseAttributeDialog(protected val itemView: View) : BaseDialog(itemVi
     protected val application: Application by lazy {
         AndroidAppHelper.currentApplication()
     }
-    private val viewSpecSelectionMap by lazy {
-        val m = HashMap<Int, Int>()
-        m[ViewGroup.LayoutParams.MATCH_PARENT] = 0
-        m[ViewGroup.LayoutParams.WRAP_CONTENT] = 1
-        m
-    }
-    private val viewVisibilitySelectionMap by lazy {
-        val m = HashMap<Int, Int>()
-        m[View.VISIBLE] = 0
-        m[View.INVISIBLE] = 1
-        m[View.GONE] = 2
-        m
-    }
-    private val visibilityArray = arrayOf(
-        View.VISIBLE,
-        View.INVISIBLE,
-        View.GONE
-    )
 
     override val fitScreen = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         onSetObserves()
-        setSpinners()
         onLoadViewAttributes(itemView)
         setTitle(itemView.javaClass.name)
         onSetupDialogText()
         renderPreview()
         setListeners()
-    }
-
-    private fun setSpinners() {
-        binding.widthSpinner.adapter = ArrayAdapter(
-            context,
-            android.R.layout.simple_spinner_dropdown_item,
-            moduleRes.getStringArray(R.array.spec_spinner_values)
-        )
-        binding.widthSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(p0: AdapterView<*>?, p1: View?, pos: Int, p3: Long) {
-                when (pos) {
-                    0 -> {
-                        viewModel.width = ViewGroup.LayoutParams.MATCH_PARENT
-                        viewModel.widthInputVisible.data = false
-                    }
-                    1 -> {
-                        viewModel.width = ViewGroup.LayoutParams.WRAP_CONTENT
-                        viewModel.widthInputVisible.data = false
-                    }
-                    2 -> {
-                        viewModel.widthInputVisible.data = true
-                    }
-                }
-            }
-
-            override fun onNothingSelected(p0: AdapterView<*>?) {
-                // Do nothing
-            }
-
-        }
-        binding.heightSpinner.adapter = ArrayAdapter(
-            context,
-            android.R.layout.simple_spinner_dropdown_item,
-            moduleRes.getStringArray(R.array.spec_spinner_values)
-        )
-        binding.heightSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(p0: AdapterView<*>?, p1: View?, pos: Int, p3: Long) {
-                when (pos) {
-                    0 -> {
-                        viewModel.height = ViewGroup.LayoutParams.MATCH_PARENT
-                        viewModel.heightInputVisible.data = false
-                    }
-                    1 -> {
-                        viewModel.height = ViewGroup.LayoutParams.WRAP_CONTENT
-                        viewModel.heightInputVisible.data = false
-                    }
-                    2 -> {
-                        viewModel.heightInputVisible.data = true
-                    }
-                }
-            }
-
-            override fun onNothingSelected(p0: AdapterView<*>?) {
-                // Do nothing
-            }
-        }
     }
 
     /**
@@ -150,10 +75,8 @@ open class BaseAttributeDialog(protected val itemView: View) : BaseDialog(itemVi
         binding.ancestorButton.title = getString(R.string.ancestors)
         binding.childrenButton.title = getString(R.string.children)
         binding.visibilityButton.title = getString(R.string.visibility)
-        binding.widthTitle.text = getString(R.string.width)
-        binding.heightTitle.text = getString(R.string.height)
-        binding.heightInput.hint = getString(R.string.height)
-        binding.widthInput.hint = getString(R.string.width)
+        binding.widthSpecButton.title = getString(R.string.width)
+        binding.heightSpecButton.title = getString(R.string.height)
         binding.rulesButton.title = moduleRes.getString(R.string.rules)
         binding.ltrbMarginInputs.setTitle(getString(R.string.margin_title))
         binding.ltrbPaddingInput.setTitle(moduleRes.getString(R.string.padding_title))
@@ -161,12 +84,6 @@ open class BaseAttributeDialog(protected val itemView: View) : BaseDialog(itemVi
 
     @CallSuper
     protected open fun onSetObserves() {
-        viewModel.heightInputVisible.observe {
-            binding.heightInput.isVisible = it
-        }
-        viewModel.widthInputVisible.observe {
-            binding.widthInput.isVisible = it
-        }
     }
 
     private fun setListeners() {
@@ -178,6 +95,22 @@ open class BaseAttributeDialog(protected val itemView: View) : BaseDialog(itemVi
                 viewModel.visibility = visibility
                 binding.visibilityButton.subtitle = text
             }.show()
+        }
+        binding.widthSpecButton.setOnClickListener {
+            val dialog = ViewSpecDialog(context, viewModel.width) { spec, text ->
+                viewModel.width = spec
+                binding.widthSpecButton.subtitle = text
+            }
+            dialog.show()
+            dialog.setTitle(moduleRes.getString(R.string.width))
+        }
+        binding.heightSpecButton.setOnClickListener {
+            val dialog = ViewSpecDialog(context, viewModel.height) { spec, text ->
+                viewModel.height = spec
+                binding.heightSpecButton.subtitle = text
+            }
+            dialog.show()
+            dialog.setTitle(moduleRes.getString(R.string.height))
         }
         binding.rulesButton.setOnClickListener {
             val dialog = RulePreviewDialog(context)
@@ -197,12 +130,6 @@ open class BaseAttributeDialog(protected val itemView: View) : BaseDialog(itemVi
         }
         binding.previewImage.setOnClickListener {
             showViewPreviewDialog(itemView)
-        }
-        binding.widthInput.addTextChangedListener {
-            viewModel.width = it.toString().toIntOrNull() ?: viewModel.width
-        }
-        binding.heightInput.addTextChangedListener {
-            viewModel.height = it.toString().toIntOrNull() ?: viewModel.height
         }
         setApplyButton(moduleRes.getString(R.string.apply)) {
             onApply()
@@ -341,7 +268,6 @@ open class BaseAttributeDialog(protected val itemView: View) : BaseDialog(itemVi
         val forceClickable = application.isForceClickable
         val width = params.width.specOrDp()
         val height = params.height.specOrDp()
-        val visibility = view.visibility
         val paddingLeft = view.paddingLeft.dp()
         val paddingRight = view.paddingRight.dp()
         val paddingTop = view.paddingTop.dp()
@@ -350,29 +276,7 @@ open class BaseAttributeDialog(protected val itemView: View) : BaseDialog(itemVi
         binding.showLayoutBoundsSwitch.isChecked = showBounds
         binding.forceWidgetsClickable.isChecked = forceClickable
 
-        when (width) {
-            ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT -> {
-                viewModel.widthInputVisible.data = false
-            }
-            else -> {
-                viewModel.widthInputVisible.data = true
-            }
-        }
-        when (height) {
-            ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT -> {
-                viewModel.heightInputVisible.data = false
-            }
-            else -> {
-                viewModel.heightInputVisible.data = true
-            }
-        }
-        binding.widthSpinner.setSelection(viewSpecSelectionMap[width] ?: 2)
-        binding.heightSpinner.setSelection(viewSpecSelectionMap[height] ?: 2)
-        binding.visibilityButton.subtitle =
-            moduleRes.getStringArray(R.array.visibility)[viewVisibilitySelectionMap[visibility]
-                ?: 0]
-        binding.widthInput.setText(width.toString())
-        binding.heightInput.setText(height.toString())
+        binding.visibilityButton.subtitle = fromVisibilityToString(itemView.visibility)
 
         viewModel.width = width
         viewModel.height = height
@@ -394,8 +298,28 @@ open class BaseAttributeDialog(protected val itemView: View) : BaseDialog(itemVi
             }
         }
 
+        binding.widthSpecButton.subtitle = fromSpecToString(params.width.specOrDp())
+        binding.heightSpecButton.subtitle = fromSpecToString(params.height.specOrDp())
+
         viewModel.showBounds = application.isShowBounds
         viewModel.forceClickable = application.isForceClickable
+    }
+
+    private fun fromSpecToString(spec: Int): CharSequence {
+        return when (spec) {
+            ViewGroup.LayoutParams.MATCH_PARENT -> moduleRes.getString(R.string.match_parent)
+            ViewGroup.LayoutParams.WRAP_CONTENT -> moduleRes.getString(R.string.wrap_content)
+            else -> "${spec}dp"
+        }
+    }
+
+    private fun fromVisibilityToString(visibility: Int): CharSequence {
+        return when (visibility) {
+            View.VISIBLE -> moduleRes.getString(R.string.visible)
+            View.INVISIBLE -> moduleRes.getString(R.string.invisible)
+            View.GONE -> moduleRes.getString(R.string.gone)
+            else -> ""
+        }
     }
 
     /**

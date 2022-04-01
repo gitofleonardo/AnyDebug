@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">AnyDebug</string>
+    <string name="app_subtitle">随心所欲更改控件</string>
     <string name="apply">应用</string>
     <string name="perform_origin_click">原点击</string>
     <string name="successfully_modified">成功修改</string>
@@ -64,4 +65,5 @@
     <string name="ok">确定</string>
     <string name="delete">删除</string>
     <string name="preview">预览</string>
+    <string name="dp_input_hint">值(单位dp)</string>
 </resources>

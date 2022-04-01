@@ -12,9 +12,10 @@ import com.hhvvg.anydebug.hook.AnyHookFramework.Companion.moduleRes
  */
 class VisibilityDialog(
     context: Context,
-    private var visibility: Int,
+    private val visibility: Int,
     private val onVisibilityChanged: ((Int, CharSequence) -> Unit)? = null
 ) : BaseDialog(context) {
+    private var newVisibility = visibility
     private lateinit var binding: LayoutVisibilityDialogBinding
 
     override fun onInflateLayout(): Int = R.layout.layout_visibility_dialog
@@ -28,7 +29,7 @@ class VisibilityDialog(
             View.GONE -> binding.goneRadio.isChecked = true
         }
         binding.visibilityGroup.setOnCheckedChangeListener { _, checkedId ->
-            visibility = when (checkedId) {
+            newVisibility = when (checkedId) {
                 R.id.visible_radio -> View.VISIBLE
                 R.id.invisible_radio -> View.INVISIBLE
                 R.id.gone_radio -> View.GONE
@@ -41,7 +42,12 @@ class VisibilityDialog(
             goneRadio.text = moduleRes.getString(R.string.gone)
         }
         setApplyButton(moduleRes.getString(R.string.apply)) {
-            onVisibilityChanged?.invoke(visibility, fromVisibilityToString(visibility))
+            if (newVisibility != visibility) {
+                onVisibilityChanged?.invoke(newVisibility, fromVisibilityToString(newVisibility))
+            }
+            dismiss()
+        }
+        setCancelButton(moduleRes.getString(R.string.cancel)) {
             dismiss()
         }
         setTitle(moduleRes.getString(R.string.visibility))
