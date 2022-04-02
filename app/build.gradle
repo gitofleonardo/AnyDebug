@@ -27,8 +27,8 @@ android {
             buildConfigField("String", "PACKAGE_NAME", "\"com.hhvvg.anydebug\"")
         }
         debug {
-            minifyEnabled false
-            shrinkResources false
+            minifyEnabled true
+            shrinkResources true
             debuggable true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             buildConfigField("String", "PACKAGE_NAME", "\"com.hhvvg.anydebug\"")
