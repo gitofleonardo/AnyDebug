@@ -22,6 +22,26 @@ This application is completely free and 100% open-source.  It's just for learnin
 
 本应用完全开源免费，且仅供学习交流使用。使用者在使用本应用的过程产生的任何后果都与开发者无关。
 
+# FAQ
+
++ App becomes laggy
+
+View tree needs to be traversed to ensure the new-added views can be properly hooked. I tried to hook the `onAttachedToWindow` method, but it would hook my own dialog as well. Looking for another better solution.
+
++ Persistent changes behave weirdly, especially in list items
+
+The way to store changes and re-apply them to the origin view is not perfect yet. To locate a view, the `id` of the view and its parent, and the class name should be unique. But in android apps, view id is not always unique, so some rules may be apply to another view.
+Be cautious when you use persistent editing, especially in list views.
+
++ 应用变卡了
+
+因为要遍历View树，来保证新添加的View能够被正确地hook掉。我之前尝试过hook `onAttachedToWindow`，但那会连我自定义的对话框也一起hook。正在寻找更好的方法。
+
++ 持久化编辑有点怪怪的，特别是在一些列表项中
+
+持久化编辑的方法目前仍未完美。为了在view树中定位一个view，需要知道view的id，以及view的父view的id，还有view的类名。但Android中id在view树中并不是唯一的，特别是在列表里，所以一些持久化规则可能会被应用到其他view上。
+请谨慎使用持久化编辑，特别是在一些列表项中。
+
 # Sample
 
 | ![sample0.png](raw/sample0.png) | ![sample1.png](raw/sample1.png) | ![sample1.png](raw/sample2.png) | ![sample1.png](raw/sample3.png) |
