@@ -9,26 +9,26 @@
         android:layout_height="match_parent">
 
         <RadioButton
-            android:layout_margin="10dp"
             android:id="@+id/visible_radio"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="10dp"
             android:tag="ANYDEBUG_IGNORE_HOOK"
             android:text="@string/visible" />
 
         <RadioButton
-            android:layout_margin="10dp"
             android:id="@+id/invisible_radio"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="10dp"
             android:tag="ANYDEBUG_IGNORE_HOOK"
             android:text="@string/invisible" />
 
         <RadioButton
-            android:layout_margin="10dp"
             android:id="@+id/gone_radio"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="10dp"
             android:tag="ANYDEBUG_IGNORE_HOOK"
             android:text="@string/gone" />
     </RadioGroup>

@@ -4,9 +4,10 @@
     android:layout_height="match_parent"
     android:overScrollMode="always"
     android:scrollbars="none">
+
     <ImageView
-        android:scaleType="centerInside"
         android:id="@+id/preview_image"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:scaleType="centerInside" />
 </ScrollView>

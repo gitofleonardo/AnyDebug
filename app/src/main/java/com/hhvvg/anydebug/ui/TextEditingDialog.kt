@@ -1,16 +1,17 @@
-package com.hhvvg.anydebug.handler.textview
+package com.hhvvg.anydebug.ui
 
 import android.os.Bundle
+import android.text.InputType
 import android.text.SpannableString
 import android.view.View
 import android.widget.TextView
 import com.hhvvg.anydebug.R
 import com.hhvvg.anydebug.databinding.LayoutTextViewAttrBinding
+import com.hhvvg.anydebug.handler.textview.TextViewAttribute
 import com.hhvvg.anydebug.hook.AnyHookFramework.Companion.moduleRes
 import com.hhvvg.anydebug.persistent.AppDatabase
 import com.hhvvg.anydebug.persistent.RuleType
 import com.hhvvg.anydebug.persistent.ViewRule
-import com.hhvvg.anydebug.ui.BaseAttributeDialog
 import com.hhvvg.anydebug.util.inflater.MyLayoutInflater
 import com.hhvvg.anydebug.util.isPersistentEnabled
 import com.hhvvg.anydebug.util.sp
@@ -34,16 +35,40 @@ class TextEditingDialog(private val view: TextView) : BaseAttributeDialog(view) 
         LayoutTextViewAttrBinding.bind(rootView)
     }
 
-    private val currentText
-        get() = binding.editText.text.toString()
-    private val currentMaxLine
-        get() = binding.textMaxLine.text.toString().toIntOrNull()
-    private val currentTextSize
-        get() = binding.textSizeInput.text.toString().toFloatOrNull()
+    private var currentText: CharSequence = view.text.toString()
+    private var currentMaxLine = view.maxLines
+    private var currentTextSize = view.textSize.sp()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         appendAttributePanelView(binding.root)
+        setListeners()
+    }
+
+    private fun setListeners() {
+        binding.textButton.setOnClickListener {
+            val dialog = InputDialog(context, InputType.TYPE_CLASS_TEXT, currentText) {
+                currentText = it
+            }
+            dialog.show()
+            dialog.setTitle(moduleRes.getString(R.string.enter_text))
+        }
+        binding.maxLineButton.setOnClickListener {
+            val dialog = InputDialog(context, InputType.TYPE_CLASS_NUMBER, currentMaxLine.toString()) {
+                currentMaxLine = it.toString().toIntOrNull() ?: view.maxLines
+                binding.maxLineButton.subtitle = currentMaxLine.toString()
+            }
+            dialog.show()
+            dialog.setTitle(moduleRes.getString(R.string.max_line))
+        }
+        binding.textSizeButton.setOnClickListener {
+            val dialog = InputDialog(context, InputType.TYPE_CLASS_NUMBER, currentTextSize.toString()) {
+                currentTextSize = it.toString().toFloatOrNull() ?: view.textSize
+                binding.textSizeButton.subtitle = currentTextSize.toString()
+            }
+            dialog.show()
+            dialog.setTitle(moduleRes.getString(R.string.text_size))
+        }
     }
 
     override fun onLoadViewAttributes(view: View) {
@@ -51,19 +76,15 @@ class TextEditingDialog(private val view: TextView) : BaseAttributeDialog(view) 
         if (view !is TextView) {
             return
         }
-        binding.editText.setText(SpannableString(view.text))
-        binding.textMaxLine.setText(SpannableString(view.maxLines.toString()))
-        binding.textSizeInput.setText(SpannableString(view.textSize.sp().toString()))
+        binding.maxLineButton.subtitle = currentMaxLine.toString()
+        binding.textSizeButton.subtitle = currentTextSize.toString()
     }
 
     override fun onSetupDialogText() {
         super.onSetupDialogText()
-        binding.editText.hint = getString(R.string.enter_text)
-        binding.textMaxLine.hint = getString(R.string.max_line)
-        binding.textContentTitle.text = getString(R.string.text_content)
-        binding.textMaxLineTitle.text = getString(R.string.max_line)
-        binding.textSizeTitle.text = getString(R.string.text_size)
-        binding.textSizeInput.hint = getString(R.string.sp)
+        binding.textButton.title = getString(R.string.text_content)
+        binding.maxLineButton.title = getString(R.string.max_line)
+        binding.textSizeButton.title = getString(R.string.text_size)
     }
 
     private val attrData: TextViewAttribute
@@ -71,7 +92,7 @@ class TextEditingDialog(private val view: TextView) : BaseAttributeDialog(view) 
             val text = if (currentText == view.text.toString()) {
                 null
             } else {
-                currentText
+                currentText.toString()
             }
             val maxLines = if (currentMaxLine == view.maxLines) {
                 null

@@ -1,3 +1,5 @@
 package com.hhvvg.anydebug.handler.imageview
 
-class ImageViewAttribute(val imageUrl: String)
+import android.widget.ImageView
+
+data class ImageViewAttribute(val imageUrl: String, val scaleType: ImageView.ScaleType)

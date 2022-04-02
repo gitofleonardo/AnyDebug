@@ -3,6 +3,7 @@ package com.hhvvg.anydebug.handler.imageview
 import android.view.View
 import android.widget.ImageView
 import com.hhvvg.anydebug.handler.ViewDispatchHandler
+import com.hhvvg.anydebug.ui.ImageViewAttrDialog
 
 /**
  * @author hhvvg

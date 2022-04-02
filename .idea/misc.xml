@@ -4,6 +4,7 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="../../../../layout/custom_preview.xml" value="0.2791666666666667" />
+        <entry key="../../Android/Sdk/platforms/android-31/data/res/layout/simple_list_item_1.xml" value="0.334375" />
         <entry key="../../Android/platforms/android-31/data/res/layout/simple_spinner_dropdown_item.xml" value="0.35052083333333334" />
         <entry key="../../Android/platforms/android-31/data/res/layout/simple_spinner_item.xml" value="0.35052083333333334" />
         <entry key="app/src/main/res/drawable-v24/ic_baseline_find_in_page_24.xml" value="0.1925" />
@@ -26,6 +27,7 @@
         <entry key="app/src/main/res/layout/layout_image.xml" value="0.33" />
         <entry key="app/src/main/res/layout/layout_image_item.xml" value="0.334375" />
         <entry key="app/src/main/res/layout/layout_image_view_attr.xml" value="0.328125" />
+        <entry key="app/src/main/res/layout/layout_input_dialog.xml" value="0.334375" />
         <entry key="app/src/main/res/layout/layout_listview_dialog.xml" value="0.334375" />
         <entry key="app/src/main/res/layout/layout_ltrb_view.xml" value="0.33" />
         <entry key="app/src/main/res/layout/layout_preview_dialog.xml" value="0.334375" />

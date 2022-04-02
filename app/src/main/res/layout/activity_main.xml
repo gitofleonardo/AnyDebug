@@ -27,9 +27,7 @@
                 android:layout_height="?attr/actionBarSize"
                 app:layout_collapseMode="pin"
                 app:title="@string/app_name"
-                app:subtitle="@string/app_subtitle"
-                app:titleTextColor="?attr/colorOnPrimary"
-                app:subtitleTextColor="?attr/colorOnPrimary"/>
+                app:titleTextColor="?attr/colorOnPrimary" />
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
 

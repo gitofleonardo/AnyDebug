@@ -6,8 +6,6 @@ import android.os.Bundle
 import android.text.SpannableString
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
 import android.widget.LinearLayout
 import androidx.annotation.CallSuper
 import androidx.annotation.LayoutRes
@@ -16,7 +14,6 @@ import androidx.core.view.ancestors
 import androidx.core.view.children
 import androidx.core.view.drawToBitmap
 import androidx.core.view.isVisible
-import androidx.core.widget.addTextChangedListener
 import com.hhvvg.anydebug.R
 import com.hhvvg.anydebug.databinding.LayoutBaseAttributeDialogBinding
 import com.hhvvg.anydebug.glide.GlideApp
@@ -31,7 +28,6 @@ import com.hhvvg.anydebug.util.inflater.MyLayoutInflater
 import com.hhvvg.anydebug.util.isForceClickable
 import com.hhvvg.anydebug.util.isPersistentEnabled
 import com.hhvvg.anydebug.util.isShowBounds
-import com.hhvvg.anydebug.util.setIgnoreTagRecursively
 import com.hhvvg.anydebug.util.specOrDp
 import com.hhvvg.anydebug.util.specOrPx
 import com.hhvvg.anydebug.util.updateDrawLayoutBounds
@@ -353,7 +349,6 @@ open class BaseAttributeDialog(protected val itemView: View) : BaseDialog(itemVi
      * @param view Additional settings view
      */
     protected fun appendAttributePanelView(view: View) {
-        view.setIgnoreTagRecursively()
         val param = LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.MATCH_PARENT,
             LinearLayout.LayoutParams.WRAP_CONTENT
@@ -371,7 +366,6 @@ open class BaseAttributeDialog(protected val itemView: View) : BaseDialog(itemVi
         val layout = moduleRes.getLayout(resId)
         val inflater = MyLayoutInflater.from(context)
         val view = inflater.inflate(layout, null, false)
-        view.setIgnoreTagRecursively()
         appendAttributePanelView(view)
         return view
     }

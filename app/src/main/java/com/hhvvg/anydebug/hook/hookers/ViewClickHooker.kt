@@ -10,6 +10,7 @@ import com.hhvvg.anydebug.handler.ViewClickWrapper.Companion.IGNORE_HOOK
 import com.hhvvg.anydebug.hook.IHooker
 import com.hhvvg.anydebug.util.doAfter
 import com.hhvvg.anydebug.util.doAfterConstructor
+import com.hhvvg.anydebug.util.doOnActivityPostCreated
 import com.hhvvg.anydebug.util.doOnActivityResumed
 import com.hhvvg.anydebug.util.isForceClickable
 import com.hhvvg.anydebug.util.isGlobalEditEnabled
@@ -31,6 +32,12 @@ class ViewClickHooker : IHooker {
             app.doOnActivityResumed { activity ->
                 val decor = activity.window.decorView as ViewGroup
                 decor.updateViewHookClick()
+            }
+            app.doOnActivityPostCreated { activity, _ ->
+                val decorView = activity.window.decorView
+                decorView.viewTreeObserver.addOnGlobalLayoutListener {
+                    decorView.updateViewHookClick()
+                }
             }
         }
 
@@ -55,16 +62,6 @@ class ViewClickHooker : IHooker {
                     view.isClickable = true
                 }
             }
-        }
-
-        // Hooks listener if it is newly added to window
-        View::class.doAfter("onAttachedToWindow") {
-            val view = it.thisObject as View
-            if (view.tag == IGNORE_HOOK) {
-                view.updateViewHookClick(enabled = false, traversalChildren = false)
-                return@doAfter
-            }
-            view.updateViewHookClick(traversalChildren = false)
         }
 
         // When setting tag to ignore, remove listener

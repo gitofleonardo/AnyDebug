@@ -4,47 +4,18 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <TextView
-        android:textColor="@android:color/black"
-        android:id="@+id/text_content_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/text_content" />
-
-    <EditText
-        android:id="@+id/edit_text"
+    <com.hhvvg.anydebug.ui.view.TileButton
+        android:id="@+id/text_button"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp" />
+        android:layout_height="wrap_content" />
 
-    <TextView
-        android:textColor="@android:color/black"
-        android:id="@+id/text_max_line_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="@string/max_line" />
-
-    <EditText
-        android:id="@+id/text_max_line"
+    <com.hhvvg.anydebug.ui.view.TileButton
+        android:id="@+id/maxLine_button"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:inputType="number" />
+        android:layout_height="wrap_content" />
 
-    <TextView
-        android:textColor="@android:color/black"
-        android:id="@+id/text_size_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="@string/text_size" />
-
-    <EditText
-        android:id="@+id/text_size_input"
+    <com.hhvvg.anydebug.ui.view.TileButton
+        android:id="@+id/text_size_button"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:hint="@string/sp"
-        android:inputType="number" />
+        android:layout_height="wrap_content" />
 </LinearLayout>

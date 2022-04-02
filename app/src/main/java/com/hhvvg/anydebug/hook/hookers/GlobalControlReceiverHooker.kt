@@ -21,6 +21,7 @@ import com.hhvvg.anydebug.util.doOnActivityDestroyed
 import com.hhvvg.anydebug.util.doOnActivityPostCreated
 import com.hhvvg.anydebug.util.getInjectedField
 import com.hhvvg.anydebug.util.injectField
+import com.hhvvg.anydebug.util.isForceClickable
 import com.hhvvg.anydebug.util.isGlobalEditEnabled
 import com.hhvvg.anydebug.util.isPersistentEnabled
 import com.hhvvg.anydebug.util.updateViewHookClick
@@ -83,6 +84,9 @@ class GlobalControlReceiverHooker : IHooker {
         private fun setGlobalEnable(decorView: View, enabled: Boolean) {
             val app = AndroidAppHelper.currentApplication()
             app.isGlobalEditEnabled = enabled
+            if (!enabled) {
+                app.isForceClickable = false
+            }
             decorView.updateViewHookClick()
         }
     }

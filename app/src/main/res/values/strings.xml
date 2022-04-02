@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">AnyDebug</string>
-    <string name="app_subtitle">Change your views as you wish</string>
     <string name="apply">Apply</string>
     <string name="perform_origin_click">Original Click</string>
     <string name="successfully_modified">Successfully modified</string>
@@ -10,7 +9,7 @@
     <string name="github">Github</string>
     <string name="get_source">Get source code on Github</string>
     <string name="caution_text">This software is completely free and open-source, and only for learning usage. Please download this software from my Github page, or compile source code by yourself. Avoid using source-unknown packages.</string>
-    <string name="about_description">This software provides functions to change view parameters running currently. It\'s like element inspections in web development.</string>
+    <string name="about_description">This software provides functions to change view parameters running currently. It\'s like element inspections in web development. If you got some problems, try to restart your app.</string>
     <string name="caution">Caution</string>
     <string name="cancel">Cancel</string>
     <string name="width">Width</string>

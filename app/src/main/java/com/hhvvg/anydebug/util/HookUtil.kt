@@ -53,7 +53,7 @@ fun View.updateViewHookClick(
     }
     val app = AndroidAppHelper.currentApplication()
     val editEnabled = enabled ?: app.isGlobalEditEnabled
-    val isForceClickable = forceClickable ?: app.isForceClickable
+    val isForceClickable = if (editEnabled) forceClickable ?: app.isForceClickable else false
     replaceOnClickListener { origin ->
         if (editEnabled) {
             // Replace with my custom one
@@ -134,11 +134,3 @@ fun View.setShowLayoutBounds(show: Boolean) {
     XposedHelpers.setBooleanField(attachInfo, "mDebugLayout", show)
 }
 
-fun View.setIgnoreTagRecursively() {
-    tag = IGNORE_HOOK
-    if (this is ViewGroup) {
-        children.forEach {
-            it.setIgnoreTagRecursively()
-        }
-    }
-}

@@ -5,7 +5,6 @@ import android.view.WindowManager
 import android.widget.PopupWindow
 import com.hhvvg.anydebug.hook.IHooker
 import com.hhvvg.anydebug.util.doBefore
-import com.hhvvg.anydebug.util.setIgnoreTagRecursively
 import com.hhvvg.anydebug.util.updateViewHookClick
 import de.robv.android.xposed.XposedHelpers
 import de.robv.android.xposed.callbacks.XC_LoadPackage
@@ -25,7 +24,6 @@ class PupupWindowHooker : IHooker {
                 forceClickable = false,
                 traversalChildren = true
             )
-            decorView.setIgnoreTagRecursively()
         }
     }
 }

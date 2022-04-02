@@ -3,13 +3,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="5dp" >
+    android:padding="5dp">
 
     <TextView
-        android:layout_margin="10dp"
         android:id="@+id/dialog_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_margin="10dp"
         android:tag="ANYDEBUG_IGNORE_HOOK"
         android:textColor="@android:color/black"
         android:textSize="18sp"
@@ -30,12 +30,12 @@
         android:layout_marginTop="5dp">
 
         <Button
-            style="?android:borderlessButtonStyle"
-            android:elevation="0dp"
-            android:shadowColor="@android:color/transparent"
             android:id="@+id/detail_button"
+            style="?android:borderlessButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:elevation="0dp"
+            android:shadowColor="@android:color/transparent"
             android:tag="ANYDEBUG_IGNORE_HOOK"
             android:text="@string/details"
             android:textColor="#673AB7"
@@ -43,13 +43,13 @@
             android:visibility="gone" />
 
         <Button
-            style="?android:borderlessButtonStyle"
-            android:elevation="0dp"
-            android:shadowColor="@android:color/transparent"
             android:id="@+id/apply_button"
+            style="?android:borderlessButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
+            android:elevation="0dp"
+            android:shadowColor="@android:color/transparent"
             android:tag="ANYDEBUG_IGNORE_HOOK"
             android:text="@string/apply"
             android:textColor="#673AB7"
@@ -57,13 +57,13 @@
             android:visibility="gone" />
 
         <Button
-            style="?android:borderlessButtonStyle"
-            android:elevation="0dp"
-            android:shadowColor="@android:color/transparent"
             android:id="@+id/cancel_button"
+            style="?android:borderlessButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toStartOf="@id/apply_button"
+            android:elevation="0dp"
+            android:shadowColor="@android:color/transparent"
             android:tag="ANYDEBUG_IGNORE_HOOK"
             android:text="@string/cancel"
             android:textColor="#673AB7"

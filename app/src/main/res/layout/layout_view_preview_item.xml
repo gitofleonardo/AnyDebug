@@ -13,7 +13,6 @@
         android:tag="ANYDEBUG_IGNORE_HOOK" />
 
     <TextView
-        android:textColor="@android:color/black"
         android:id="@+id/view_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -23,5 +22,6 @@
         android:layout_toEndOf="@id/view_image"
         android:gravity="center"
         android:tag="ANYDEBUG_IGNORE_HOOK"
+        android:textColor="@android:color/black"
         android:textSize="16sp" />
 </RelativeLayout>

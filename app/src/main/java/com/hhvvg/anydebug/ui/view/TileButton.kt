@@ -11,7 +11,6 @@ import com.hhvvg.anydebug.R
 import com.hhvvg.anydebug.databinding.LayoutTileButtonBinding
 import com.hhvvg.anydebug.hook.AnyHookFramework.Companion.moduleRes
 import com.hhvvg.anydebug.util.inflater.MyLayoutInflater
-import com.hhvvg.anydebug.util.setIgnoreTagRecursively
 
 /**
  * @author hhvvg
@@ -25,7 +24,12 @@ class TileButton(context: Context, attributeSet: AttributeSet?) :
 
     init {
         binding = getBindingInternal()
-        binding.arrowImage.setImageDrawable(moduleRes.getDrawable(R.drawable.ic_baseline_arrow_right_24, null))
+        binding.arrowImage.setImageDrawable(
+            moduleRes.getDrawable(
+                R.drawable.ic_baseline_arrow_right_24,
+                null
+            )
+        )
         binding.root.background =
             ResourcesCompat.getDrawable(moduleRes, R.drawable.ripple_button_background, null)
     }
@@ -33,9 +37,7 @@ class TileButton(context: Context, attributeSet: AttributeSet?) :
     private fun getBindingInternal(): LayoutTileButtonBinding {
         val layout = moduleRes.getLayout(R.layout.layout_tile_button)
         val inflater = MyLayoutInflater.from(context)
-        val view = inflater.inflate(layout, this, true).apply {
-            setIgnoreTagRecursively()
-        }
+        val view = inflater.inflate(layout, this, true)
         return LayoutTileButtonBinding.bind(view)
     }
 

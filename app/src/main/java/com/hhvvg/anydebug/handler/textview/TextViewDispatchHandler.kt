@@ -3,6 +3,7 @@ package com.hhvvg.anydebug.handler.textview
 import android.view.View
 import android.widget.TextView
 import com.hhvvg.anydebug.handler.ViewDispatchHandler
+import com.hhvvg.anydebug.ui.TextEditingDialog
 
 /**
  * @author hhvvg

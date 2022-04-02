@@ -2,59 +2,62 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="5dp"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:padding="5dp">
+
     <RelativeLayout
-        android:layout_weight="1"
         android:layout_width="0dp"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_weight="1">
+
         <TextView
-            android:textColor="@android:color/black"
             android:id="@+id/view_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
+            android:textColor="@android:color/black"
             android:textSize="16sp"
             android:textStyle="bold" />
 
         <TextView
-            android:textColor="@android:color/black"
             android:id="@+id/view_id_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/view_name"
-            android:layout_marginTop="5dp" />
+            android:layout_marginTop="5dp"
+            android:textColor="@android:color/black" />
 
         <TextView
-            android:textColor="@android:color/black"
             android:id="@+id/parent_id_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/view_name"
             android:layout_marginStart="5dp"
             android:layout_marginTop="5dp"
-            android:layout_toEndOf="@id/view_id_text" />
+            android:layout_toEndOf="@id/view_id_text"
+            android:textColor="@android:color/black" />
 
         <TextView
-            android:textColor="@android:color/black"
             android:id="@+id/view_rule_type_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/view_id_text"
-            android:layout_marginTop="5dp" />
+            android:layout_marginTop="5dp"
+            android:textColor="@android:color/black" />
 
         <TextView
-            android:textColor="@android:color/black"
             android:id="@+id/rule_content_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/view_rule_type_text"
-            android:layout_marginTop="5dp" />
+            android:layout_marginTop="5dp"
+            android:textColor="@android:color/black" />
     </RelativeLayout>
+
     <CheckBox
-        android:tag="ANYDEBUG_IGNORE_HOOK"
         android:id="@+id/rule_checkbox"
-        android:layout_gravity="center"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:tag="ANYDEBUG_IGNORE_HOOK" />
 </LinearLayout>
