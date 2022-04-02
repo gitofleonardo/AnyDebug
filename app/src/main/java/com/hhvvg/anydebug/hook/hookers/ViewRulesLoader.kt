@@ -67,7 +67,7 @@ class ViewRulesLoader : IHooker {
                     view.visibility = rule.viewRule.toIntOrNull() ?: View.VISIBLE
                 }
                 RuleType.Text -> {
-                    if (view is TextView) {
+                    if (view is TextView && view.text.toString() == rule.originViewContent) {
                         view.text = SpannableString(rule.viewRule)
                     }
                 }

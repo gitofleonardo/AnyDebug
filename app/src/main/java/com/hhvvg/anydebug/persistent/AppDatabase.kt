@@ -1,12 +1,14 @@
 package com.hhvvg.anydebug.persistent
 
 import android.app.AndroidAppHelper
+import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import androidx.room.migration.AutoMigrationSpec
 
-@Database(entities = [ViewRule::class], version = 1)
+@Database(entities = [ViewRule::class], version = 2, autoMigrations = [AutoMigration(from = 1, to = 2)], exportSchema = true)
 @TypeConverters(RuleTypeConverter::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun viewRuleDao(): ViewRuleDao

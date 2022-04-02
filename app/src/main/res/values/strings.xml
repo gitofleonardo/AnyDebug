@@ -49,6 +49,7 @@
     <string name="view_parent_id_text">Parent ID: %s</string>
     <string name="view_rule_type">Rule type: %s</string>
     <string name="view_rule_content">Content: %s</string>
+    <string name="view_rule_origin_content">Origin Content: %s</string>
 
     <!-- Preferences strings -->
     <string name="global_edit_enable_key" translatable="false">key_global_edit_enable</string>

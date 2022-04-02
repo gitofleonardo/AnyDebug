@@ -23,4 +23,7 @@ interface ViewRuleDao {
 
     @Query("SELECT * FROM table_view_rules")
     fun queryAllRules(): Flow<List<ViewRule>>
+
+    @Query("SELECT * FROM table_view_rules WHERE view_id=:viewId and view_parent_id=:parentId and view_rule_type=:ruleType")
+    fun findByIdAndParentIdAndType(viewId: Int, parentId: Int, ruleType: RuleType): ViewRule?
 }

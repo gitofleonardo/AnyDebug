@@ -12,9 +12,11 @@ import com.hhvvg.anydebug.hook.AnyHookFramework.Companion.moduleRes
 import com.hhvvg.anydebug.persistent.AppDatabase
 import com.hhvvg.anydebug.persistent.RuleType
 import com.hhvvg.anydebug.persistent.ViewRule
+import com.hhvvg.anydebug.persistent.ViewRuleDao
 import com.hhvvg.anydebug.util.inflater.MyLayoutInflater
 import com.hhvvg.anydebug.util.isPersistentEnabled
 import com.hhvvg.anydebug.util.sp
+import com.hhvvg.anydebug.util.viewId
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 
@@ -116,9 +118,10 @@ class TextEditingDialog(private val view: TextView) : BaseAttributeDialog(view) 
         val data = attrData
         val persistent = application.isPersistentEnabled
         if (persistent) {
-            val rules = makeRules(data)
             runBlocking(context = Dispatchers.IO) {
-                AppDatabase.viewRuleDao.insertAll(rules)
+                val dao = AppDatabase.viewRuleDao
+                val rules = makeRules(dao, data)
+                dao.insertAll(rules)
             }
         }
 
@@ -133,7 +136,8 @@ class TextEditingDialog(private val view: TextView) : BaseAttributeDialog(view) 
         }
     }
 
-    private fun makeRules(data: TextViewAttribute): List<ViewRule> {
+    private fun makeRules(dao: ViewRuleDao,data: TextViewAttribute): List<ViewRule> {
+        val originTextRule = dao.findByIdAndParentIdAndType(view.id, view.parent.viewId(), RuleType.Text)
         val rules = mutableListOf<ViewRule>()
         val parent = itemView.parent
         val parentId = if (parent is View) {
@@ -142,12 +146,14 @@ class TextEditingDialog(private val view: TextView) : BaseAttributeDialog(view) 
             View.NO_ID
         }
         data.text?.let {
+            val originText = originTextRule?.originViewContent ?: view.text.toString()
             val textRule = ViewRule(
                 className = itemView::class.java.name,
                 viewParentId = parentId,
                 viewId = itemView.id,
                 ruleType = RuleType.Text,
                 viewRule = it,
+                originViewContent = originText
             )
             rules.add(textRule)
         }
@@ -158,6 +164,7 @@ class TextEditingDialog(private val view: TextView) : BaseAttributeDialog(view) 
                 viewId = itemView.id,
                 ruleType = RuleType.TextSize,
                 viewRule = it.toString(),
+                originViewContent = view.textSize.toString()
             )
             rules.add(textSizeRule)
         }
@@ -168,6 +175,7 @@ class TextEditingDialog(private val view: TextView) : BaseAttributeDialog(view) 
                 viewId = itemView.id,
                 ruleType = RuleType.TextMaxLine,
                 viewRule = it.toString(),
+                originViewContent = view.maxLines.toString()
             )
             rules.add(textMaxLineRule)
         }

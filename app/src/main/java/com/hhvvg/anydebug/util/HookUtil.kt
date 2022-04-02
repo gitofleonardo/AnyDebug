@@ -3,6 +3,7 @@ package com.hhvvg.anydebug.util
 import android.app.AndroidAppHelper
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewParent
 import androidx.core.view.children
 import com.hhvvg.anydebug.handler.ViewClickWrapper
 import com.hhvvg.anydebug.handler.ViewClickWrapper.Companion.IGNORE_HOOK
@@ -134,3 +135,6 @@ fun View.setShowLayoutBounds(show: Boolean) {
     XposedHelpers.setBooleanField(attachInfo, "mDebugLayout", show)
 }
 
+fun ViewParent.viewId(): Int {
+    return if (this is View) id else View.NO_ID
+}

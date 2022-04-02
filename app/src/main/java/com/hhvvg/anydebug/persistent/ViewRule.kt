@@ -12,5 +12,6 @@ data class ViewRule(
     @ColumnInfo(name = "view_parent_id") val viewParentId: Int,
     @ColumnInfo(name = "view_id") val viewId: Int,
     @ColumnInfo(name = "view_rule_type") val ruleType: RuleType,
-    @ColumnInfo(name = "view_rule") val viewRule: String
+    @ColumnInfo(name = "view_rule") val viewRule: String,
+    @ColumnInfo(name = "origin_view_content") val originViewContent: String? = null
 )

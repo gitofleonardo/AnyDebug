@@ -235,7 +235,7 @@ open class BaseAttributeDialog(protected val itemView: View) : BaseDialog(itemVi
                 viewId = itemView.id,
                 ruleType = RuleType.Visibility,
                 viewRule = it.toString(),
-                viewParentId = parentId
+                viewParentId = parentId,
             )
             rules.add(visibilityRule)
         }

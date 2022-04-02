@@ -12,10 +12,19 @@ android {
         applicationId "com.hhvvg.anydebug"
         minSdk 23
         targetSdk 31
-        versionCode 4
-        versionName "2.0.1"
+        versionCode 5
+        versionName "2.0.2"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments += [
+                        "room.schemaLocation":
+                                "$projectDir/schemas".toString()
+                ]
+            }
+        }
     }
 
     buildTypes {

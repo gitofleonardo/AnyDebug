@@ -50,6 +50,7 @@
     <string name="view_parent_id_text">父ID: %s</string>
     <string name="view_rule_type">规则类型: %s</string>
     <string name="view_rule_content">内容: %s</string>
+    <string name="view_rule_origin_content">原内容: %s</string>
 
     <!-- Perference strings -->
     <string name="global_edit_title">启用全局编辑</string>

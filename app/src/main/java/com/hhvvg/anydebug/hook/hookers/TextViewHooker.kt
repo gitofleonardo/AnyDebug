@@ -23,12 +23,17 @@ class TextViewHooker : IHooker {
         ) {
             val app = AndroidAppHelper.currentApplication()
             val textView = it.thisObject as TextView
+            val textToSet = it.args[0].toString()
             val viewId = textView.id
             val parent = textView.parent
             val parentId = if (parent is View) parent.id else View.NO_ID
             val rules = app.rulesMap[viewId] ?: emptyList()
             for (rule in rules) {
-                if (rule.ruleType == RuleType.Text && textView::class.java.name == rule.className && parentId == rule.viewParentId) {
+                if (rule.ruleType == RuleType.Text &&
+                    textView::class.java.name == rule.className &&
+                    parentId == rule.viewParentId &&
+                    rule.originViewContent == textToSet
+                ) {
                     it.args[0] = rule.viewRule
                     break
                 }

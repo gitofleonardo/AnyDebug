@@ -62,6 +62,7 @@ class RuleItemAdapter(private val context: Context, private val items: MutableLi
             ruleCheckbox.setOnCheckedChangeListener { _, isChecked ->
                 item.selected = isChecked
             }
+            ruleOriginContentText.text = SpannableString(moduleRes.getString(R.string.view_rule_origin_content, item.rule.originViewContent ?: ""))
         }
     }
 }

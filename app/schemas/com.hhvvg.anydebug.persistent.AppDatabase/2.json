@@ -1,0 +1,82 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 2,
+    "identityHash": "0390100093906213e45d3b9e1817afd2",
+    "entities": [
+      {
+        "tableName": "table_view_rules",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`ruleId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `view_class_name` TEXT NOT NULL, `view_parent_id` INTEGER NOT NULL, `view_id` INTEGER NOT NULL, `view_rule_type` INTEGER NOT NULL, `view_rule` TEXT NOT NULL, `origin_view_content` TEXT)",
+        "fields": [
+          {
+            "fieldPath": "ruleId",
+            "columnName": "ruleId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "className",
+            "columnName": "view_class_name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "viewParentId",
+            "columnName": "view_parent_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "viewId",
+            "columnName": "view_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "ruleType",
+            "columnName": "view_rule_type",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "viewRule",
+            "columnName": "view_rule",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "originViewContent",
+            "columnName": "origin_view_content",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "ruleId"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [
+          {
+            "name": "index_table_view_rules_view_parent_id_view_id_view_rule_type",
+            "unique": true,
+            "columnNames": [
+              "view_parent_id",
+              "view_id",
+              "view_rule_type"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_table_view_rules_view_parent_id_view_id_view_rule_type` ON `${TABLE_NAME}` (`view_parent_id`, `view_id`, `view_rule_type`)"
+          }
+        ],
+        "foreignKeys": []
+      }
+    ],
+    "views": [],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '0390100093906213e45d3b9e1817afd2')"
+    ]
+  }
+}

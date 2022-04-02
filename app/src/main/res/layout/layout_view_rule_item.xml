@@ -52,6 +52,14 @@
             android:layout_below="@id/view_rule_type_text"
             android:layout_marginTop="5dp"
             android:textColor="@android:color/black" />
+
+        <TextView
+            android:id="@+id/rule_origin_content_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/rule_content_text"
+            android:layout_marginTop="5dp"
+            android:textColor="@android:color/black" />
     </RelativeLayout>
 
     <CheckBox
