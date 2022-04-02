@@ -33,7 +33,7 @@ View tree needs to be traversed to ensure the new-added views can be properly ho
 The way to store changes and re-apply them to the origin view is not perfect yet. To locate a view, the `id` of the view and its parent, and the class name should be unique. But in android apps, view id is not always unique, so some rules may be apply to another view.
 Be cautious when you use persistent editing, especially in list views.
 
-# Not working on some apps
++ Not working on some apps
 
 Only works on navtive android app. Some views may override `onTouchEvent` and doesn't call `performClick`, this module won't work in that situation.
 
