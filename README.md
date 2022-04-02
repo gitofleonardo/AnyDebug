@@ -33,6 +33,10 @@ View tree needs to be traversed to ensure the new-added views can be properly ho
 The way to store changes and re-apply them to the origin view is not perfect yet. To locate a view, the `id` of the view and its parent, and the class name should be unique. But in android apps, view id is not always unique, so some rules may be apply to another view.
 Be cautious when you use persistent editing, especially in list views.
 
+# Not working on some apps
+
+Only works on navtive android app. Some views may override `onTouchEvent` and doesn't call `performClick`, this module won't work in that situation.
+
 + 应用变卡了
 
 因为要遍历View树，来保证新添加的View能够被正确地hook掉。我之前尝试过hook `onAttachedToWindow`，但那会连我自定义的对话框也一起hook。正在寻找更好的方法。
@@ -41,6 +45,10 @@ Be cautious when you use persistent editing, especially in list views.
 
 持久化编辑的方法目前仍未完美。为了在view树中定位一个view，需要知道view的id，以及view的父view的id，还有view的类名。但Android中id在view树中并不是唯一的，特别是在列表里，所以一些持久化规则可能会被应用到其他view上。
 请谨慎使用持久化编辑，特别是在一些列表项中。
+
++ 某些应用中没法使用
+
+只支持原生Android应用。一些控件可能会重写`onTouchEvent`而不调用`performClick`方法，这种情况也是没法使用的。
 
 # Sample
 
