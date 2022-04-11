@@ -76,6 +76,9 @@ open class BaseAttributeDialog(protected val itemView: View) : BaseDialog(itemVi
         binding.rulesButton.title = moduleRes.getString(R.string.rules)
         binding.ltrbMarginInputs.setTitle(getString(R.string.margin_title))
         binding.ltrbPaddingInput.setTitle(moduleRes.getString(R.string.padding_title))
+
+        // Make title(view name) selectable
+        titleSelectable = true
     }
 
     @CallSuper

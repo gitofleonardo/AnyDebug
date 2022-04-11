@@ -23,6 +23,12 @@ abstract class BaseDialog(context: Context) : AlertDialog(context) {
 
     protected open val fitScreen: Boolean = false
 
+    protected var titleSelectable: Boolean
+        get() = baseBinding.dialogTitle.isTextSelectable
+        set(value) {
+            baseBinding.dialogTitle.setTextIsSelectable(value)
+        }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setLayout()
