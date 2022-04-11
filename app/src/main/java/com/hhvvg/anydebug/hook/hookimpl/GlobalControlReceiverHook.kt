@@ -1,4 +1,4 @@
-package com.hhvvg.anydebug.hook.hookers
+package com.hhvvg.anydebug.hook.hookimpl
 
 import android.app.Activity
 import android.app.AndroidAppHelper
@@ -10,7 +10,7 @@ import android.content.IntentFilter
 import android.view.View
 import com.hhvvg.anydebug.config.ConfigDbHelper
 import com.hhvvg.anydebug.config.ConfigPreferences
-import com.hhvvg.anydebug.hook.IHooker
+import com.hhvvg.anydebug.hook.IHook
 import com.hhvvg.anydebug.ui.fragment.SettingsFragment.Companion.ACTION_ENABLE
 import com.hhvvg.anydebug.ui.fragment.SettingsFragment.Companion.ACTION_GLOBAL_ENABLE
 import com.hhvvg.anydebug.ui.fragment.SettingsFragment.Companion.ACTION_PERSISTENT_ENABLE
@@ -32,7 +32,7 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage
  *
  * Hook for listening config change broadcast.
  */
-class GlobalControlReceiverHooker : IHooker {
+class GlobalControlReceiverHook : IHook {
     override fun onHook(param: XC_LoadPackage.LoadPackageParam) {
         Application::class.doAfter("onCreate") {
             val app = it.thisObject as Application

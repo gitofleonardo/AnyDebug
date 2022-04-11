@@ -1,4 +1,4 @@
-package com.hhvvg.anydebug.hook.hookers
+package com.hhvvg.anydebug.hook.hookimpl
 
 import android.app.AndroidAppHelper
 import android.app.Application
@@ -8,12 +8,10 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.view.children
 import com.hhvvg.anydebug.handler.ViewClickWrapper.Companion.IGNORE_HOOK
-import com.hhvvg.anydebug.hook.IHooker
+import com.hhvvg.anydebug.hook.IHook
 import com.hhvvg.anydebug.persistent.AppDatabase
 import com.hhvvg.anydebug.persistent.RuleType
-import com.hhvvg.anydebug.persistent.ViewRule
 import com.hhvvg.anydebug.util.doAfter
-import com.hhvvg.anydebug.util.doOnActivityResumed
 import com.hhvvg.anydebug.util.rules
 import com.hhvvg.anydebug.util.rulesMap
 import com.hhvvg.anydebug.util.sp
@@ -28,7 +26,7 @@ import kotlinx.coroutines.launch
  *
  * Loads persistent rules and apply them to specific views.
  */
-class ViewRulesLoader : IHooker {
+class ViewRulesLoader : IHook {
     override fun onHook(param: XC_LoadPackage.LoadPackageParam) {
         Application::class.doAfter("onCreate") {
             val app = it.thisObject as Application

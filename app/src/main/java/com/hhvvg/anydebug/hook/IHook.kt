@@ -7,7 +7,7 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage
  *
  * Hook interface for implementing customized hook process.
  */
-interface IHooker {
+interface IHook {
 
     /**
      * Method with hook process.

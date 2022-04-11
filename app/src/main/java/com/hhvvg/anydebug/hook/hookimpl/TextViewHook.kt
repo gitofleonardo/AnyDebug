@@ -1,9 +1,9 @@
-package com.hhvvg.anydebug.hook.hookers
+package com.hhvvg.anydebug.hook.hookimpl
 
 import android.app.AndroidAppHelper
 import android.view.View
 import android.widget.TextView
-import com.hhvvg.anydebug.hook.IHooker
+import com.hhvvg.anydebug.hook.IHook
 import com.hhvvg.anydebug.persistent.RuleType
 import com.hhvvg.anydebug.util.doBefore
 import com.hhvvg.anydebug.util.rulesMap
@@ -14,7 +14,7 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage
  *
  * Prevent from setting text.
  */
-class TextViewHooker : IHooker {
+class TextViewHook : IHook {
     override fun onHook(param: XC_LoadPackage.LoadPackageParam) {
         TextView::class.doBefore(
             "setText",

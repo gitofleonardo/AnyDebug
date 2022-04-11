@@ -3,14 +3,14 @@ package com.hhvvg.anydebug.hook
 import android.content.res.Resources
 import android.content.res.XModuleResources
 import com.hhvvg.anydebug.BuildConfig
-import com.hhvvg.anydebug.hook.hookers.ActivityInspectHooker
-import com.hhvvg.anydebug.hook.hookers.GlobalControlReceiverHooker
-import com.hhvvg.anydebug.hook.hookers.PupupWindowHooker
-import com.hhvvg.anydebug.hook.hookers.TextViewHooker
-import com.hhvvg.anydebug.hook.hookers.ViewBoundsHooker
-import com.hhvvg.anydebug.hook.hookers.ViewClickHooker
-import com.hhvvg.anydebug.hook.hookers.ViewRulesLoader
-import com.hhvvg.anydebug.hook.hookers.ViewVisibilityHooker
+import com.hhvvg.anydebug.hook.hookimpl.ActivityInspectHook
+import com.hhvvg.anydebug.hook.hookimpl.GlobalControlReceiverHook
+import com.hhvvg.anydebug.hook.hookimpl.PupupWindowHook
+import com.hhvvg.anydebug.hook.hookimpl.TextViewHook
+import com.hhvvg.anydebug.hook.hookimpl.ViewBoundsHook
+import com.hhvvg.anydebug.hook.hookimpl.ViewClickHook
+import com.hhvvg.anydebug.hook.hookimpl.ViewRulesLoader
+import com.hhvvg.anydebug.hook.hookimpl.ViewVisibilityHook
 import de.robv.android.xposed.IXposedHookLoadPackage
 import de.robv.android.xposed.IXposedHookZygoteInit
 import de.robv.android.xposed.callbacks.XC_LoadPackage
@@ -21,15 +21,15 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage
  * @author hhvvg
  */
 class AnyHookFramework : IXposedHookLoadPackage, IXposedHookZygoteInit {
-    private val hookers: ArrayList<IHooker> = arrayListOf(
-        ViewClickHooker(),
-        PupupWindowHooker(),
-        GlobalControlReceiverHooker(),
+    private val hooks: ArrayList<IHook> = arrayListOf(
+        ViewClickHook(),
+        PupupWindowHook(),
+        GlobalControlReceiverHook(),
         ViewRulesLoader(),
-        ViewVisibilityHooker(),
-        TextViewHooker(),
-        ViewBoundsHooker(),
-        ActivityInspectHooker(),
+        ViewVisibilityHook(),
+        TextViewHook(),
+        ViewBoundsHook(),
+        ActivityInspectHook(),
     )
 
     override fun handleLoadPackage(p0: XC_LoadPackage.LoadPackageParam) {
@@ -38,7 +38,7 @@ class AnyHookFramework : IXposedHookLoadPackage, IXposedHookZygoteInit {
         if (packageName == BuildConfig.PACKAGE_NAME) {
             return
         }
-        hookers.forEach {
+        hooks.forEach {
             it.onHook(param = p0)
         }
     }

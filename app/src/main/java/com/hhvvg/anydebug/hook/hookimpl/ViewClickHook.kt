@@ -1,23 +1,19 @@
-package com.hhvvg.anydebug.hook.hookers
+package com.hhvvg.anydebug.hook.hookimpl
 
 import android.app.AndroidAppHelper
 import android.app.Application
-import android.content.Context
 import android.view.View
 import android.view.ViewGroup
 import com.hhvvg.anydebug.handler.ViewClickWrapper
 import com.hhvvg.anydebug.handler.ViewClickWrapper.Companion.IGNORE_HOOK
-import com.hhvvg.anydebug.hook.IHooker
+import com.hhvvg.anydebug.hook.IHook
 import com.hhvvg.anydebug.util.doAfter
-import com.hhvvg.anydebug.util.doAfterConstructor
 import com.hhvvg.anydebug.util.doOnActivityPostCreated
 import com.hhvvg.anydebug.util.doOnActivityResumed
 import com.hhvvg.anydebug.util.isForceClickable
 import com.hhvvg.anydebug.util.isGlobalEditEnabled
 import com.hhvvg.anydebug.util.replaceOnClickListener
 import com.hhvvg.anydebug.util.updateViewHookClick
-import de.robv.android.xposed.XposedBridge
-import de.robv.android.xposed.XposedHelpers
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 
 /**
@@ -25,7 +21,7 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage
  *
  * Hooks {@link View#seOnClickListener}, replace listener with our own custom one if necessary.
  */
-class ViewClickHooker : IHooker {
+class ViewClickHook : IHook {
     override fun onHook(param: XC_LoadPackage.LoadPackageParam) {
         Application::class.doAfter("onCreate") {
             val app = it.thisObject as Application

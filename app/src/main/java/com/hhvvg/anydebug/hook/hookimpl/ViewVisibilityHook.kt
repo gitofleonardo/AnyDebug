@@ -1,9 +1,9 @@
-package com.hhvvg.anydebug.hook.hookers
+package com.hhvvg.anydebug.hook.hookimpl
 
 import android.app.AndroidAppHelper
 import android.view.View
 import com.hhvvg.anydebug.handler.ViewClickWrapper.Companion.IGNORE_HOOK
-import com.hhvvg.anydebug.hook.IHooker
+import com.hhvvg.anydebug.hook.IHook
 import com.hhvvg.anydebug.persistent.RuleType
 import com.hhvvg.anydebug.util.doBefore
 import com.hhvvg.anydebug.util.rulesMap
@@ -15,7 +15,7 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage
  *
  * Hooks {@link View#setVisibility} to apply our own rules.
  */
-class ViewVisibilityHooker : IHooker {
+class ViewVisibilityHook : IHook {
     override fun onHook(param: XC_LoadPackage.LoadPackageParam) {
         View::class.doBefore("setFlags", Int::class.java, Int::class.java) {
             val view = it.thisObject as View
