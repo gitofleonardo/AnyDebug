@@ -5,6 +5,7 @@ import android.app.Application
 import android.os.Bundle
 import com.hhvvg.anydebug.persistent.ViewRule
 import de.robv.android.xposed.XposedHelpers
+import java.lang.ref.WeakReference
 
 var Application.isGlobalEditEnabled
     get() = getInjectedField(APP_FIELD_GLOBAL_CONTROL_ENABLED, defaultValue = false)!!
@@ -61,6 +62,16 @@ val Application.myLifecycleCallbacks: MyLifecycleCallbacks
             registerMyActivityLifecycleCallbacks(field)
         }
         return field
+    }
+
+var Application.currentActivity: Activity?
+    get() {
+        val weakRef = getInjectedField<WeakReference<Activity>>(APP_FIELD_CURRENT_ACTIVITY_REF, null)
+        return weakRef?.get()
+    }
+    set(value) {
+        val weakRef = WeakReference<Activity>(value)
+        injectField(APP_FIELD_CURRENT_ACTIVITY_REF, weakRef)
     }
 
 fun Application.doOnActivityPostCreated(action: (Activity, Bundle?) -> Unit) {

@@ -3,6 +3,7 @@ package com.hhvvg.anydebug.hook
 import android.content.res.Resources
 import android.content.res.XModuleResources
 import com.hhvvg.anydebug.BuildConfig
+import com.hhvvg.anydebug.hook.hookers.ActivityInspectHooker
 import com.hhvvg.anydebug.hook.hookers.GlobalControlReceiverHooker
 import com.hhvvg.anydebug.hook.hookers.PupupWindowHooker
 import com.hhvvg.anydebug.hook.hookers.TextViewHooker
@@ -28,6 +29,7 @@ class AnyHookFramework : IXposedHookLoadPackage, IXposedHookZygoteInit {
         ViewVisibilityHooker(),
         TextViewHooker(),
         ViewBoundsHooker(),
+        ActivityInspectHooker(),
     )
 
     override fun handleLoadPackage(p0: XC_LoadPackage.LoadPackageParam) {
