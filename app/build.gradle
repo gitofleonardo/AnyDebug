@@ -70,7 +70,7 @@ android {
 
 dependencies {
     // Android Navigation dependencies
-    def nav_version = "2.4.1"
+    def nav_version = "2.4.2"
     implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
     implementation 'androidx.preference:preference:1.2.0'
