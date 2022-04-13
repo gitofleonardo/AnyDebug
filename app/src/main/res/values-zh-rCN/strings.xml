@@ -66,4 +66,6 @@
     <string name="delete">删除</string>
     <string name="preview">预览</string>
     <string name="dp_input_hint">值(单位dp)</string>
+
+    <string name="tile_control_service_label">编辑控制</string>
 </resources>

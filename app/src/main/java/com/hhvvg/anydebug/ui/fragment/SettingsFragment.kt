@@ -9,6 +9,10 @@ import androidx.preference.SwitchPreferenceCompat
 import com.hhvvg.anydebug.R
 import com.hhvvg.anydebug.config.ConfigDbHelper
 import com.hhvvg.anydebug.config.ConfigPreferences
+import com.hhvvg.anydebug.receiver.EditControlReceiver
+import com.hhvvg.anydebug.receiver.EditControlReceiver.Companion.ACTION_DISABLE
+import com.hhvvg.anydebug.receiver.EditControlReceiver.Companion.ACTION_ENABLE
+import com.hhvvg.anydebug.receiver.EditControlReceiver.Companion.EXTRA_CONTROL_ACTION
 
 class SettingsFragment : PreferenceFragmentCompat() {
     private val globalEditPreference by lazy { findPreference<SwitchPreferenceCompat>(getString(R.string.global_edit_enable_key)) }
@@ -18,11 +22,23 @@ class SettingsFragment : PreferenceFragmentCompat() {
     private val localSp by lazy {
         ConfigPreferences(requireContext())
     }
+    private val stateChangeReceiver by lazy {
+        EditControlReceiver { enabled, source ->
+            if (source != SOURCE) {
+                globalEditPreference?.isChecked = enabled
+            }
+        }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        EditControlReceiver.register(stateChangeReceiver, requireContext())
+    }
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.root_preferences, rootKey)
         globalEditPreference?.setOnPreferenceChangeListener { _, newValue ->
-            sendEditEnableBroadcast(newValue as Boolean)
+            EditControlReceiver.sendBroadcast(requireContext(), newValue as Boolean, SOURCE)
             val edit = localSp.edit()
             edit.putBoolean(ConfigDbHelper.CONFIG_EDIT_ENABLED_COLUMN, newValue)
             edit.apply()
@@ -42,18 +58,6 @@ class SettingsFragment : PreferenceFragmentCompat() {
         }
     }
 
-    private fun sendEditEnableBroadcast(enabled: Boolean) {
-        val intent = Intent(ACTION_GLOBAL_ENABLE).apply {
-            val enableAction = if (enabled) {
-                ACTION_ENABLE
-            } else {
-                ACTION_DISABLE
-            }
-            putExtra(EXTRA_CONTROL_ACTION, enableAction)
-        }
-        context?.sendBroadcast(intent)
-    }
-
     private fun sendEditPersistentBroadcast(enabled: Boolean) {
         val intent = Intent(ACTION_PERSISTENT_ENABLE).apply {
             val enableAction = if (enabled) {
@@ -67,12 +71,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
     }
 
     companion object {
-        const val ACTION_GLOBAL_ENABLE = "com.hhvvg.action.control.enable"
+        private const val SOURCE = "SettingsFragmentSource"
         const val ACTION_PERSISTENT_ENABLE = "com.hhvvg.action.persistent.enable"
-
-        const val EXTRA_CONTROL_ACTION = "EXTRA_CONTROL_ACTION"
-
-        const val ACTION_ENABLE = 0
-        const val ACTION_DISABLE = 1
     }
 }

@@ -1,6 +1,5 @@
 package com.hhvvg.anydebug.hook.hookimpl
 
-import android.app.Activity
 import android.app.AndroidAppHelper
 import android.app.Application
 import android.content.BroadcastReceiver
@@ -11,10 +10,10 @@ import android.view.View
 import com.hhvvg.anydebug.config.ConfigDbHelper
 import com.hhvvg.anydebug.config.ConfigPreferences
 import com.hhvvg.anydebug.hook.IHook
-import com.hhvvg.anydebug.ui.fragment.SettingsFragment.Companion.ACTION_ENABLE
-import com.hhvvg.anydebug.ui.fragment.SettingsFragment.Companion.ACTION_GLOBAL_ENABLE
+import com.hhvvg.anydebug.receiver.EditControlReceiver
+import com.hhvvg.anydebug.receiver.EditControlReceiver.Companion.ACTION_ENABLE
+import com.hhvvg.anydebug.receiver.EditControlReceiver.Companion.EXTRA_CONTROL_ACTION
 import com.hhvvg.anydebug.ui.fragment.SettingsFragment.Companion.ACTION_PERSISTENT_ENABLE
-import com.hhvvg.anydebug.ui.fragment.SettingsFragment.Companion.EXTRA_CONTROL_ACTION
 import com.hhvvg.anydebug.util.ACTIVITY_FIELD_GLOBAL_ENABLE_RECEIVER
 import com.hhvvg.anydebug.util.doAfter
 import com.hhvvg.anydebug.util.doOnActivityDestroyed
@@ -46,10 +45,11 @@ class GlobalControlReceiverHook : IHook {
             registerReceiverForApp(app)
             app.doOnActivityPostCreated { activity, _ ->
                 // Register this receiver for every activity
-                val receiver = GlobalEnableReceiver(activity)
+                val receiver = EditControlReceiver { enabled, _ ->
+                    setGlobalEnable(activity.window.decorView, enabled)
+                }
                 activity.injectField(ACTIVITY_FIELD_GLOBAL_ENABLE_RECEIVER, receiver)
-                val filter = IntentFilter(ACTION_GLOBAL_ENABLE)
-                activity.registerReceiver(receiver, filter)
+                EditControlReceiver.register(receiver, activity)
             }
             app.doOnActivityDestroyed { activity ->
                 // Don't forget to release it.
@@ -67,28 +67,13 @@ class GlobalControlReceiverHook : IHook {
         app.registerReceiver(persistentEnableReceiver, filter)
     }
 
-    private class GlobalEnableReceiver(private val activity: Activity) : BroadcastReceiver() {
-        override fun onReceive(context: Context, intent: Intent) {
-            val decorView = activity.window.decorView
-            val enabled = when (intent.getIntExtra(EXTRA_CONTROL_ACTION, ACTION_ENABLE)) {
-                ACTION_ENABLE -> {
-                    true
-                }
-                else -> {
-                    false
-                }
-            }
-            setGlobalEnable(decorView, enabled)
+    private fun setGlobalEnable(decorView: View, enabled: Boolean) {
+        val app = AndroidAppHelper.currentApplication()
+        app.isGlobalEditEnabled = enabled
+        if (!enabled) {
+            app.isForceClickable = false
         }
-
-        private fun setGlobalEnable(decorView: View, enabled: Boolean) {
-            val app = AndroidAppHelper.currentApplication()
-            app.isGlobalEditEnabled = enabled
-            if (!enabled) {
-                app.isForceClickable = false
-            }
-            decorView.updateViewHookClick()
-        }
+        decorView.updateViewHookClick()
     }
 
     private class PersistentEnableReceiver : BroadcastReceiver() {

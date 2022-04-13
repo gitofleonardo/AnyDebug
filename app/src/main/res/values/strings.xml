@@ -76,4 +76,6 @@
     <string name="match_parent" translatable="false">MATCH_PARENT</string>
     <string name="wrap_content" translatable="false">WRAP_CONTENT</string>
     <string name="dp_input_hint">Value in dp</string>
+
+    <string name="tile_control_service_label">EditControl</string>
 </resources>
