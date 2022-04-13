@@ -68,4 +68,11 @@
     <string name="dp_input_hint">值(单位dp)</string>
 
     <string name="tile_control_service_label">编辑控制</string>
+
+    <string name="context_info">上下文信息</string>
+    <string name="view_name_text">控件类: %s</string>
+    <string name="activity_name_text">活动类: %s</string>
+    <string name="context_class_text">上下文(Context): %s</string>
+    <string name="screen_width">屏幕宽度: %s</string>
+    <string name="screen_height">屏幕高度: %s</string>
 </resources>

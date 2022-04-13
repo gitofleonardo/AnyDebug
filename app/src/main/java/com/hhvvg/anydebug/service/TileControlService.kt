@@ -4,6 +4,7 @@ import android.os.Build
 import android.service.quicksettings.Tile
 import android.service.quicksettings.TileService
 import androidx.annotation.RequiresApi
+import com.hhvvg.anydebug.BuildConfig
 import com.hhvvg.anydebug.R
 import com.hhvvg.anydebug.config.ConfigDbHelper
 import com.hhvvg.anydebug.config.ConfigPreferences
@@ -31,6 +32,9 @@ class TileControlService : TileService() {
             }
         }
     }
+    private val appSp by lazy {
+        getSharedPreferences("${BuildConfig.PACKAGE_NAME}_preferences", MODE_PRIVATE)
+    }
 
     override fun onTileAdded() {
         // Load initial value
@@ -52,6 +56,12 @@ class TileControlService : TileService() {
         val edit = configSp.edit()
         edit.putBoolean(ConfigDbHelper.CONFIG_EDIT_ENABLED_COLUMN, isEditEnabled)
         edit.apply()
+
+        // Update local sp as well
+        val appEdit = appSp.edit()
+        appEdit.putBoolean(getString(R.string.global_edit_enable_key), isEditEnabled)
+        appEdit.apply()
+
         EditControlReceiver.sendBroadcast(this, isEditEnabled, SOURCE)
     }
 

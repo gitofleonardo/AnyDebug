@@ -24,6 +24,7 @@
         <entry key="app/src/main/res/layout/layout_base_attribute_dialog.xml" value="0.25" />
         <entry key="app/src/main/res/layout/layout_base_dialog.xml" value="0.2" />
         <entry key="app/src/main/res/layout/layout_base_view_attr.xml" value="0.35052083333333334" />
+        <entry key="app/src/main/res/layout/layout_context_info_dialog.xml" value="0.31302083333333336" />
         <entry key="app/src/main/res/layout/layout_empty_dialog.xml" value="0.334375" />
         <entry key="app/src/main/res/layout/layout_image.xml" value="0.33" />
         <entry key="app/src/main/res/layout/layout_image_item.xml" value="0.334375" />

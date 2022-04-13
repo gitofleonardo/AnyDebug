@@ -76,6 +76,7 @@ open class BaseAttributeDialog(protected val itemView: View) : BaseDialog(itemVi
         binding.rulesButton.title = moduleRes.getString(R.string.rules)
         binding.ltrbMarginInputs.setTitle(getString(R.string.margin_title))
         binding.ltrbPaddingInput.setTitle(moduleRes.getString(R.string.padding_title))
+        binding.contextInfoButton.title = getString(R.string.context_info)
 
         // Make title(view name) selectable
         titleSelectable = true
@@ -86,6 +87,9 @@ open class BaseAttributeDialog(protected val itemView: View) : BaseDialog(itemVi
     }
 
     private fun setListeners() {
+        binding.contextInfoButton.setOnClickListener {
+            ContextInfoDialog(context, itemView).show()
+        }
         binding.visibilityButton.setOnClickListener {
             VisibilityDialog(
                 context,

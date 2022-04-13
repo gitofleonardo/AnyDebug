@@ -53,10 +53,18 @@
                 tools:ignore="UseSwitchCompatOrMaterialXml" />
 
             <com.hhvvg.anydebug.ui.view.TileButton
-                android:id="@+id/ancestor_button"
+                android:id="@+id/context_info_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/force_widgets_clickable"
+                android:layout_alignParentStart="true"
+                android:tag="ANYDEBUG_IGNORE_HOOK" />
+
+            <com.hhvvg.anydebug.ui.view.TileButton
+                android:id="@+id/ancestor_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/context_info_button"
                 android:layout_alignParentStart="true"
                 android:tag="ANYDEBUG_IGNORE_HOOK" />
 

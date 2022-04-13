@@ -78,4 +78,11 @@
     <string name="dp_input_hint">Value in dp</string>
 
     <string name="tile_control_service_label">EditControl</string>
+
+    <string name="context_info">Context Information</string>
+    <string name="view_name_text">View class: %s</string>
+    <string name="activity_name_text">Activity class: %s</string>
+    <string name="context_class_text">Context: %s</string>
+    <string name="screen_width">Screen width: %s</string>
+    <string name="screen_height">Screen height: %s</string>
 </resources>
