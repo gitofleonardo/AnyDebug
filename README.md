@@ -54,3 +54,9 @@ Only works on navtive android app. Some views may override `onTouchEvent` and do
 
 | ![sample0.png](raw/sample0.png) | ![sample1.png](raw/sample1.png) | ![sample1.png](raw/sample2.png) | ![sample1.png](raw/sample3.png) |
 | -- | -- | -- | -- |
+
+# Sponsor
+
+Give me a free star to be a sponsor if you like this project.
+
+如果你喜欢本项目的话，给个star支持一下就可以了。
