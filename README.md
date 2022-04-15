@@ -35,7 +35,7 @@ Be cautious when you use persistent editing, especially in list views.
 
 + Not working on some apps
 
-Only works on navtive android app. Some views may override `onTouchEvent` and doesn't call `performClick`, this module won't work in that situation.
+Only works on navtive android app. Some views may override `onTouchEvent` and don't call `performClick`, this module won't work in that situation.
 
 + 应用变卡了
 
