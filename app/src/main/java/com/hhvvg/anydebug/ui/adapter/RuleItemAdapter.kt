@@ -5,7 +5,6 @@ import android.text.SpannableString
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
-import androidx.recyclerview.widget.RecyclerView
 import com.hhvvg.anydebug.R
 import com.hhvvg.anydebug.databinding.LayoutViewRuleItemBinding
 import com.hhvvg.anydebug.hook.AnyHookFramework.Companion.moduleRes

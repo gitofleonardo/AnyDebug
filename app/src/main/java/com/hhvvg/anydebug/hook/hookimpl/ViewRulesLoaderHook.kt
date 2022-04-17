@@ -26,7 +26,7 @@ import kotlinx.coroutines.launch
  *
  * Loads persistent rules and apply them to specific views.
  */
-class ViewRulesLoader : IHook {
+class ViewRulesLoaderHook : IHook {
     override fun onHook(param: XC_LoadPackage.LoadPackageParam) {
         Application::class.doAfter("onCreate") {
             val app = it.thisObject as Application

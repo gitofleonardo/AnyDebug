@@ -9,7 +9,7 @@ import com.hhvvg.anydebug.hook.hookimpl.PupupWindowHook
 import com.hhvvg.anydebug.hook.hookimpl.TextViewHook
 import com.hhvvg.anydebug.hook.hookimpl.ViewBoundsHook
 import com.hhvvg.anydebug.hook.hookimpl.ViewClickHook
-import com.hhvvg.anydebug.hook.hookimpl.ViewRulesLoader
+import com.hhvvg.anydebug.hook.hookimpl.ViewRulesLoaderHook
 import com.hhvvg.anydebug.hook.hookimpl.ViewVisibilityHook
 import de.robv.android.xposed.IXposedHookLoadPackage
 import de.robv.android.xposed.IXposedHookZygoteInit
@@ -25,7 +25,7 @@ class AnyHookFramework : IXposedHookLoadPackage, IXposedHookZygoteInit {
         ViewClickHook(),
         PupupWindowHook(),
         GlobalControlReceiverHook(),
-        ViewRulesLoader(),
+        ViewRulesLoaderHook(),
         ViewVisibilityHook(),
         TextViewHook(),
         ViewBoundsHook(),

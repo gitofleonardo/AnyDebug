@@ -23,7 +23,7 @@ class TextViewHook : IHook {
         ) {
             val app = AndroidAppHelper.currentApplication()
             val textView = it.thisObject as TextView
-            val textToSet = it.args[0].toString()
+            val charseq: CharSequence? = it.args[0] as CharSequence?
             val viewId = textView.id
             val parent = textView.parent
             val parentId = if (parent is View) parent.id else View.NO_ID
@@ -32,7 +32,7 @@ class TextViewHook : IHook {
                 if (rule.ruleType == RuleType.Text &&
                     textView::class.java.name == rule.className &&
                     parentId == rule.viewParentId &&
-                    rule.originViewContent == textToSet
+                    rule.originViewContent == charseq
                 ) {
                     it.args[0] = rule.viewRule
                     break
