@@ -23,7 +23,7 @@
         </service>
 
         <provider
-            android:name=".config.ConfigContentProvider"
+            android:name="com.hhvvg.anydebug.config.ConfigContentProvider"
             android:authorities="com.hhvvg.anydebug.config"
             android:enabled="true"
             android:exported="true"

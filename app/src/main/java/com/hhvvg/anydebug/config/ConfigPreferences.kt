@@ -12,15 +12,16 @@ import com.hhvvg.anydebug.config.ConfigDbHelper.Companion.CONFIG_PERSISTENT_ENAB
  * @author hhvvg
  */
 class ConfigPreferences(private val context: Context) : SharedPreferences {
-    private val resolver = context.contentResolver
 
     /**
      * Read from ContentProvider only when first accessing it.
      */
     private val configurations: MutableMap<String, Any> by lazy {
+        val resolver = context.contentResolver
         val url = "content://$AUTHORITIES/config"
         val uri = Uri.parse(url)
-        val cursor = resolver.query(uri, null, "${ConfigDbHelper.CONFIG_ID_COLUMN}=?", arrayOf("0"), null)!!
+        val cursor =
+            resolver.query(uri, null, "${ConfigDbHelper.CONFIG_ID_COLUMN}=?", arrayOf("0"), null) ?: return@lazy mutableMapOf()
         if (cursor.moveToFirst()) {
             val editEnabled = cursor.getInt(cursor.getColumnIndexOrThrow(CONFIG_EDIT_ENABLED_COLUMN))
             val persistentEnabled = cursor.getInt(cursor.getColumnIndexOrThrow(
@@ -71,7 +72,7 @@ class ConfigPreferences(private val context: Context) : SharedPreferences {
     }
 
     override fun edit(): SharedPreferences.Editor {
-        return ConfigEditImpl(resolver)
+        return ConfigEditImpl(context.contentResolver)
     }
 
     override fun registerOnSharedPreferenceChangeListener(listener: SharedPreferences.OnSharedPreferenceChangeListener?) {
