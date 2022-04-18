@@ -37,6 +37,10 @@ Be cautious when you use persistent editing, especially in list views.
 
 Only works on navtive android app. Some views may override `onTouchEvent` and don't call `performClick`, this module won't work in that situation.
 
++ App crashes
+
+Due to some unknown reasons, `LayoutInflater` cannot properly inflate custom layout, thus causes crash on some apps. Reasons to be discovered.
+
 + 应用变卡了
 
 因为要遍历View树，来保证新添加的View能够被正确地hook掉。我之前尝试过hook `onAttachedToWindow`，但那会连我自定义的对话框也一起hook。正在寻找更好的方法。
@@ -49,6 +53,10 @@ Only works on navtive android app. Some views may override `onTouchEvent` and do
 + 某些应用中没法使用
 
 只支持原生Android应用。一些控件可能会重写`onTouchEvent`而不调用`performClick`方法，这种情况也是没法使用的。
+
++ 应用崩溃
+
+因为一些未知原因，`LayoutInflater`无法正确加载自定义布局，导致应用崩溃。暂时未找到原因。
 
 # Sample
 
