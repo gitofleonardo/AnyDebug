@@ -3,7 +3,9 @@ package com.hhvvg.anydebug.hook
 import android.content.res.Resources
 import android.content.res.XModuleResources
 import com.hhvvg.anydebug.BuildConfig
+import com.hhvvg.anydebug.config.ConfigurationManagerService
 import com.hhvvg.anydebug.hook.hookimpl.ActivityInspectHook
+import com.hhvvg.anydebug.hook.hookimpl.ConfigServiceHook
 import com.hhvvg.anydebug.hook.hookimpl.GlobalControlReceiverHook
 import com.hhvvg.anydebug.hook.hookimpl.PupupWindowHook
 import com.hhvvg.anydebug.hook.hookimpl.TextViewHook
@@ -22,6 +24,7 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage
  */
 class AnyHookFramework : IXposedHookLoadPackage, IXposedHookZygoteInit {
     private val hooks: ArrayList<IHook> = arrayListOf(
+        ConfigServiceHook(),
         ViewClickHook(),
         PupupWindowHook(),
         GlobalControlReceiverHook(),

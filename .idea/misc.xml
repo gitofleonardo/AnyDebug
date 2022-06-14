@@ -7,6 +7,9 @@
         <entry key="../../Android/Sdk/platforms/android-31/data/res/layout/simple_list_item_1.xml" value="0.334375" />
         <entry key="../../Android/platforms/android-31/data/res/layout/simple_spinner_dropdown_item.xml" value="0.35052083333333334" />
         <entry key="../../Android/platforms/android-31/data/res/layout/simple_spinner_item.xml" value="0.35052083333333334" />
+        <entry key="..\:/Users/hvang/StudioProjects/AnyDebug/app/src/main/res/drawable/ripple_button_background.xml" value="0.198" />
+        <entry key="..\:/Users/hvang/StudioProjects/AnyDebug/app/src/main/res/drawable/white_button_background.xml" value="0.198" />
+        <entry key="..\:/Users/hvang/StudioProjects/AnyDebug/app/src/main/res/layout/activity_main.xml" value="0.23867753623188406" />
         <entry key="app/src/main/res/drawable-v24/ic_baseline_find_in_page_24.xml" value="0.1925" />
         <entry key="app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.181" />
         <entry key="app/src/main/res/drawable/backgroun_dialog.xml" value="0.2575" />

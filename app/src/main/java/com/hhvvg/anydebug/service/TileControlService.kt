@@ -1,21 +1,25 @@
 package com.hhvvg.anydebug.service
 
+import android.content.Intent
 import android.os.Build
 import android.service.quicksettings.Tile
 import android.service.quicksettings.TileService
 import androidx.annotation.RequiresApi
-import com.hhvvg.anydebug.BuildConfig
+import com.hhvvg.anydebug.IConfigurationService
 import com.hhvvg.anydebug.R
-import com.hhvvg.anydebug.config.ConfigDbHelper
-import com.hhvvg.anydebug.config.ConfigPreferences
 import com.hhvvg.anydebug.receiver.EditControlReceiver
+import com.hhvvg.anydebug.util.CONFIGURATION_SERVICE
+import com.kaisar.xservicemanager.XServiceManager
 
 /**
  * @author hhvvg
  */
 @RequiresApi(Build.VERSION_CODES.N)
 class TileControlService : TileService() {
-    private val configSp by lazy { ConfigPreferences(this) }
+    private val confService by lazy {
+        val binder = XServiceManager.getService(CONFIGURATION_SERVICE)
+        IConfigurationService.Stub.asInterface(binder)
+    }
     private var isEditEnabled
         get() = qsTile.state == Tile.STATE_ACTIVE
         set(value) {
@@ -32,13 +36,10 @@ class TileControlService : TileService() {
             }
         }
     }
-    private val appSp by lazy {
-        getSharedPreferences("${BuildConfig.PACKAGE_NAME}_preferences", MODE_PRIVATE)
-    }
 
     override fun onTileAdded() {
         // Load initial value
-        isEditEnabled = configSp.getBoolean(ConfigDbHelper.CONFIG_EDIT_ENABLED_COLUMN, false)
+        isEditEnabled = confService.isEditEnabled
     }
 
     override fun onCreate() {
@@ -53,14 +54,7 @@ class TileControlService : TileService() {
 
     override fun onClick() {
         isEditEnabled = !isEditEnabled
-        val edit = configSp.edit()
-        edit.putBoolean(ConfigDbHelper.CONFIG_EDIT_ENABLED_COLUMN, isEditEnabled)
-        edit.apply()
-
-        // Update local sp as well
-        val appEdit = appSp.edit()
-        appEdit.putBoolean(getString(R.string.global_edit_enable_key), isEditEnabled)
-        appEdit.apply()
+        confService.isEditEnabled = isEditEnabled
 
         EditControlReceiver.sendBroadcast(this, isEditEnabled, SOURCE)
     }

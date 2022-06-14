@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     package="com.hhvvg.anydebug">
 
     <application
@@ -18,16 +17,13 @@
             android:enabled="true"
             android:exported="true">
             <intent-filter>
-                <action android:name="android.service.quicksettings.action.QS_TILE" />
+                <action android:name="android.service.quicksettings.action.QS_TILE"/>
             </intent-filter>
-        </service>
 
-        <provider
-            android:name="com.hhvvg.anydebug.config.ConfigContentProvider"
-            android:authorities="com.hhvvg.anydebug.config"
-            android:enabled="true"
-            android:exported="true"
-            tools:ignore="ExportedContentProvider" />
+            <meta-data
+                android:name="android.service.quicksettings.TOGGLEABLE_TILE"
+                android:value="true"/>
+        </service>
 
         <meta-data
             android:name="xposedmodule"
@@ -44,6 +40,7 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.service.quicksettings.action.QS_TILE_PREFERENCES"/>
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>

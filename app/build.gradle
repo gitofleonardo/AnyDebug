@@ -12,8 +12,8 @@ android {
         applicationId "com.hhvvg.anydebug"
         minSdk 23
         targetSdk 31
-        versionCode 7
-        versionName "2.0.4"
+        versionCode 8
+        versionName "2.0.5"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
@@ -88,6 +88,12 @@ dependencies {
     // Glide support
     implementation 'com.github.bumptech.glide:glide:4.13.1'
     kapt 'com.github.bumptech.glide:compiler:4.13.1'
+
+    // Service inject dependency
+    implementation project(path: ':libxservicemanager')
+
+    // Json parser
+    implementation 'com.google.code.gson:gson:2.9.0'
 
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation 'androidx.appcompat:appcompat:1.4.1'

@@ -7,14 +7,14 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.view.View
-import com.hhvvg.anydebug.config.ConfigDbHelper
-import com.hhvvg.anydebug.config.ConfigPreferences
+import com.hhvvg.anydebug.IConfigurationService
 import com.hhvvg.anydebug.hook.IHook
 import com.hhvvg.anydebug.receiver.EditControlReceiver
 import com.hhvvg.anydebug.receiver.EditControlReceiver.Companion.ACTION_ENABLE
 import com.hhvvg.anydebug.receiver.EditControlReceiver.Companion.EXTRA_CONTROL_ACTION
 import com.hhvvg.anydebug.ui.fragment.SettingsFragment.Companion.ACTION_PERSISTENT_ENABLE
 import com.hhvvg.anydebug.util.ACTIVITY_FIELD_GLOBAL_ENABLE_RECEIVER
+import com.hhvvg.anydebug.util.CONFIGURATION_SERVICE
 import com.hhvvg.anydebug.util.doAfter
 import com.hhvvg.anydebug.util.doOnActivityDestroyed
 import com.hhvvg.anydebug.util.doOnActivityPostCreated
@@ -24,6 +24,7 @@ import com.hhvvg.anydebug.util.isForceClickable
 import com.hhvvg.anydebug.util.isGlobalEditEnabled
 import com.hhvvg.anydebug.util.isPersistentEnabled
 import com.hhvvg.anydebug.util.updateViewHookClick
+import com.kaisar.xservicemanager.XServiceManager
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 
 /**
@@ -32,14 +33,16 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage
  * Hook for listening config change broadcast.
  */
 class GlobalControlReceiverHook : IHook {
+    private val service by lazy {
+        val binder = XServiceManager.getService(CONFIGURATION_SERVICE)
+        IConfigurationService.Stub.asInterface(binder)
+    }
     override fun onHook(param: XC_LoadPackage.LoadPackageParam) {
         Application::class.doAfter("onCreate") {
             val app = it.thisObject as Application
             // Read from module
-            val sp = ConfigPreferences(app.applicationContext)
-            val editEnabled = sp.getBoolean(ConfigDbHelper.CONFIG_EDIT_ENABLED_COLUMN, false)
-            val persistentEnabled =
-                sp.getBoolean(ConfigDbHelper.CONFIG_PERSISTENT_ENABLED_COLUMN, false)
+            val editEnabled = service.isEditEnabled
+            val persistentEnabled = service.isPersistentEnabled
             app.isGlobalEditEnabled = editEnabled
             app.isPersistentEnabled = persistentEnabled
             registerReceiverForApp(app)

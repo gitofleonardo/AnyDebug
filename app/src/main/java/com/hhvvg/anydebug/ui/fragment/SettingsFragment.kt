@@ -6,21 +6,23 @@ import androidx.navigation.fragment.findNavController
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreferenceCompat
+import com.hhvvg.anydebug.IConfigurationService
 import com.hhvvg.anydebug.R
-import com.hhvvg.anydebug.config.ConfigDbHelper
-import com.hhvvg.anydebug.config.ConfigPreferences
 import com.hhvvg.anydebug.receiver.EditControlReceiver
 import com.hhvvg.anydebug.receiver.EditControlReceiver.Companion.ACTION_DISABLE
 import com.hhvvg.anydebug.receiver.EditControlReceiver.Companion.ACTION_ENABLE
 import com.hhvvg.anydebug.receiver.EditControlReceiver.Companion.EXTRA_CONTROL_ACTION
+import com.hhvvg.anydebug.util.CONFIGURATION_SERVICE
+import com.kaisar.xservicemanager.XServiceManager
 
 class SettingsFragment : PreferenceFragmentCompat() {
     private val globalEditPreference by lazy { findPreference<SwitchPreferenceCompat>(getString(R.string.global_edit_enable_key)) }
     private val persistentPreference by lazy { findPreference<SwitchPreferenceCompat>(getString(R.string.edit_persistent_key)) }
     private val aboutPerf by lazy { findPreference<Preference>(getString(R.string.about_key)) }
     private val navController by lazy { findNavController() }
-    private val localSp by lazy {
-        ConfigPreferences(requireContext())
+    private val confService: IConfigurationService by lazy {
+        val binder = XServiceManager.getService(CONFIGURATION_SERVICE)
+        IConfigurationService.Stub.asInterface(binder)
     }
     private val stateChangeReceiver by lazy {
         EditControlReceiver { enabled, source ->
@@ -42,18 +44,16 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.root_preferences, rootKey)
+        globalEditPreference?.isChecked = confService.isEditEnabled
+        persistentPreference?.isChecked = confService.isPersistentEnabled
         globalEditPreference?.setOnPreferenceChangeListener { _, newValue ->
             EditControlReceiver.sendBroadcast(requireContext(), newValue as Boolean, SOURCE)
-            val edit = localSp.edit()
-            edit.putBoolean(ConfigDbHelper.CONFIG_EDIT_ENABLED_COLUMN, newValue)
-            edit.apply()
+            confService.isEditEnabled = newValue
             true
         }
         persistentPreference?.setOnPreferenceChangeListener { _, newValue ->
             sendEditPersistentBroadcast(newValue as Boolean)
-            val edit = localSp.edit()
-            edit.putBoolean(ConfigDbHelper.CONFIG_PERSISTENT_ENABLED_COLUMN, newValue)
-            edit.apply()
+            confService.isPersistentEnabled = newValue
             true
         }
         aboutPerf?.setOnPreferenceClickListener {
