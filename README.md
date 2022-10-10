@@ -1,5 +1,7 @@
 # AnyDebug
 
+[![GitHub all releases](https://img.shields.io/github/downloads/Xposed-Modules-Repo/com.hhvvg.anydebug/total?label=Downloads)](https://github.com/Xposed-Modules-Repo/com.hhvvg.anydebug/releases)
+
 Change your view attributes without restarting your application.
 
 # About
