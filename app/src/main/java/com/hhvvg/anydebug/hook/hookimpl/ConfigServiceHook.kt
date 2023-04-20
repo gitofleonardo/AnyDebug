@@ -1,6 +1,5 @@
 package com.hhvvg.anydebug.hook.hookimpl
 
-import com.hhvvg.anydebug.BuildConfig
 import com.hhvvg.anydebug.config.ConfigurationManagerService
 import com.hhvvg.anydebug.hook.IHook
 import com.hhvvg.anydebug.util.CONFIGURATION_SERVICE
@@ -16,9 +15,8 @@ class ConfigServiceHook : IHook {
             return
         }
         XServiceManager.initForSystemServer()
-        val service = ConfigurationManagerService()
-        XServiceManager.addService(CONFIGURATION_SERVICE, service)
-
-        XServiceManager.debug(BuildConfig.DEBUG)
+        XServiceManager.registerService(CONFIGURATION_SERVICE) {
+            ConfigurationManagerService()
+        }
     }
 }
