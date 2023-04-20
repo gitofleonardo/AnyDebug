@@ -32,4 +32,8 @@
         <item>reply</item>
         <item>reply_all</item>
     </string-array>
+
+    <array name="required_packages">
+        <item>android</item>
+    </array>
 </resources>

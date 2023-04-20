@@ -34,6 +34,9 @@
         <meta-data
             android:name="xposedminversion"
             android:value="53" />
+        <meta-data
+            android:name="xposedscope"
+            android:resource="@array/required_packages" />
 
         <activity
             android:name=".ui.MainActivity"
