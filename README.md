@@ -46,6 +46,11 @@ Due to some unknown reasons, `LayoutInflater` cannot properly inflate custom lay
 
 Give me a free star to be a sponsor if you like this project.
 
+
+# Stargazers over time
+
+[![Stargazers over time](https://starchart.cc/gitofleonardo/AnyDebug.svg)](https://starchart.cc/gitofleonardo/AnyDebug)
+
 ------------------------------------------------------------------------------------------------------------------------------------------
 
 # AnyDebug
