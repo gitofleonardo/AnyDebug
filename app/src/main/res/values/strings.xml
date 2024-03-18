@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">AnyDebugV2</string>
+    <string name="tile_control_service_label">EditControl</string>
+</resources>
