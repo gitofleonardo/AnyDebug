@@ -31,11 +31,23 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <ImageView
+        android:src="@drawable/ic_touch_app_24"
+        app:layout_constraintTop_toTopOf="@id/edit_switch"
+        app:layout_constraintBottom_toBottomOf="@id/edit_switch"
+        app:layout_constraintStart_toStartOf="parent"
+        android:id="@+id/pick_indicator"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:layout_marginStart="5dp"
+        android:tint="#216BDB"
+        tools:ignore="UseAppTint" />
+
     <Switch
         android:id="@+id/edit_switch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="2dp"
+        android:layout_marginTop="10dp"
         android:thumb="@drawable/switch_selector_thumb"
         android:track="@drawable/switch_selector_tracker"
         app:layout_constraintEnd_toEndOf="parent"
@@ -47,7 +59,7 @@
         android:id="@+id/bottom_drag_bar"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="2dp"
+        android:layout_marginTop="5dp"
         android:paddingVertical="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
