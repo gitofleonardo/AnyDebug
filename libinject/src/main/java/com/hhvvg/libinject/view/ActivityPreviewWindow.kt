@@ -33,12 +33,12 @@ import android.widget.Switch
 import androidx.core.view.isVisible
 import com.hhvvg.libinject.R
 import com.hhvvg.libinject.utils.Logger
+import com.hhvvg.libinject.utils.call
 import com.hhvvg.libinject.utils.override
 import com.hhvvg.libinject.view.remote.RemoteViewFactoryLoader
 import de.robv.android.xposed.XC_MethodHook.Unhook
-import de.robv.android.xposed.XposedHelpers
 
-class ActivityPreviewWindow(private val activity: Activity): OnTouchListener, OnGestureListener {
+class ActivityPreviewWindow(private val activity: Activity) : OnTouchListener, OnGestureListener {
 
     companion object {
         private val TAG = ActivityPreviewWindow::class.java.simpleName
@@ -72,14 +72,13 @@ class ActivityPreviewWindow(private val activity: Activity): OnTouchListener, On
     private val lastMovePoint = PointF()
     private var activityTouchHookToken: Unhook? = null
     private val tempLoc = IntArray(2)
-    private var renderer: View? = null
 
     fun show() {
         if (attachedToWindow || activity.isFinishing) {
             return
         }
         floatingView = onCreateWindowContent(activity).apply {
-            setOnTouchListener(this@ActivityPreviewWindow)
+            findViewById<View>(R.id.bottom_drag_bar).setOnTouchListener(this@ActivityPreviewWindow)
             findViewById<Switch>(R.id.edit_switch).setOnCheckedChangeListener { _, isChecked ->
                 handleActivityTouchStateChanged(isChecked)
             }
@@ -88,7 +87,7 @@ class ActivityPreviewWindow(private val activity: Activity): OnTouchListener, On
             Logger.log(TAG, "addView to window, wm=${windowManager}.")
         }
         floatingView?.let {
-            setRenderer(activity.window.decorView)
+            setRenderers(mutableListOf(activity.window.decorView))
         }
     }
 
@@ -108,34 +107,43 @@ class ActivityPreviewWindow(private val activity: Activity): OnTouchListener, On
             activityTouchHookToken = null
             return
         }
-        activityTouchHookToken = Activity::class.override("dispatchTouchEvent",
-            MotionEvent::class.java) {
+        activityTouchHookToken = Activity::class.override(
+            "dispatchTouchEvent",
+            MotionEvent::class.java
+        ) {
             onActivityTouchEvent(it.args[0] as MotionEvent)
             true
         }
     }
 
     private fun onActivityTouchEvent(event: MotionEvent) {
-        val target = findEventTarget(event)
-        setRenderer(target)
+        val targets = findEventTargets(event)
+        setRenderers(targets)
     }
 
-    private fun findEventTarget(event: MotionEvent): View {
-        return findEventTarget(activity.window.decorView, event)
+    private fun findEventTargets(event: MotionEvent): List<View> {
+        val items = mutableListOf<View>()
+        findEventTargets(activity.window.decorView, event, items)
+        return items
     }
 
-    private fun findEventTarget(root: View, event: MotionEvent): View {
+    private fun findEventTargets(root: View, event: MotionEvent, outList: MutableList<View>) {
         if (root !is ViewGroup || root.childCount == 0) {
-            return root
+            outList.add(root)
+            return
         }
         val childCount = root.childCount
+        val touchedTargetChildren = mutableListOf<View>()
         for (i in 0..childCount) {
             val child = root.getChildAt(i)
             if (child != null && child.isVisible && isEventInChild(event, child)) {
-                return findEventTarget(child, event)
+                findEventTargets(child, event, touchedTargetChildren)
             }
         }
-        return root
+        if (touchedTargetChildren.isEmpty()) {
+            touchedTargetChildren.add(root)
+        }
+        outList.addAll(touchedTargetChildren)
     }
 
     private fun isEventInChild(event: MotionEvent, child: View): Boolean {
@@ -146,15 +154,10 @@ class ActivityPreviewWindow(private val activity: Activity): OnTouchListener, On
                 event.rawY <= tempLoc[1] + child.height
     }
 
-    private fun setRenderer(renderer: View) {
-        this.renderer = renderer
+    private fun setRenderers(renderers: List<View>) {
         floatingView?.let {
-            val previewView = it.findViewById<View>(R.id.preview_view)
-            XposedHelpers.callMethod(
-                previewView,
-                "setRenderer",
-                renderer
-            )
+            it.findViewById<View>(R.id.preview_list)
+                .call("updatePreviewItems", renderers)
         }
     }
 
@@ -164,7 +167,8 @@ class ActivityPreviewWindow(private val activity: Activity): OnTouchListener, On
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouch(v: View, event: MotionEvent): Boolean {
-        return gestureDetector.onTouchEvent(event)
+        gestureDetector.onTouchEvent(event)
+        return true
     }
 
     override fun onDown(e: MotionEvent): Boolean {

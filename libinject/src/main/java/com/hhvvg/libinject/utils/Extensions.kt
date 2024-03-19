@@ -67,3 +67,7 @@ fun <T> Any.getInjectedField(name: String, defaultValue: T): T {
     val value = XposedHelpers.getAdditionalInstanceField(this, name) ?: defaultValue
     return value as T
 }
+
+fun Any.call(method: String, vararg args: Any) {
+    XposedHelpers.callMethod(this, method, *args)
+}

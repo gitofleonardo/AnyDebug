@@ -19,7 +19,9 @@ package com.hhvvg.libinject.view.remote
 
 import android.content.Context
 import android.view.View
+import android.view.ViewGroup
 
 interface RemoteViewFactory {
-    fun onInflateView(context: Context, name: String): View
+    fun onInflateView(context: Context, name: String,
+                      root: ViewGroup? = null, attachToRoot: Boolean = false): View
 }

@@ -15,8 +15,9 @@
   ~     along with this program.  If not, see <https://www.gnu.org/licenses/>.
   -->
 
-<resources>
-    <color name="transparent">#00FFFFFF</color>
-    <color name="color_display_window_bg">#64D8D8D8</color>
-    <color name="color_window_bottom_bar">#A2A2A2</color>
-</resources>
+<com.hhvvg.libinject.view.PreviewView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/preview_item">
+
+</com.hhvvg.libinject.view.PreviewView>

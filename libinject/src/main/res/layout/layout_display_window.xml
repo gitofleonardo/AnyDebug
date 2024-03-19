@@ -24,22 +24,37 @@
     android:id="@+id/content"
     android:padding="2dp">
 
-    <com.hhvvg.libinject.view.PreviewView
+    <com.hhvvg.libinject.view.PreviewList
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:id="@+id/preview_view"
-        android:layout_width="60dp"
-        android:layout_height="80dp"
-        android:background="@color/transparent"/>
+        android:id="@+id/preview_list"
+        android:layout_width="80dp"
+        android:layout_height="95dp"/>
 
     <Switch
         android:id="@+id/edit_switch"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/preview_view"
+        app:layout_constraintTop_toBottomOf="@id/preview_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+    <FrameLayout
+        android:id="@+id/bottom_drag_bar"
+        android:paddingVertical="10dp"
+        app:layout_constraintTop_toBottomOf="@id/edit_switch"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content">
+        <View
+            android:layout_gravity="center"
+            android:background="@drawable/drawable_bottom_bar"
+            android:layout_width="40dp"
+            android:layout_height="5dp"/>
+    </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

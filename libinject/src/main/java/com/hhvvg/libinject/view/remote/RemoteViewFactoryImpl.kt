@@ -20,17 +20,23 @@ package com.hhvvg.libinject.view.remote
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import com.hhvvg.libinject.utils.APPLICATION_ID
 
 class RemoteViewFactoryImpl : RemoteViewFactory {
 
-    override fun onInflateView(context: Context, name: String): View {
-        val packageContext = context.createPackageContext(APPLICATION_ID,
-            Context.CONTEXT_INCLUDE_CODE or Context.CONTEXT_IGNORE_SECURITY)
+    override fun onInflateView(
+        context: Context, name: String, root: ViewGroup?,
+        attachToRoot: Boolean
+    ): View {
+        val packageContext = context.createPackageContext(
+            APPLICATION_ID,
+            Context.CONTEXT_INCLUDE_CODE or Context.CONTEXT_IGNORE_SECURITY
+        )
         val resId = packageContext.resources
             .getIdentifier(name, "layout", packageContext.packageName)
         if (resId > 0) {
-            return LayoutInflater.from(packageContext).inflate(resId, null, false)
+            return LayoutInflater.from(packageContext).inflate(resId, root, attachToRoot)
         }
         throw RuntimeException("Error inflating remote layout.")
     }
