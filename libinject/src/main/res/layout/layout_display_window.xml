@@ -21,16 +21,15 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/display_window_background"
-    android:id="@+id/content"
-    android:padding="2dp">
+    android:id="@+id/content">
 
     <com.hhvvg.libinject.view.PreviewList
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:id="@+id/preview_list"
-        android:layout_width="80dp"
-        android:layout_height="95dp"/>
+        android:layout_width="100dp"
+        android:layout_height="120dp"/>
 
     <Switch
         android:id="@+id/edit_switch"
@@ -48,7 +47,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_width="80dp"
+        android:layout_width="100dp"
         android:layout_height="wrap_content">
         <View
             android:layout_gravity="center"
