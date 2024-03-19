@@ -16,44 +16,49 @@
   -->
 
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/content"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@drawable/display_window_background"
-    android:id="@+id/content">
+    android:background="@drawable/display_window_background">
 
     <com.hhvvg.libinject.view.PreviewList
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         android:id="@+id/preview_list"
         android:layout_width="100dp"
-        android:layout_height="120dp"/>
+        android:layout_height="120dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Switch
         android:id="@+id/edit_switch"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/preview_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:thumb="@drawable/switch_selector_thumb"
+        android:track="@drawable/switch_selector_tracker"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/preview_list"
         tools:ignore="UseSwitchCompatOrMaterialXml" />
 
     <FrameLayout
         android:id="@+id/bottom_drag_bar"
-        android:paddingVertical="10dp"
-        app:layout_constraintTop_toBottomOf="@id/edit_switch"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
         android:layout_width="100dp"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:paddingVertical="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/edit_switch">
+
         <View
-            android:layout_gravity="center"
-            android:background="@drawable/drawable_bottom_bar"
             android:layout_width="40dp"
-            android:layout_height="5dp"/>
+            android:layout_height="5dp"
+            android:layout_gravity="center"
+            android:background="@drawable/drawable_bottom_bar" />
     </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
