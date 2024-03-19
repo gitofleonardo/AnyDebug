@@ -19,22 +19,18 @@ package com.hhvvg.libinject.instances
 
 import android.app.Activity
 import android.app.Application.ActivityLifecycleCallbacks
-import android.content.Context
 import android.database.ContentObserver
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.view.View
-import android.view.WindowManager
 import com.hhvvg.libinject.Instance
 import com.hhvvg.libinject.configurations.AllSettings
 import com.hhvvg.libinject.configurations.CONTENT_URI
 import com.hhvvg.libinject.modules.ActivityModule
 import com.hhvvg.libinject.utils.Logger
 import com.hhvvg.libinject.utils.doAfter
-import com.hhvvg.libinject.view.PreviewWindow
-import com.hhvvg.libinject.view.remote.RemoteViewFactoryLoader
+import com.hhvvg.libinject.view.ActivityPreviewWindow
 
 class ActivityInstance(private val activity: Activity) : Instance, ActivityLifecycleCallbacks {
 
@@ -52,7 +48,7 @@ class ActivityInstance(private val activity: Activity) : Instance, ActivityLifec
     private val windowShouldDisplay: Boolean
         get() = AllSettings.editEnabled.value
     private val previewWindow by lazy {
-        PreviewWindow(activity)
+        ActivityPreviewWindow(activity)
     }
 
     init {

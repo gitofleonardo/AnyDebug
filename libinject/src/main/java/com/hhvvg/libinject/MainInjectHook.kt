@@ -21,6 +21,7 @@ import android.content.res.Resources
 import android.content.res.XModuleResources
 import com.hhvvg.libinject.modules.ApplicationModule
 import com.hhvvg.libinject.modules.ActivityModule
+import com.hhvvg.libinject.utils.Logger
 import de.robv.android.xposed.IXposedHookLoadPackage
 import de.robv.android.xposed.IXposedHookZygoteInit
 import de.robv.android.xposed.callbacks.XC_LoadPackage
@@ -28,15 +29,22 @@ import kotlin.reflect.KClass
 
 class MainInjectHook : IXposedHookLoadPackage, IXposedHookZygoteInit {
 
+    private var processLoaded = false
+
     private val modules = arrayOf<KClass<*>>(
         ApplicationModule::class,
         ActivityModule::class,
     )
 
     override fun handleLoadPackage(lpparam: XC_LoadPackage.LoadPackageParam) {
+        if (processLoaded) {
+            Logger.log("Process already loaded, skip init modules.")
+            return
+        }
         modules.forEach {
             (it.java.constructors[0].newInstance() as Module).onHook(lpparam)
         }
+        processLoaded = true
     }
 
     override fun initZygote(startupParam: IXposedHookZygoteInit.StartupParam) {

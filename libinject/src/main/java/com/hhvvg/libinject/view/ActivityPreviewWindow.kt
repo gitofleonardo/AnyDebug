@@ -38,10 +38,10 @@ import com.hhvvg.libinject.view.remote.RemoteViewFactoryLoader
 import de.robv.android.xposed.XC_MethodHook.Unhook
 import de.robv.android.xposed.XposedHelpers
 
-class PreviewWindow(private val activity: Activity): OnTouchListener, OnGestureListener {
+class ActivityPreviewWindow(private val activity: Activity): OnTouchListener, OnGestureListener {
 
     companion object {
-        private val TAG = PreviewWindow::class.java.simpleName
+        private val TAG = ActivityPreviewWindow::class.java.simpleName
     }
 
     private var floatingView: View? = null
@@ -79,7 +79,7 @@ class PreviewWindow(private val activity: Activity): OnTouchListener, OnGestureL
             return
         }
         floatingView = onCreateWindowContent(activity).apply {
-            setOnTouchListener(this@PreviewWindow)
+            setOnTouchListener(this@ActivityPreviewWindow)
             findViewById<Switch>(R.id.edit_switch).setOnCheckedChangeListener { _, isChecked ->
                 handleActivityTouchStateChanged(isChecked)
             }
