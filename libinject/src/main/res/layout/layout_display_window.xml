@@ -41,7 +41,8 @@
         android:layout_height="16dp"
         android:layout_marginStart="5dp"
         android:tint="#216BDB"
-        tools:ignore="UseAppTint" />
+        tools:ignore="UseAppTint"
+        android:contentDescription="@string/touch_indicator_desc" />
 
     <Switch
         android:id="@+id/edit_switch"

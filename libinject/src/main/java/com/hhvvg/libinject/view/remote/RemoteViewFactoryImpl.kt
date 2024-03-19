@@ -17,6 +17,7 @@
 
 package com.hhvvg.libinject.view.remote
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -25,6 +26,7 @@ import com.hhvvg.libinject.utils.APPLICATION_ID
 
 class RemoteViewFactoryImpl : RemoteViewFactory {
 
+    @SuppressLint("DiscouragedApi")
     override fun onInflateView(
         context: Context, name: String, root: ViewGroup?,
         attachToRoot: Boolean
