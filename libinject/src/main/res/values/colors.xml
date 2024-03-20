@@ -19,4 +19,5 @@
     <color name="transparent">#00FFFFFF</color>
     <color name="color_display_window_bg">#EDFFFFFF</color>
     <color name="color_window_bottom_bar">#A2A2A2</color>
+    <color name="color_primary">#216BDB</color>
 </resources>

@@ -23,16 +23,21 @@ import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
+import com.hhvvg.libinject.R
+import com.rbrooks.indefinitepagerindicator.IndefinitePagerIndicator
 
 class PreviewList(context: Context, attrs: AttributeSet?, defStyleAttr: Int) :
     RecyclerView(context, attrs, defStyleAttr) {
     constructor(context: Context, attrs: AttributeSet?)
 
             : this(context, attrs, 0)
+
     constructor(context: Context)
             : this(context, null)
 
     private val previewAdapter = PreviewAdapter(context)
+    private val indicatorView: IndefinitePagerIndicator?
+        get() = rootView.findViewById(R.id.page_indicator)
 
     init {
         adapter = previewAdapter
@@ -40,7 +45,13 @@ class PreviewList(context: Context, attrs: AttributeSet?, defStyleAttr: Int) :
         LinearSnapHelper().attachToRecyclerView(this)
     }
 
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+        indicatorView?.attachToRecyclerView(this)
+    }
+
     fun updatePreviewItems(items: List<View>) {
         previewAdapter.updatePreviewItems(items.map { ViewItem(it) })
+        indicatorView?.requestLayout()
     }
 }
