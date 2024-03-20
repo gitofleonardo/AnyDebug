@@ -321,7 +321,7 @@ class ActivityPreviewWindow(private val activity: Activity) : OnTouchListener, O
                     if (windowState == STATE_MINI_WINDOW) {
                         dockToEdge(0f, 0f)
                     } else if (windowState == STATE_MAX_WINDOW) {
-                        minimizeWindow(0f, 0f)
+                        moveMaximizeWindowCenter()
                     }
                 }
             }
