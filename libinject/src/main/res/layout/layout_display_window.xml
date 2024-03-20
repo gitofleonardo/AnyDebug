@@ -68,7 +68,7 @@
 
         <Switch
             android:id="@+id/edit_switch"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:background="@null"
@@ -84,7 +84,8 @@
         android:id="@+id/bottom_drag_bar"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:paddingVertical="6dp"
+        android:paddingTop="6dp"
+        android:paddingBottom="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
