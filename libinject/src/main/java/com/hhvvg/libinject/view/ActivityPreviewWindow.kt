@@ -17,12 +17,14 @@
 
 package com.hhvvg.libinject.view
 
+import android.animation.Animator
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.graphics.PixelFormat
 import android.graphics.PointF
 import android.graphics.Rect
+import android.util.FloatProperty
 import android.view.GestureDetector
 import android.view.GestureDetector.OnGestureListener
 import android.view.Gravity
@@ -35,14 +37,13 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import android.view.animation.DecelerateInterpolator
 import android.widget.Switch
+import androidx.core.animation.addListener
 import androidx.core.view.isVisible
 import androidx.dynamicanimation.animation.DynamicAnimation
-import androidx.dynamicanimation.animation.FloatPropertyCompat
-import androidx.dynamicanimation.animation.SpringAnimation
-import androidx.dynamicanimation.animation.SpringForce
 import com.hhvvg.libinject.R
 import com.hhvvg.libinject.utils.Logger
 import com.hhvvg.libinject.utils.OverScroll
+import com.hhvvg.libinject.utils.SpringAnimationBuilder
 import com.hhvvg.libinject.utils.call
 import com.hhvvg.libinject.utils.override
 import com.hhvvg.libinject.view.remote.RemoteViewFactoryLoader
@@ -58,8 +59,8 @@ class ActivityPreviewWindow(private val activity: Activity) : OnTouchListener, O
         private val TAG = ActivityPreviewWindow::class.java.simpleName
 
         private val WINDOW_X_PROPERTY =
-            object : FloatPropertyCompat<ActivityPreviewWindow>("window_x_property") {
-                override fun getValue(window: ActivityPreviewWindow): Float {
+            object : FloatProperty<ActivityPreviewWindow>("window_x_property") {
+                override fun get(window: ActivityPreviewWindow): Float {
                     return window.windowParams.x.toFloat()
                 }
 
@@ -70,8 +71,8 @@ class ActivityPreviewWindow(private val activity: Activity) : OnTouchListener, O
             }
 
         private val WINDOW_Y_PROPERTY =
-            object : FloatPropertyCompat<ActivityPreviewWindow>("window_y_property") {
-                override fun getValue(window: ActivityPreviewWindow): Float {
+            object : FloatProperty<ActivityPreviewWindow>("window_y_property") {
+                override fun get(window: ActivityPreviewWindow): Float {
                     return window.windowParams.y.toFloat()
                 }
 
@@ -82,8 +83,8 @@ class ActivityPreviewWindow(private val activity: Activity) : OnTouchListener, O
             }
 
         private val WINDOW_WIDTH_PROPERTY =
-            object : FloatPropertyCompat<ActivityPreviewWindow>("window_width_property") {
-                override fun getValue(window: ActivityPreviewWindow): Float {
+            object : FloatProperty<ActivityPreviewWindow>("window_width_property") {
+                override fun get(window: ActivityPreviewWindow): Float {
                     return if (window.windowParams.width > 0)
                         window.windowParams.width.toFloat()
                     else run {
@@ -99,8 +100,8 @@ class ActivityPreviewWindow(private val activity: Activity) : OnTouchListener, O
             }
 
         private val WINDOW_HEIGHT_PROPERTY =
-            object : FloatPropertyCompat<ActivityPreviewWindow>("window_width_property") {
-                override fun getValue(window: ActivityPreviewWindow): Float {
+            object : FloatProperty<ActivityPreviewWindow>("window_width_property") {
+                override fun get(window: ActivityPreviewWindow): Float {
                     return if (window.windowParams.height > 0)
                         window.windowParams.height.toFloat()
                     else run {
@@ -156,10 +157,10 @@ class ActivityPreviewWindow(private val activity: Activity) : OnTouchListener, O
     private val lastMovePoint = PointF()
     private var activityTouchHookToken: Unhook? = null
     private val tempLoc = IntArray(2)
-    private var dockToEdgeAnimationX: SpringAnimation? = null
-    private var dockToEdgeAnimationY: SpringAnimation? = null
-    private var widthAnimation: SpringAnimation? = null
-    private var heightAnimation: SpringAnimation? = null
+    private var dockToEdgeAnimationX: Animator? = null
+    private var dockToEdgeAnimationY: Animator? = null
+    private var widthAnimation: Animator? = null
+    private var heightAnimation: Animator? = null
     private val tempRect = Rect()
     private val runningDockingAnimation: Boolean
         get() = dockToEdgeAnimationX != null && dockToEdgeAnimationY != null
@@ -405,43 +406,35 @@ class ActivityPreviewWindow(private val activity: Activity) : OnTouchListener, O
         maximizeWindow()
     }
 
-    private fun maximizeWindow() {
-        if (windowState == STATE_MAX_WINDOW) {
-            return
-        }
-        windowState = STATE_MAX_WINDOW
-        activity.window.decorView.getWindowVisibleDisplayFrame(tempRect)
-        val parentWindowWidth = tempRect.width()
-        val parentWindowHeight = tempRect.height()
-        val finalWidth = parentWindowWidth * (2f / 3f)
-        val finalHeight = parentWindowHeight * .5f
-        animateWindowSize(finalWidth, finalHeight)
-        moveMaximizeWindowCenter()
-    }
-
     private fun animateWindowSize(finalWidth: Float, finalHeight: Float) {
         widthAnimation?.cancel()
         heightAnimation?.cancel()
-        widthAnimation = SpringAnimation(this, WINDOW_WIDTH_PROPERTY).apply {
-            spring = SpringForce(finalWidth)
-                .setStiffness(FLING_STIFFNESS)
-                .setDampingRatio(FLING_DAMPING_RATIO)
-            minimumVisibleChange = DynamicAnimation.MIN_VISIBLE_CHANGE_PIXELS
-            addEndListener { _, _, _, _ ->
-                widthAnimation = null
+        widthAnimation = SpringAnimationBuilder(activity)
+            .setDampingRatio(FLING_DAMPING_RATIO)
+            .setStiffness(FLING_STIFFNESS)
+            .setEndValue(finalWidth)
+            .setMinimumVisibleChange(DynamicAnimation.MIN_VISIBLE_CHANGE_PIXELS)
+            .setStartValue(WINDOW_WIDTH_PROPERTY.get(this))
+            .build(this, WINDOW_WIDTH_PROPERTY).apply {
+                addListener(onEnd = {
+                    widthAnimation = null
+                })
+                currentPlayTime = 16
+                start()
             }
-            start()
-        }
-        heightAnimation = SpringAnimation(this, WINDOW_HEIGHT_PROPERTY).apply {
-            spring = SpringForce(finalHeight)
-                .setStiffness(FLING_STIFFNESS)
-                .setDampingRatio(FLING_DAMPING_RATIO)
-            minimumVisibleChange = DynamicAnimation.MIN_VISIBLE_CHANGE_PIXELS
-            addEndListener { _, _, _, _ ->
-                heightAnimation = null
+        heightAnimation = SpringAnimationBuilder(activity)
+            .setDampingRatio(FLING_DAMPING_RATIO)
+            .setStiffness(FLING_STIFFNESS)
+            .setEndValue(finalHeight)
+            .setMinimumVisibleChange(DynamicAnimation.MIN_VISIBLE_CHANGE_PIXELS)
+            .setStartValue(WINDOW_HEIGHT_PROPERTY.get(this))
+            .build(this, WINDOW_HEIGHT_PROPERTY).apply {
+                addListener(onEnd = {
+                    heightAnimation = null
+                })
+                currentPlayTime = 16
+                start()
             }
-            start()
-        }
     }
 
     private fun moveMaximizeWindowCenter() {
@@ -459,30 +452,32 @@ class ActivityPreviewWindow(private val activity: Activity) : OnTouchListener, O
     ) {
         dockToEdgeAnimationX?.cancel()
         dockToEdgeAnimationY?.cancel()
-        dockToEdgeAnimationX = SpringAnimation(this, WINDOW_X_PROPERTY).apply {
-            spring = SpringForce()
-                .setStiffness(FLING_STIFFNESS)
-                .setDampingRatio(FLING_DAMPING_RATIO)
-                .setFinalPosition(finalX)
-            minimumVisibleChange = DynamicAnimation.MIN_VISIBLE_CHANGE_PIXELS
-            setStartVelocity(velocityX)
-            addEndListener { _, _, _, _ ->
-                dockToEdgeAnimationX = null
+        dockToEdgeAnimationX = SpringAnimationBuilder(activity)
+            .setDampingRatio(FLING_DAMPING_RATIO)
+            .setStiffness(FLING_STIFFNESS)
+            .setEndValue(finalX)
+            .setMinimumVisibleChange(DynamicAnimation.MIN_VISIBLE_CHANGE_PIXELS)
+            .setStartVelocity(velocityX)
+            .setStartValue(WINDOW_X_PROPERTY.get(this))
+            .build(this, WINDOW_X_PROPERTY).apply {
+                addListener(onEnd = {
+                    dockToEdgeAnimationX = null
+                })
+                start()
             }
-            start()
-        }
-        dockToEdgeAnimationY = SpringAnimation(this, WINDOW_Y_PROPERTY).apply {
-            spring = SpringForce()
-                .setStiffness(FLING_STIFFNESS)
-                .setDampingRatio(FLING_DAMPING_RATIO)
-                .setFinalPosition(finalY)
-            minimumVisibleChange = DynamicAnimation.MIN_VISIBLE_CHANGE_PIXELS
-            setStartVelocity(velocityY)
-            addEndListener { _, _, _, _ ->
-                dockToEdgeAnimationY = null
+        dockToEdgeAnimationY = SpringAnimationBuilder(activity)
+            .setDampingRatio(FLING_DAMPING_RATIO)
+            .setStiffness(FLING_STIFFNESS)
+            .setEndValue(finalY)
+            .setMinimumVisibleChange(DynamicAnimation.MIN_VISIBLE_CHANGE_PIXELS)
+            .setStartVelocity(velocityY)
+            .setStartValue(WINDOW_Y_PROPERTY.get(this))
+            .build(this, WINDOW_Y_PROPERTY).apply {
+                addListener(onEnd = {
+                    dockToEdgeAnimationY = null
+                })
+                start()
             }
-            start()
-        }
     }
 
     private fun calcMaximizeWindowPosition(): PointF {
@@ -518,5 +513,19 @@ class ActivityPreviewWindow(private val activity: Activity) : OnTouchListener, O
         val finalHeight = miniWidowSize.y
         animateWindowSize(finalWidth, finalHeight)
         dockToEdge(velocityX, velocityY)
+    }
+
+    private fun maximizeWindow() {
+        if (windowState == STATE_MAX_WINDOW) {
+            return
+        }
+        windowState = STATE_MAX_WINDOW
+        activity.window.decorView.getWindowVisibleDisplayFrame(tempRect)
+        val parentWindowWidth = tempRect.width()
+        val parentWindowHeight = tempRect.height()
+        val finalWidth = parentWindowWidth * (2f / 3f)
+        val finalHeight = parentWindowHeight * .5f
+        animateWindowSize(finalWidth, finalHeight)
+        moveMaximizeWindowCenter()
     }
 }
