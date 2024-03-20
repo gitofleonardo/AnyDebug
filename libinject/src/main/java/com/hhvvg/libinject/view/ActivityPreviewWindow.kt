@@ -24,6 +24,7 @@ import android.content.Context
 import android.graphics.PixelFormat
 import android.graphics.PointF
 import android.graphics.Rect
+import android.os.Build
 import android.util.FloatProperty
 import android.view.GestureDetector
 import android.view.GestureDetector.OnGestureListener
@@ -150,6 +151,9 @@ class ActivityPreviewWindow(private val activity: Activity) : OnTouchListener, O
                 WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL or
                         WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
                         WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                setCanPlayMoveAnimation(false)
+            }
         }
     }
     private val gestureDetector = GestureDetector(activity, this)
@@ -419,7 +423,6 @@ class ActivityPreviewWindow(private val activity: Activity) : OnTouchListener, O
                 addListener(onEnd = {
                     widthAnimation = null
                 })
-                currentPlayTime = 16
                 start()
             }
         heightAnimation = SpringAnimationBuilder(activity)
@@ -432,7 +435,6 @@ class ActivityPreviewWindow(private val activity: Activity) : OnTouchListener, O
                 addListener(onEnd = {
                     heightAnimation = null
                 })
-                currentPlayTime = 16
                 start()
             }
     }
