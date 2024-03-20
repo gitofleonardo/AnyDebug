@@ -25,6 +25,7 @@ import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.hhvvg.libinject.R
 import com.rbrooks.indefinitepagerindicator.IndefinitePagerIndicator
+import java.util.function.Consumer
 
 class PreviewList(context: Context, attrs: AttributeSet?, defStyleAttr: Int) :
     RecyclerView(context, attrs, defStyleAttr) {
@@ -53,5 +54,9 @@ class PreviewList(context: Context, attrs: AttributeSet?, defStyleAttr: Int) :
     fun updatePreviewItems(items: List<View>) {
         previewAdapter.updatePreviewItems(items.map { ViewItem(it) })
         indicatorView?.requestLayout()
+    }
+
+    fun setOnPreviewClickListener(listener: OnClickListener) {
+        previewAdapter.setOnClickListener(listener)
     }
 }

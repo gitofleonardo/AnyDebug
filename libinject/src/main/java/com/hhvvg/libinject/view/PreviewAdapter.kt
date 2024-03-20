@@ -20,15 +20,18 @@ package com.hhvvg.libinject.view
 import android.annotation.SuppressLint
 import android.content.Context
 import android.view.View
+import android.view.View.OnClickListener
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.hhvvg.libinject.R
 import com.hhvvg.libinject.view.remote.RemoteViewFactoryLoader
+import java.util.function.Consumer
 
 class PreviewAdapter(context: Context) : Adapter<PreviewHolder>() {
     private val previewItems = mutableListOf<ViewItem>()
     private val remoteInflater = RemoteViewFactoryLoader(context).getRemoteFactory()
+    private var onPreviewClickListener: OnClickListener? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PreviewHolder {
         val view =
@@ -43,6 +46,9 @@ class PreviewAdapter(context: Context) : Adapter<PreviewHolder>() {
     override fun onBindViewHolder(holder: PreviewHolder, position: Int) {
         val item = previewItems[position]
         holder.previewView.setRenderer(item.view)
+        holder.previewView.setOnClickListener {
+            onPreviewClickListener?.onClick(it)
+        }
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -50,6 +56,10 @@ class PreviewAdapter(context: Context) : Adapter<PreviewHolder>() {
         previewItems.clear()
         previewItems.addAll(items)
         notifyDataSetChanged()
+    }
+
+    fun setOnClickListener(listener: OnClickListener) {
+        onPreviewClickListener = listener
     }
 }
 
