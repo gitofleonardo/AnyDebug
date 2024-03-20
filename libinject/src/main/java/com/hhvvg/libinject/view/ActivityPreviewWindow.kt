@@ -419,7 +419,6 @@ class ActivityPreviewWindow(private val activity: Activity) : OnTouchListener, O
                 addListener(onEnd = {
                     widthAnimation = null
                 })
-                currentPlayTime = 16
                 start()
             }
         heightAnimation = SpringAnimationBuilder(activity)
@@ -432,7 +431,6 @@ class ActivityPreviewWindow(private val activity: Activity) : OnTouchListener, O
                 addListener(onEnd = {
                     heightAnimation = null
                 })
-                currentPlayTime = 16
                 start()
             }
     }
