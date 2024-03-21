@@ -19,4 +19,10 @@
     <array name="required_packages">
         <item>tv.danmaku.bili</item>
     </array>
+
+    <string-array name="visibility_array">
+        <item>Visible</item>
+        <item>Invisible</item>
+        <item>Gone</item>
+    </string-array>
 </resources>

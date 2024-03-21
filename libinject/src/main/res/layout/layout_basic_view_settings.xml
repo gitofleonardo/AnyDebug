@@ -77,17 +77,18 @@
         android:text="@string/sample_text"
         app:preference_title="@string/title_context" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginTop="5dp"
-        android:background="@color/color_divider" />
-
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/preview_children_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="5dp"
+            android:background="@color/color_divider"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:layout_width="@dimen/preference_title_width"
@@ -121,4 +122,16 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="5dp"
+        android:background="@color/color_divider" />
+
+    <com.hhvvg.libinject.view.preference.OptionsPreferenceView
+        app:preference_title="@string/title_visibility"
+        app:preference_options="@array/visibility_array"
+        android:id="@+id/visibility_preference"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 </LinearLayout>

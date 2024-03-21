@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><!--
+<!--
   ~     Copyright (C) <2024>  <gitofleonardo>
   ~
   ~     This program is free software: you can redistribute it and/or modify
@@ -15,13 +15,8 @@
   ~     along with this program.  If not, see <https://www.gnu.org/licenses/>.
   -->
 
-<resources>
-    <string name="touch_indicator_desc">TouchIndicator</string>
-    <string name="sample_text">Hello world</string>
-    <string name="long_sample_text">Hello world.Hello world.Hello world.Hello world.Hello world.Hello world.Hello world.Hello world.Hello world.Hello world.Hello world.Hello world.Hello world.Hello world.Hello world.Hello world.Hello world.Hello world.Hello world.Hello world.Hello world.</string>
-    <string name="title_basic_view">Basics</string>
-    <string name="title_context">Context</string>
-    <string name="title_class">Class</string>
-    <string name="title_children">Children</string>
-    <string name="title_visibility">Visibility</string>
-</resources>
+<vector xmlns:android="http://schemas.android.com/apk/res/android" android:height="24dp" android:tint="#B9B9B9" android:viewportHeight="24" android:viewportWidth="24" android:width="24dp">
+      
+    <path android:fillColor="@android:color/white" android:pathData="M9,16.17L4.83,12l-1.42,1.41L9,19 21,7l-1.41,-1.41z"/>
+    
+</vector>

@@ -16,8 +16,17 @@
   -->
 
 <resources>
+    <attr name="preference_title" format="reference|string"/>
+    <attr name="preference_summary" format="string|reference"/>
+
     <declare-styleable name="PreferenceView">
-        <attr name="preference_title" format="string|reference"/>
-        <attr name="preference_summary" format="string|reference"/>
+        <attr name="preference_title"/>
+        <attr name="preference_summary"/>
+    </declare-styleable>
+
+    <declare-styleable name="OptionsPreferenceView">
+        <attr name="preference_title"/>
+        <attr name="preference_summary"/>
+        <attr name="preference_options" format="reference"/>
     </declare-styleable>
 </resources>

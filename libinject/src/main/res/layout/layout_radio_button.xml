@@ -15,13 +15,14 @@
   ~     along with this program.  If not, see <https://www.gnu.org/licenses/>.
   -->
 
-<resources>
-    <string name="touch_indicator_desc">TouchIndicator</string>
-    <string name="sample_text">Hello world</string>
-    <string name="long_sample_text">Hello world.Hello world.Hello world.Hello world.Hello world.Hello world.Hello world.Hello world.Hello world.Hello world.Hello world.Hello world.Hello world.Hello world.Hello world.Hello world.Hello world.Hello world.Hello world.Hello world.Hello world.</string>
-    <string name="title_basic_view">Basics</string>
-    <string name="title_context">Context</string>
-    <string name="title_class">Class</string>
-    <string name="title_children">Children</string>
-    <string name="title_visibility">Visibility</string>
-</resources>
+<RadioButton xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@null"
+    android:button="@drawable/button_radio"
+    android:layoutDirection="rtl"
+    android:paddingStart="15dp"
+    android:paddingEnd="0dp"
+    android:text="@string/sample_text"
+    android:textAlignment="textEnd"
+    android:paddingVertical="3dp"/>
