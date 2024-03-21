@@ -17,7 +17,11 @@
 
 <resources>
     <color name="transparent">#00FFFFFF</color>
-    <color name="color_display_window_bg">#EDFFFFFF</color>
+    <color name="color_display_window_bg">#F1F1F1</color>
+    <color name="color_on_surface">#FFFFFF</color>
     <color name="color_window_bottom_bar">#A2A2A2</color>
     <color name="color_primary">#216BDB</color>
+    <color name="color_error">#FF0000</color>
+    <color name="color_settings_title">#101010</color>
+    <color name="color_divider">#F1F1F1</color>
 </resources>

@@ -47,7 +47,7 @@ class PreviewAdapter(context: Context) : Adapter<PreviewHolder>() {
         val item = previewItems[position]
         holder.previewView.setRenderer(item.view)
         holder.previewView.setOnClickListener {
-            onPreviewClickListener?.onClick(it)
+            onPreviewClickListener?.onClick(holder.previewView.getRenderer())
         }
     }
 

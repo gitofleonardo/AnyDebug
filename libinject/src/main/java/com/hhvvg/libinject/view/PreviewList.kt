@@ -20,6 +20,7 @@ package com.hhvvg.libinject.view
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
+import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -38,7 +39,7 @@ class PreviewList(context: Context, attrs: AttributeSet?, defStyleAttr: Int) :
 
     private val previewAdapter = PreviewAdapter(context)
     private val indicatorView: IndefinitePagerIndicator?
-        get() = rootView.findViewById(R.id.page_indicator)
+        get() = (parent as View).findViewById(R.id.page_indicator)
 
     init {
         adapter = previewAdapter

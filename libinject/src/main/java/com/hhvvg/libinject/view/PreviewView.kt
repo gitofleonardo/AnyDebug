@@ -47,6 +47,10 @@ class PreviewView(context: Context, attrs: AttributeSet?, defStyleAttr: Int, def
         invalidate()
     }
 
+    fun getRenderer(): View? {
+        return renderer
+    }
+
     override fun onDraw(canvas: Canvas) {
         renderer?.let { drawRenderer(canvas, it) }
     }

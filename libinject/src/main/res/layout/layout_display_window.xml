@@ -80,6 +80,12 @@
             tools:ignore="UseSwitchCompatOrMaterialXml" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <com.hhvvg.libinject.view.ViewSettingsContainer
+        android:id="@+id/max_window_container"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
     <FrameLayout
         android:id="@+id/bottom_drag_bar"
         android:layout_width="100dp"

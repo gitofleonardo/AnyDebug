@@ -123,6 +123,9 @@ class ActivityPreviewWindow(private val activity: Activity) : OnTouchListener, O
 
         private const val STATE_MINI_WINDOW = 0
         private const val STATE_MAX_WINDOW = 1
+
+        private const val MAX_WINDOW_WIDTH_RATIO = 3f / 4f
+        private const val MAX_WINDOW_HEIGHT_RATIO = .7f
     }
 
     private var decorView: View? = null
@@ -171,6 +174,10 @@ class ActivityPreviewWindow(private val activity: Activity) : OnTouchListener, O
         activity.window.decorView.getWindowVisibleDisplayFrame(tempRect)
         tempRect.height()
     }
+    private val miniWindowView: View?
+        get() = decorView?.findViewById(R.id.mini_window_container)
+    private val maxWindowView: View?
+        get() = decorView?.findViewById(R.id.max_window_container)
 
     fun show() {
         if (attachedToWindow || activity.isFinishing) {
@@ -181,7 +188,7 @@ class ActivityPreviewWindow(private val activity: Activity) : OnTouchListener, O
             findViewById<Switch>(R.id.edit_switch).setOnCheckedChangeListener { _, isChecked ->
                 handleActivityTouchStateChanged(isChecked)
             }
-
+            elevation = activity.resources.getDimensionPixelSize(R.dimen.decor_elevation).toFloat()
             windowManager.addView(this, windowParams)
             Logger.log(TAG, "addView to window, wm=${windowManager}.")
         }
@@ -403,6 +410,10 @@ class ActivityPreviewWindow(private val activity: Activity) : OnTouchListener, O
     }
 
     private fun onPreviewClick(view: View) {
+        maxWindowView?.call(
+            "setTargetView",
+            view
+        )
         maximizeWindow()
     }
 
@@ -482,8 +493,8 @@ class ActivityPreviewWindow(private val activity: Activity) : OnTouchListener, O
         activity.window.decorView.getWindowVisibleDisplayFrame(tempRect)
         val parentWindowWidth = tempRect.width()
         val parentWindowHeight = tempRect.height()
-        val finalX = parentWindowWidth * (1f / 3f) * .5f
-        val finalY = parentWindowHeight * .25f
+        val finalX = parentWindowWidth * (1 - MAX_WINDOW_WIDTH_RATIO) * .5f
+        val finalY = parentWindowHeight * (1 - MAX_WINDOW_HEIGHT_RATIO) * .5f
         return PointF(finalX, finalY)
     }
 
@@ -506,6 +517,8 @@ class ActivityPreviewWindow(private val activity: Activity) : OnTouchListener, O
             return
         }
         windowState = STATE_MINI_WINDOW
+        miniWindowView?.isVisible = true
+        maxWindowView?.isVisible = false
         val miniWidowSize = calcMiniWindowSize()
         val finalWidth = miniWidowSize.x
         val finalHeight = miniWidowSize.y
@@ -518,11 +531,13 @@ class ActivityPreviewWindow(private val activity: Activity) : OnTouchListener, O
             return
         }
         windowState = STATE_MAX_WINDOW
+        miniWindowView?.isVisible = false
+        maxWindowView?.isVisible = true
         activity.window.decorView.getWindowVisibleDisplayFrame(tempRect)
         val parentWindowWidth = tempRect.width()
         val parentWindowHeight = tempRect.height()
-        val finalWidth = parentWindowWidth * (2f / 3f)
-        val finalHeight = parentWindowHeight * .5f
+        val finalWidth = parentWindowWidth * MAX_WINDOW_WIDTH_RATIO
+        val finalHeight = parentWindowHeight * MAX_WINDOW_HEIGHT_RATIO
         animateWindowSize(finalWidth, finalHeight)
         moveMaximizeWindowCenter()
     }
