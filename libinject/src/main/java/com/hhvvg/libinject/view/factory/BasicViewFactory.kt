@@ -24,10 +24,12 @@ import android.view.ViewGroup.MarginLayoutParams
 import androidx.core.view.children
 import androidx.core.view.isVisible
 import com.hhvvg.libinject.R
+import com.hhvvg.libinject.utils.findTargetAncestor
 import com.hhvvg.libinject.view.PreviewList
 import com.hhvvg.libinject.view.PreviewView
 import com.hhvvg.libinject.view.SettingContent
 import com.hhvvg.libinject.view.SettingsFactory
+import com.hhvvg.libinject.view.ViewSettingsContainer
 import com.hhvvg.libinject.view.factory.command.FactoryCommand
 import com.hhvvg.libinject.view.factory.command.HeightCommand
 import com.hhvvg.libinject.view.factory.command.MarginLtrbCommand
@@ -106,6 +108,9 @@ class BasicViewFactory : SettingsFactory {
             previewList.updatePreviewItems(targetView.children.toList())
         } else {
             previewContainer.isVisible = false
+        }
+        previewList.setOnPreviewClickListener {
+            previewList.findTargetAncestor(ViewSettingsContainer::class.java)?.setTargetView(it)
         }
 
         visibilityPreference.setOnCheckChangedListener { _, id ->

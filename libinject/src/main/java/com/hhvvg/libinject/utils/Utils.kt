@@ -17,8 +17,18 @@
 
 package com.hhvvg.libinject.utils
 
+import android.view.View
+import android.view.ViewGroup
 import java.util.regex.Pattern
 
 const val APPLICATION_ID = "com.hhvvg.anydebugv2"
 
 val ltrbPattern = Pattern.compile("^\\[(-?\\d+),(-?\\d+),(-?\\d+),(-?\\d+)]$")
+
+fun <T : ViewGroup> View.findTargetAncestor(targetClass: Class<T>): T? {
+    var currParent = parent
+    while (currParent != null && !targetClass.isInstance(currParent)) {
+        currParent = currParent.parent
+    }
+    return if (currParent == null || !targetClass.isInstance(currParent)) null else currParent as T
+}
