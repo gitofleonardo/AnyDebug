@@ -24,7 +24,9 @@ import android.widget.EditText
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
+import androidx.core.widget.addTextChangedListener
 import com.hhvvg.libinject.R
+import java.util.function.Consumer
 
 class InputPreferenceView(
     context: Context,
@@ -78,6 +80,8 @@ class InputPreferenceView(
             summaryView.isVisible = !value.isNullOrEmpty()
         }
 
+    private var textListener: Consumer<CharSequence>? = null
+
     init {
         inflate(context, R.layout.layout_input_preference_view, this)
         val ta = context.obtainStyledAttributes(attrs, R.styleable.InputPreferenceView)
@@ -89,5 +93,13 @@ class InputPreferenceView(
         )
         summary = ta.getString(R.styleable.InputPreferenceView_preference_summary)
         ta.recycle()
+
+        inputView.addTextChangedListener(afterTextChanged = {
+            textListener?.accept(it ?: "")
+        })
+    }
+
+    fun setOnTextChangedListener(listener: Consumer<CharSequence>) {
+        textListener = listener
     }
 }

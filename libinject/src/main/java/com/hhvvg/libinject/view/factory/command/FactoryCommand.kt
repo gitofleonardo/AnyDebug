@@ -15,18 +15,8 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.hhvvg.libinject.view
+package com.hhvvg.libinject.view.factory.command
 
-import android.content.Context
-import android.view.View
-import android.view.ViewGroup
-
-interface SettingsFactory {
-
-    fun onCreate(targetView: View, parent: ViewGroup, outViews: MutableList<SettingContent>)
-
-    fun commit()
-
+interface FactoryCommand {
+    fun onApply()
 }
-
-data class SettingContent(val view: View, val title: CharSequence)

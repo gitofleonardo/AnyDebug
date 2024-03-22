@@ -15,18 +15,25 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.hhvvg.libinject.view
+package com.hhvvg.libinject.view.factory.command
 
-import android.content.Context
 import android.view.View
-import android.view.ViewGroup
+import com.hhvvg.libinject.utils.ltrbPattern
 
-interface SettingsFactory {
+class PaddingLtrbCommand(view: View, private val ltrb: CharSequence) : BaseCommand<View>(view) {
 
-    fun onCreate(targetView: View, parent: ViewGroup, outViews: MutableList<SettingContent>)
-
-    fun commit()
-
+    override fun onApply() {
+        val matcher = ltrbPattern.matcher(ltrb)
+        var l = 0
+        var t = 0
+        var r = 0
+        var b = 0
+        if (matcher.find()) {
+            l = matcher.group(1)?.toInt() ?: 0
+            t = matcher.group(2)?.toInt() ?: 0
+            r = matcher.group(3)?.toInt() ?: 0
+            b = matcher.group(4)?.toInt() ?: 0
+        }
+        targetView.setPadding(l, t, r, b)
+    }
 }
-
-data class SettingContent(val view: View, val title: CharSequence)

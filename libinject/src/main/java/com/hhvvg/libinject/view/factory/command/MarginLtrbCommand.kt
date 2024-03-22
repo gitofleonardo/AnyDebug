@@ -15,18 +15,25 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.hhvvg.libinject.view
+package com.hhvvg.libinject.view.factory.command
 
-import android.content.Context
 import android.view.View
-import android.view.ViewGroup
+import android.view.ViewGroup.MarginLayoutParams
+import com.hhvvg.libinject.utils.ltrbPattern
 
-interface SettingsFactory {
+class MarginLtrbCommand(view: View, private val ltrb: CharSequence) : BaseCommand<View>(view) {
 
-    fun onCreate(targetView: View, parent: ViewGroup, outViews: MutableList<SettingContent>)
-
-    fun commit()
-
+    override fun onApply() {
+        val params = targetView.layoutParams
+        if (params !is MarginLayoutParams) {
+            return
+        }
+        val matcher = ltrbPattern.matcher(ltrb)
+        if (matcher.find()) {
+            params.leftMargin = matcher.group(1)?.toInt() ?: 0
+            params.topMargin = matcher.group(2)?.toInt() ?: 0
+            params.rightMargin = matcher.group(3)?.toInt() ?: 0
+            params.bottomMargin = matcher.group(4)?.toInt() ?: 0
+        }
+    }
 }
-
-data class SettingContent(val view: View, val title: CharSequence)

@@ -21,9 +21,11 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.hhvvg.libinject.R
 
 class ViewSettingsContainer(
@@ -31,7 +33,7 @@ class ViewSettingsContainer(
     attrs: AttributeSet?,
     defStyleAttr: Int,
     defStyleRes: Int
-) : ScrollView(context, attrs, defStyleAttr, defStyleRes) {
+) : FrameLayout(context, attrs, defStyleAttr, defStyleRes) {
 
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int)
             : this(context, attrs, defStyleAttr, 0)
@@ -46,12 +48,21 @@ class ViewSettingsContainer(
     private val settingsContainer by lazy {
         findViewById<LinearLayout>(R.id.settings_container)
     }
+    private val okButton by lazy {
+        findViewById<FloatingActionButton>(R.id.ok_button)
+    }
+    private val scrollContainer by lazy {
+        findViewById<ScrollView>(R.id.scroll_view)
+    }
 
     private var targetView: View? = null
+    private var factory: SettingsFactory? = null
 
     init {
         inflate(context, R.layout.layout_view_settings_container, this)
-        overScrollMode = OVER_SCROLL_ALWAYS
+        okButton.setOnClickListener {
+            factory?.commit()
+        }
     }
 
     fun setTargetView(target: View) {
@@ -63,8 +74,9 @@ class ViewSettingsContainer(
         clearSettings()
         val target = targetView ?: return
         val views = mutableListOf<SettingContent>()
-        val factory = SettingsFactoryManager.createFactory(target, settingsContainer)
-        factory.onCreate(target, settingsContainer, views)
+        factory = SettingsFactoryManager.createFactory(target, settingsContainer).apply {
+            onCreate(target, settingsContainer, views)
+        }
         views.forEach {
             settingsContainer.addView(createTitle(it.title))
             settingsContainer.addView(it.view)

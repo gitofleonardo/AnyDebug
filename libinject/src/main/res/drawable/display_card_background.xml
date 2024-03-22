@@ -18,5 +18,5 @@
 
 <shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
     <corners android:radius="@dimen/display_card_radius"/>
-    <solid android:color="@color/color_on_surface"/>
+    <solid android:color="?attr/colorSurfaceContainerLowest"/>
 </shape>

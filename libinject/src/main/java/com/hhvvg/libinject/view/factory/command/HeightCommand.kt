@@ -15,18 +15,16 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.hhvvg.libinject.view
+package com.hhvvg.libinject.view.factory.command
 
-import android.content.Context
 import android.view.View
-import android.view.ViewGroup
 
-interface SettingsFactory {
+class HeightCommand(view: View, private val height: Int) : BaseCommand<View>(view) {
 
-    fun onCreate(targetView: View, parent: ViewGroup, outViews: MutableList<SettingContent>)
-
-    fun commit()
-
+    override fun onApply() {
+        targetView.layoutParams?.let {
+            it.height = height
+            targetView.layoutParams = it
+        }
+    }
 }
-
-data class SettingContent(val view: View, val title: CharSequence)

@@ -66,6 +66,11 @@ class OptionsPreferenceView(
         set(value) {
             titleView.text = value
         }
+    var selectedIndex: Int = -1
+        set(value) {
+            field = value
+            summary = options[value]
+        }
 
     init {
         inflate(context, R.layout.layout_options_preference_view, this)
@@ -93,9 +98,11 @@ class OptionsPreferenceView(
                 .inflate(R.layout.layout_radio_button, this, false) as RadioButton
             radio.text = charSequence
             radio.id = index
+            radio.isChecked = index == selectedIndex
             radioGroup.addView(radio)
         }
         radioGroup.setOnCheckedChangeListener { group, checkedId ->
+            selectedIndex = checkedId
             onRadioChangedListener?.onCheckedChanged(group, checkedId)
         }
     }

@@ -17,5 +17,5 @@
 
 <shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
     <corners android:radius="100pt"/>
-    <solid android:color="@color/color_window_bottom_bar"/>
+    <solid android:color="?attr/colorOnSurfaceVariant"/>
 </shape>

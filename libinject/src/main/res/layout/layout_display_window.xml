@@ -51,7 +51,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/preview_list"
-            app:selectedDotColor="@color/color_primary" />
+            app:selectedDotColor="?attr/colorPrimary" />
 
         <ImageView
             android:id="@+id/pick_indicator"
@@ -60,7 +60,7 @@
             android:layout_marginStart="5dp"
             android:contentDescription="@string/touch_indicator_desc"
             android:src="@drawable/ic_touch_app_24"
-            android:tint="@color/color_primary"
+            android:tint="?attr/colorPrimary"
             app:layout_constraintBottom_toBottomOf="@id/edit_switch"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/edit_switch"

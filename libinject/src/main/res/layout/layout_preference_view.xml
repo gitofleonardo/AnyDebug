@@ -27,13 +27,14 @@
         android:layout_height="wrap_content"
         android:gravity="start"
         android:text="@string/sample_text"
-        android:textColor="@color/color_settings_title"
+        android:textColor="?attr/colorOnSurface"
         android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
+        android:textColor="?attr/colorOnSurfaceVariant"
         android:textSize="12sp"
         android:id="@+id/summary_view"
         android:layout_width="0dp"

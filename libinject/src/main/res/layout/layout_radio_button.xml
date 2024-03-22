@@ -25,4 +25,5 @@
     android:paddingEnd="0dp"
     android:text="@string/sample_text"
     android:textAlignment="textEnd"
-    android:paddingVertical="3dp"/>
+    android:paddingVertical="3dp"
+    android:textColor="?attr/colorOnSurfaceVariant"/>

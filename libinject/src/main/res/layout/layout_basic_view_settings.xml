@@ -44,7 +44,7 @@
             android:contentDescription="@null"
             android:padding="10dp"
             android:src="@drawable/ic_remove_circle_24"
-            android:tint="@color/color_error"
+            android:tint="?attr/colorError"
             app:layout_constraintBottom_toBottomOf="@id/preview_item"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/preview_item"
@@ -55,7 +55,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginTop="5dp"
-        android:background="@color/color_divider" />
+        android:background="?attr/colorSurface" />
 
     <com.hhvvg.libinject.view.preference.PreferenceView
         android:id="@+id/view_class_name"
@@ -69,7 +69,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginTop="5dp"
-        android:background="@color/color_divider" />
+        android:background="?attr/colorSurface" />
 
     <com.hhvvg.libinject.view.preference.PreferenceView
         android:id="@+id/context_info"
@@ -89,7 +89,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/color_divider"
+            android:background="?attr/colorSurface"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
@@ -97,7 +97,7 @@
             android:layout_height="wrap_content"
             android:paddingHorizontal="10dp"
             android:text="@string/title_children"
-            android:textColor="@color/color_settings_title"
+            android:textColor="?attr/colorOnSurface"
             android:textSize="14sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -128,7 +128,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginTop="5dp"
-        android:background="@color/color_divider" />
+        android:background="?attr/colorSurface" />
 
     <com.hhvvg.libinject.view.preference.OptionsPreferenceView
         android:id="@+id/visibility_preference"
@@ -141,13 +141,13 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginTop="5dp"
-        android:background="@color/color_divider" />
+        android:background="?attr/colorSurface" />
 
     <com.hhvvg.libinject.view.preference.InputPreferenceView
         android:id="@+id/width_input_preference"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="numberDecimal"
+        android:inputType="numberSigned"
         app:preference_summary="@string/view_size_hint"
         app:preference_title="@string/title_width" />
 
@@ -155,13 +155,13 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginTop="5dp"
-        android:background="@color/color_divider" />
+        android:background="?attr/colorSurface" />
 
     <com.hhvvg.libinject.view.preference.InputPreferenceView
         android:id="@+id/height_input_preference"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="numberDecimal"
+        android:inputType="numberSigned"
         app:preference_summary="@string/view_size_hint"
         app:preference_title="@string/title_height" />
 
@@ -169,7 +169,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginTop="5dp"
-        android:background="@color/color_divider" />
+        android:background="?attr/colorSurface" />
 
     <com.hhvvg.libinject.view.preference.InputPreferenceView
         android:id="@+id/padding_ltrb_input_preference"
@@ -184,7 +184,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginTop="5dp"
-        android:background="@color/color_divider" />
+        android:background="?attr/colorSurface" />
 
     <com.hhvvg.libinject.view.preference.InputPreferenceView
         android:id="@+id/margin_ltrb_input_preference"

@@ -17,7 +17,6 @@
 
 package com.hhvvg.libinject.view.factory
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -29,9 +28,16 @@ import com.hhvvg.libinject.view.PreviewList
 import com.hhvvg.libinject.view.PreviewView
 import com.hhvvg.libinject.view.SettingContent
 import com.hhvvg.libinject.view.SettingsFactory
+import com.hhvvg.libinject.view.factory.command.FactoryCommand
+import com.hhvvg.libinject.view.factory.command.HeightCommand
+import com.hhvvg.libinject.view.factory.command.MarginLtrbCommand
+import com.hhvvg.libinject.view.factory.command.PaddingLtrbCommand
+import com.hhvvg.libinject.view.factory.command.VisibilityCommand
+import com.hhvvg.libinject.view.factory.command.WidthCommand
 import com.hhvvg.libinject.view.preference.InputPreferenceView
 import com.hhvvg.libinject.view.preference.OptionsPreferenceView
 import com.hhvvg.libinject.view.preference.PreferenceView
+import kotlin.reflect.KClass
 
 class BasicViewFactory : SettingsFactory {
 
@@ -39,6 +45,23 @@ class BasicViewFactory : SettingsFactory {
         get() = "[${paddingLeft},${paddingTop},${paddingRight},${paddingBottom}]"
     private val MarginLayoutParams.ltrb: String
         get() = "[${leftMargin},${topMargin},${rightMargin},${bottomMargin}]"
+
+    private val commandQueue = mutableMapOf<KClass<*>, FactoryCommand>()
+
+    protected fun addCommand(command: FactoryCommand) {
+        commandQueue[command::class] = command
+    }
+
+    private fun flushCommands() {
+        commandQueue.forEach { (_, u) ->
+            u.onApply()
+        }
+        commandQueue.clear()
+    }
+
+    override fun commit() {
+        flushCommands()
+    }
 
     override fun onCreate(
         targetView: View,
@@ -74,8 +97,7 @@ class BasicViewFactory : SettingsFactory {
         }
         widthPreference.text = viewParams.width.toString()
         heightPreference.text = viewParams.height.toString()
-        val visibilityMapper = createVisibilityMapper(parent.context)
-        visibilityPreference.summary = visibilityMapper[targetView.visibility]
+        visibilityPreference.selectedIndex = createVisibilityMapper()[targetView.visibility] ?: 0
         preview.setRenderer(targetView)
         clzName.summary = targetView.javaClass.name
         contextInfo.summary = targetView.context.javaClass.name
@@ -85,6 +107,34 @@ class BasicViewFactory : SettingsFactory {
         } else {
             previewContainer.isVisible = false
         }
+
+        visibilityPreference.setOnCheckChangedListener { _, id ->
+            val indexMapper = createVisibilityIndexMapper()
+            val visibility = indexMapper[id] ?: targetView.visibility
+            addCommand(VisibilityCommand(targetView, visibility))
+        }
+        widthPreference.setOnTextChangedListener {
+            addCommand(
+                WidthCommand(
+                    targetView,
+                    it.toString().toIntOrNull() ?: targetView.layoutParams.width
+                )
+            )
+        }
+        heightPreference.setOnTextChangedListener {
+            addCommand(
+                HeightCommand(
+                    targetView,
+                    it.toString().toIntOrNull() ?: targetView.layoutParams.height
+                )
+            )
+        }
+        paddingPreference.setOnTextChangedListener {
+            addCommand(PaddingLtrbCommand(targetView, it))
+        }
+        marginPreference.setOnTextChangedListener {
+            addCommand(MarginLtrbCommand(targetView, it))
+        }
         outViews.add(
             SettingContent(
                 view,
@@ -93,12 +143,19 @@ class BasicViewFactory : SettingsFactory {
         )
     }
 
-    private fun createVisibilityMapper(context: Context): Map<Int, CharSequence> {
-        val arr = context.resources.getTextArray(R.array.visibility_array)
-        val map = mutableMapOf<Int, CharSequence>()
-        map[View.VISIBLE] = arr[0]
-        map[View.INVISIBLE] = arr[1]
-        map[View.GONE] = arr[2]
-        return map
+    private fun createVisibilityMapper(): Map<Int, Int> {
+        return mapOf(
+            View.VISIBLE to 0,
+            View.INVISIBLE to 1,
+            View.GONE to 2
+        )
+    }
+
+    private fun createVisibilityIndexMapper(): Map<Int, Int> {
+        return mapOf(
+            0 to View.VISIBLE,
+            1 to View.INVISIBLE,
+            2 to View.GONE
+        )
     }
 }

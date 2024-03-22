@@ -19,6 +19,7 @@ package com.hhvvg.libinject.view.remote
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.view.ContextThemeWrapper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -31,10 +32,13 @@ class RemoteViewFactoryImpl : RemoteViewFactory {
         context: Context, name: String, root: ViewGroup?,
         attachToRoot: Boolean
     ): View {
-        val packageContext = context.createPackageContext(
+        var packageContext = context.createPackageContext(
             APPLICATION_ID,
             Context.CONTEXT_INCLUDE_CODE or Context.CONTEXT_IGNORE_SECURITY
         )
+        val themeResId =
+            packageContext.resources.getIdentifier("AppTheme", "style", packageContext.packageName)
+        packageContext = ContextThemeWrapper(packageContext, themeResId)
         val resId = packageContext.resources
             .getIdentifier(name, "layout", packageContext.packageName)
         if (resId > 0) {

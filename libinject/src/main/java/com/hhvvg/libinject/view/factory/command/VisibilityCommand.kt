@@ -15,18 +15,13 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.hhvvg.libinject.view
+package com.hhvvg.libinject.view.factory.command
 
-import android.content.Context
 import android.view.View
-import android.view.ViewGroup
 
-interface SettingsFactory {
+class VisibilityCommand(view: View, private val visibility: Int) : BaseCommand<View>(view) {
 
-    fun onCreate(targetView: View, parent: ViewGroup, outViews: MutableList<SettingContent>)
-
-    fun commit()
-
+    override fun onApply() {
+        targetView.visibility = visibility
+    }
 }
-
-data class SettingContent(val view: View, val title: CharSequence)

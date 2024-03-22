@@ -17,4 +17,8 @@
 
 package com.hhvvg.libinject.utils
 
+import java.util.regex.Pattern
+
 const val APPLICATION_ID = "com.hhvvg.anydebugv2"
+
+val ltrbPattern = Pattern.compile("^\\[(-?\\d+),(-?\\d+),(-?\\d+),(-?\\d+)]$")

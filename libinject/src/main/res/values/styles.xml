@@ -16,13 +16,14 @@
   -->
 
 <resources>
-    <color name="transparent">#00FFFFFF</color>
-    <color name="color_surface">#F1F1F1</color>
-    <color name="color_surface_container_lowest">#FFFFFF</color>
-    <color name="color_primary">#216BDB</color>
-    <color name="color_error">#FF0000</color>
-    <color name="color_on_surface">#101010</color>
-    <color name="color_on_surface_variant">#777777</color>
-    <color name="color_surface_container_low">#F1F1F1</color>
-    <color name="color_on_primary">#FFFFFF</color>
+    <style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
+        <item name="colorSurface">@color/color_surface</item>
+        <item name="colorSurfaceContainerLowest">@color/color_surface_container_lowest</item>
+        <item name="colorOnSurface">@color/color_on_surface</item>
+        <item name="colorOnSurfaceVariant">@color/color_on_surface_variant</item>
+        <item name="colorSurfaceContainerLow">@color/color_surface_container_low</item>
+        <item name="colorError">@color/color_error</item>
+        <item name="colorPrimary">@color/color_primary</item>
+        <item name="colorOnPrimary">@color/color_on_primary</item>
+    </style>
 </resources>

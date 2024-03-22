@@ -151,7 +151,8 @@ class ActivityPreviewWindow(private val activity: Activity) : OnTouchListener, O
             gravity = Gravity.TOP or Gravity.LEFT
             flags =
                 WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL or
-                        WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
+                        WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS or
+                        WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
         }
     }
     private val gestureDetector = GestureDetector(activity, this)
@@ -323,6 +324,7 @@ class ActivityPreviewWindow(private val activity: Activity) : OnTouchListener, O
             MotionEvent.ACTION_DOWN -> {
                 cancelAllAnimations()
             }
+
             MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
                 if (!runningDockingAnimation) {
                     if (windowState == STATE_MINI_WINDOW) {
@@ -516,6 +518,7 @@ class ActivityPreviewWindow(private val activity: Activity) : OnTouchListener, O
             return
         }
         windowState = STATE_MINI_WINDOW
+        windowParams.flags = windowParams.flags or WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
         miniWindowView?.isVisible = true
         maxWindowView?.isVisible = false
         val miniWidowSize = calcMiniWindowSize()
@@ -530,6 +533,8 @@ class ActivityPreviewWindow(private val activity: Activity) : OnTouchListener, O
             return
         }
         windowState = STATE_MAX_WINDOW
+        windowParams.flags =
+            windowParams.flags and WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE.inv()
         miniWindowView?.isVisible = false
         maxWindowView?.isVisible = true
         activity.window.decorView.getWindowVisibleDisplayFrame(tempRect)
