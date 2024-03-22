@@ -20,13 +20,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
     android:background="@drawable/display_card_background"
     android:orientation="vertical"
     android:padding="5dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:animateLayoutChanges="true">
 
         <com.hhvvg.libinject.view.PreviewView
             android:id="@+id/preview_item"
@@ -81,12 +83,12 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/preview_children_container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp">
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_marginTop="5dp"
             android:background="@color/color_divider"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -129,9 +131,66 @@
         android:background="@color/color_divider" />
 
     <com.hhvvg.libinject.view.preference.OptionsPreferenceView
-        app:preference_title="@string/title_visibility"
-        app:preference_options="@array/visibility_array"
         android:id="@+id/visibility_preference"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        app:preference_options="@array/visibility_array"
+        app:preference_title="@string/title_visibility" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="5dp"
+        android:background="@color/color_divider" />
+
+    <com.hhvvg.libinject.view.preference.InputPreferenceView
+        android:id="@+id/width_input_preference"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="numberDecimal"
+        app:preference_summary="@string/view_size_hint"
+        app:preference_title="@string/title_width" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="5dp"
+        android:background="@color/color_divider" />
+
+    <com.hhvvg.libinject.view.preference.InputPreferenceView
+        android:id="@+id/height_input_preference"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="numberDecimal"
+        app:preference_summary="@string/view_size_hint"
+        app:preference_title="@string/title_height" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="5dp"
+        android:background="@color/color_divider" />
+
+    <com.hhvvg.libinject.view.preference.InputPreferenceView
+        android:id="@+id/padding_ltrb_input_preference"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="text"
+        app:preference_summary="@string/view_ltrb_format_hint"
+        app:preference_title="@string/title_padding" />
+
+    <View
+        android:id="@+id/divider_margin"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="5dp"
+        android:background="@color/color_divider" />
+
+    <com.hhvvg.libinject.view.preference.InputPreferenceView
+        android:id="@+id/margin_ltrb_input_preference"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="text"
+        app:preference_summary="@string/view_ltrb_format_hint"
+        app:preference_title="@string/title_margin" />
 </LinearLayout>

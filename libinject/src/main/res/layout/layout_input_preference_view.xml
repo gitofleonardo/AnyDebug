@@ -17,10 +17,11 @@
 
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingHorizontal="10dp"
-    android:paddingVertical="5dp">
+    android:paddingVertical="10dp">
 
     <TextView
         android:id="@+id/title_view"
@@ -30,35 +31,34 @@
         android:text="@string/sample_text"
         android:textColor="@color/color_settings_title"
         android:textSize="14sp"
-        app:layout_constraintBottom_toTopOf="@id/radio_group"
+        app:layout_constraintBottom_toTopOf="@id/summary_view"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:maxLines="1"
-        android:ellipsize="end"
         android:textSize="12sp"
+        android:layout_marginTop="5dp"
+        app:layout_constraintTop_toBottomOf="@id/title_view"
         android:id="@+id/summary_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <EditText
+        android:id="@+id/input_view"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
+        android:background="@null"
         android:focusable="true"
         android:gravity="end"
         android:longClickable="true"
-        android:text="@string/sample_text"
+        android:padding="3dp"
         android:textIsSelectable="true"
+        android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="@id/title_view"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/title_view"
-        app:layout_constraintTop_toTopOf="@id/title_view" />
+        app:layout_constraintTop_toTopOf="@id/title_view"
+        tools:ignore="Autofill,LabelFor,TextFields" />
 
-    <RadioGroup
-        android:animateLayoutChanges="true"
-        android:gravity="end|center_vertical"
-        android:orientation="vertical"
-        android:layout_marginTop="5dp"
-        app:layout_constraintTop_toBottomOf="@id/title_view"
-        android:id="@+id/radio_group"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

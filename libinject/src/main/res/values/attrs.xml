@@ -16,17 +16,24 @@
   -->
 
 <resources>
-    <attr name="preference_title" format="reference|string"/>
-    <attr name="preference_summary" format="string|reference"/>
+    <attr name="preference_title" format="string" localization="suggested" />
+    <attr name="preference_summary" format="string" localization="suggested" />
 
     <declare-styleable name="PreferenceView">
-        <attr name="preference_title"/>
-        <attr name="preference_summary"/>
+        <attr name="preference_title" />
+        <attr name="preference_summary" />
     </declare-styleable>
 
     <declare-styleable name="OptionsPreferenceView">
-        <attr name="preference_title"/>
+        <attr name="preference_title" />
+        <attr name="preference_summary" />
+        <attr name="preference_options" format="reference" />
+    </declare-styleable>
+
+    <declare-styleable name="InputPreferenceView">
+        <attr name="preference_title" />
         <attr name="preference_summary"/>
-        <attr name="preference_options" format="reference"/>
+        <attr name="preference_input_hint" format="string|reference" />
+        <attr name="android:inputType" />
     </declare-styleable>
 </resources>

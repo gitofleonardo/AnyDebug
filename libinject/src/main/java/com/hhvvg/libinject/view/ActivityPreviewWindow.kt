@@ -151,7 +151,6 @@ class ActivityPreviewWindow(private val activity: Activity) : OnTouchListener, O
             gravity = Gravity.TOP or Gravity.LEFT
             flags =
                 WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL or
-                        WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
                         WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
         }
     }

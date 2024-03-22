@@ -24,4 +24,10 @@
     <string name="title_class">Class</string>
     <string name="title_children">Children</string>
     <string name="title_visibility">Visibility</string>
+    <string name="title_width">Width</string>
+    <string name="title_height">Height</string>
+    <string name="title_padding">Padding-L-T-R-B</string>
+    <string name="title_margin">Margin-L-T-R-B</string>
+    <string name="view_size_hint">-1 for match_parent, -2 for wrap_content</string>
+    <string name="view_ltrb_format_hint">Format: [left,top,right,bottom]</string>
 </resources>

@@ -56,6 +56,17 @@ class OptionsPreferenceView(
     private val options: Array<CharSequence>
     private var onRadioChangedListener: OnCheckedChangeListener? = null
 
+    var summary: CharSequence?
+        get() = summaryView.text
+        set(value) {
+            summaryView.text = value
+        }
+    var title: CharSequence?
+        get() = titleView.text
+        set(value) {
+            titleView.text = value
+        }
+
     init {
         inflate(context, R.layout.layout_options_preference_view, this)
         val ta = context.obtainStyledAttributes(attrs, R.styleable.OptionsPreferenceView)
@@ -64,6 +75,8 @@ class OptionsPreferenceView(
         options = ta.getTextArray(R.styleable.OptionsPreferenceView_preference_options)
         ta.recycle()
         setOnClickListener(this)
+        titleView.setOnClickListener(this)
+        summaryView.setOnClickListener(this)
     }
 
     override fun onClick(v: View) {
