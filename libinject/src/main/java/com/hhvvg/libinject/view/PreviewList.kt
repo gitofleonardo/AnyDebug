@@ -57,6 +57,11 @@ class PreviewList(context: Context, attrs: AttributeSet?, defStyleAttr: Int) :
         indicatorView?.requestLayout()
     }
 
+    fun removePreviewView(view: View) {
+        previewAdapter.removePreviewView(view)
+        indicatorView?.requestLayout()
+    }
+
     fun setOnPreviewClickListener(listener: OnClickListener) {
         previewAdapter.setOnClickListener(listener)
     }

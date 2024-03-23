@@ -58,6 +58,14 @@ class PreviewAdapter(context: Context) : Adapter<PreviewHolder>() {
         notifyDataSetChanged()
     }
 
+    @SuppressLint("NotifyDataSetChanged")
+    fun removePreviewView(view: View) {
+        previewItems.removeIf {
+            it.view == view
+        }
+        notifyDataSetChanged()
+    }
+
     fun setOnClickListener(listener: OnClickListener) {
         onPreviewClickListener = listener
     }

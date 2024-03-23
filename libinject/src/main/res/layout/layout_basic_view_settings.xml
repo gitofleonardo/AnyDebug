@@ -39,14 +39,30 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:foreground="?attr/selectableItemBackground"
+            android:id="@+id/remove_view"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:contentDescription="@null"
             android:padding="10dp"
             android:src="@drawable/ic_remove_circle_24"
             android:tint="?attr/colorError"
             app:layout_constraintBottom_toBottomOf="@id/preview_item"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/preview_item"
+            tools:ignore="UseAppTint" />
+
+        <ImageView
+            android:foreground="?attr/selectableItemBackground"
+            android:id="@+id/parent_view"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:contentDescription="@null"
+            android:padding="10dp"
+            android:tint="?attr/colorPrimary"
+            android:src="@drawable/ic_arrow_circle_up_24"
+            app:layout_constraintBottom_toBottomOf="@id/preview_item"
+            app:layout_constraintEnd_toStartOf="@id/remove_view"
             app:layout_constraintTop_toTopOf="@id/preview_item"
             tools:ignore="UseAppTint" />
     </androidx.constraintlayout.widget.ConstraintLayout>

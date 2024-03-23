@@ -90,7 +90,19 @@ open class BasicViewFactory : SettingsFactory {
         val marginPreference =
             view.findViewById<InputPreferenceView>(R.id.margin_ltrb_input_preference)
         val dividerMargin = view.findViewById<View>(R.id.divider_margin)
+        val removeButton = view.findViewById<View>(R.id.remove_view)
+        val parentButton = view.findViewById<View>(R.id.parent_view)
 
+        removeButton.isVisible = targetView.parent is View
+        removeButton.setOnClickListener {
+            parent.findTargetAncestor(ViewSettingsContainer::class.java)
+                ?.removeTargetView()
+        }
+        parentButton.isVisible = targetView.parent is View
+        parentButton.setOnClickListener {
+            parent.findTargetAncestor(ViewSettingsContainer::class.java)
+                ?.setTargetView(targetView.parent as View)
+        }
         paddingPreference.text = targetView.paddingLtrb
         val viewParams = targetView.layoutParams
         if (viewParams is MarginLayoutParams) {

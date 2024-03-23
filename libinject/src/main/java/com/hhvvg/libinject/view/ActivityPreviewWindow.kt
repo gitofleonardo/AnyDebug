@@ -38,14 +38,11 @@ import com.hhvvg.libinject.utils.override
 import com.hhvvg.libinject.utils.screenSize
 import com.hhvvg.libinject.view.remote.RemoteViewFactoryLoader
 import de.robv.android.xposed.XC_MethodHook.Unhook
+import java.util.function.Consumer
 
 @SuppressLint("RtlHardcoded")
 class ActivityPreviewWindow(private val activity: Activity) : Dialog(activity),
     OnTouchListener, WindowClient {
-
-    companion object {
-        private val TAG = ActivityPreviewWindow::class.java.simpleName
-    }
 
     private val remoteInflater by lazy {
         RemoteViewFactoryLoader(activity).getRemoteFactory()
@@ -54,11 +51,27 @@ class ActivityPreviewWindow(private val activity: Activity) : Dialog(activity),
     private var activityTouchHookToken: Unhook? = null
     private val tempLoc = IntArray(2)
     private val onPreviewClickListener: OnClickListener = OnClickListener { v -> onPreviewClick(v) }
+    private val onViewRemoveListener: Consumer<View> = Consumer {
+        contentView?.findViewById<View>(R.id.preview_list)?.call(
+            "removePreviewView",
+            it
+        )
+        windowController.minimizeWindow()
+    }
+    private val onViewCommitListener: Runnable = Runnable {
+        windowController.minimizeWindow()
+    }
 
     private val miniWindowView: View?
         get() = contentView?.findViewById(R.id.mini_window_container)
     private val maxWindowView: View?
         get() = contentView?.findViewById(R.id.max_window_container)
+    private val editSwitch: Switch?
+        get() = contentView?.findViewById(R.id.edit_switch)
+    private val dragBar: View?
+        get() = contentView?.findViewById(R.id.bottom_drag_bar)
+    private val previewList: View?
+        get() = contentView?.findViewById(R.id.preview_list)
     private var contentView: View? = null
     private val windowController by lazy {
         WindowController(window!!, this)
@@ -67,16 +80,24 @@ class ActivityPreviewWindow(private val activity: Activity) : Dialog(activity),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         contentView = onCreateWindowContent(activity).apply {
-            findViewById<View>(R.id.bottom_drag_bar).setOnTouchListener(this@ActivityPreviewWindow)
-            findViewById<Switch>(R.id.edit_switch).setOnCheckedChangeListener { _, isChecked ->
-                handleActivityTouchStateChanged(isChecked)
-            }
-            findViewById<View>(R.id.preview_list)?.call(
-                "setOnPreviewClickListener",
-                onPreviewClickListener
-            )
             setContentView(this)
         }
+        dragBar?.setOnTouchListener(this@ActivityPreviewWindow)
+        editSwitch?.setOnCheckedChangeListener { _, isChecked ->
+            handleActivityTouchStateChanged(isChecked)
+        }
+        previewList?.call(
+            "setOnPreviewClickListener",
+            onPreviewClickListener
+        )
+        maxWindowView?.call(
+            "setOnViewRemoveListener",
+            onViewRemoveListener
+        )
+        maxWindowView?.call(
+            "setOnCommitListener",
+            onViewCommitListener
+        )
         setRenderers(mutableListOf(activity.window.decorView))
         windowController.configureWindowParams()
         setCancelable(false)
@@ -149,7 +170,7 @@ class ActivityPreviewWindow(private val activity: Activity) : Dialog(activity),
     }
 
     private fun setRenderers(renderers: List<View>) {
-        contentView?.findViewById<View>(R.id.preview_list)?.call("updatePreviewItems", renderers)
+        previewList?.call("updatePreviewItems", renderers)
     }
 
     private fun onCreateWindowContent(context: Context): View {
@@ -189,6 +210,7 @@ class ActivityPreviewWindow(private val activity: Activity) : Dialog(activity),
             WindowController.STATE_MAX_WINDOW -> {
                 miniWindowView?.isVisible = false
                 maxWindowView?.isVisible = true
+                editSwitch?.isChecked = false
             }
         }
     }
@@ -200,7 +222,7 @@ class ActivityPreviewWindow(private val activity: Activity) : Dialog(activity),
 
     override fun onWindowInsetsChanged(insets: Insets) = with(contentView) {
         this?.findFocus()?.let {
-            val container = findViewById<View>(R.id.max_window_container)
+            val container = maxWindowView!!
             if (insets.bottom == 0 && container.scrollY != 0) {
                 container.scrollY = 0
                 return

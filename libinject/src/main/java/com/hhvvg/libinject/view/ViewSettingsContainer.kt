@@ -21,12 +21,14 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.hhvvg.libinject.R
+import java.util.function.Consumer
 
 class ViewSettingsContainer(
     context: Context,
@@ -54,17 +56,37 @@ class ViewSettingsContainer(
 
     private var targetView: View? = null
     private var factory: SettingsFactory? = null
+    private var onViewRemoveListener: Consumer<View>? = null
+    private var onCommitListener: Runnable? = null
 
     init {
         inflate(context, R.layout.layout_view_settings_container, this)
         okButton.setOnClickListener {
             factory?.commit()
+            onCommitListener?.run()
         }
     }
 
     fun setTargetView(target: View) {
         targetView = target
         recreateSettings()
+    }
+
+    fun removeTargetView() {
+        targetView?.let { onViewRemoveListener?.accept(it) }
+        targetView?.parent?.let {
+            if (it is ViewGroup) {
+                it.removeView(targetView)
+            }
+        }
+    }
+
+    fun setOnViewRemoveListener(listener: Consumer<View>) {
+        onViewRemoveListener = listener
+    }
+
+    fun setOnCommitListener(listener: Runnable) {
+        onCommitListener = listener
     }
 
     private fun recreateSettings() {
