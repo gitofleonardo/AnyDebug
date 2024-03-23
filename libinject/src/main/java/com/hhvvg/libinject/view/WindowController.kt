@@ -206,6 +206,9 @@ class WindowController(
                 remoteContext.dimenResId("decor_elevation")
             ).toFloat()
         )
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            setCanPlayMoveAnimation(false)
+        }
     }
 
     private fun updateLocationParams() = with(windowParams) {

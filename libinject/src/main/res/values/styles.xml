@@ -16,7 +16,7 @@
   -->
 
 <resources>
-    <style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Dialog.Alert">
         <item name="colorSurface">@color/color_surface</item>
         <item name="colorSurfaceContainerLowest">@color/color_surface_container_lowest</item>
         <item name="colorOnSurface">@color/color_on_surface</item>

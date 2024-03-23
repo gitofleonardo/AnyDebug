@@ -29,6 +29,7 @@ import android.view.View
 import android.view.View.OnClickListener
 import android.view.View.OnTouchListener
 import android.view.ViewGroup
+import android.view.Window
 import android.view.WindowManager
 import android.widget.Switch
 import androidx.core.view.isVisible
@@ -79,6 +80,7 @@ class ActivityPreviewWindow(private val activity: Activity) : Dialog(activity),
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        requestWindowFeature(Window.FEATURE_NO_TITLE)
         contentView = onCreateWindowContent(activity).apply {
             setContentView(this)
         }
