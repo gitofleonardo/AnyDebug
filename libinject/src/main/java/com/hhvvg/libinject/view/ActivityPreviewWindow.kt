@@ -203,12 +203,11 @@ class ActivityPreviewWindow(private val activity: Activity) : Dialog(activity),
     override fun onWindowStateChanged(state: Int) {
         when (state) {
             WindowController.STATE_MINI_WINDOW -> {
-                miniWindowView?.isVisible = true
-                maxWindowView?.isVisible = false
+                // For animation
+                maxWindowView?.isVisible = true
             }
 
             WindowController.STATE_MAX_WINDOW -> {
-                miniWindowView?.isVisible = false
                 maxWindowView?.isVisible = true
                 editSwitch?.isChecked = false
             }
@@ -240,5 +239,69 @@ class ActivityPreviewWindow(private val activity: Activity) : Dialog(activity),
             }
         }
         Unit
+    }
+
+    override fun onRequestMaxWindowSize(width: Int, height: Int) {
+        maxWindowView?.let {
+            val params = it.layoutParams
+            params.width = width
+            params.height = height
+            it.layoutParams = params
+
+            it.pivotX = 0f
+            it.pivotY = 0f
+        }
+    }
+
+    override fun onWindowWidthChanged(
+        startWidth: Float,
+        endWidth: Float,
+        minWidth: Float,
+        maxWidth: Float,
+        width: Float
+    ) {
+        val alphaFraction = (width - startWidth) / (endWidth - startWidth)
+        val realAlphaFraction = when (windowController.currentState) {
+            WindowController.STATE_MINI_WINDOW -> {
+                1 - alphaFraction
+            }
+
+            WindowController.STATE_MAX_WINDOW -> {
+                alphaFraction
+            }
+
+            else -> return
+        }
+        maxWindowView?.let {
+            View.ALPHA.set(it, realAlphaFraction)
+        }
+        miniWindowView?.let {
+            View.ALPHA.set(it, 1 - realAlphaFraction)
+        }
+        val scaleX = (1 / maxWidth) * width
+        maxWindowView?.let {
+            View.SCALE_X.set(it, scaleX)
+        }
+    }
+
+    override fun onWindowHeightChanged(
+        startHeight: Float,
+        endHeight: Float,
+        minHeight: Float,
+        maxHeight: Float,
+        height: Float
+    ) {
+        val scaleY = (1 / maxHeight) * height
+        maxWindowView?.let {
+            View.SCALE_Y.set(it, scaleY)
+        }
+    }
+
+    override fun onStateSizeAnimationEnd(state: Int) {
+        when (state) {
+            WindowController.STATE_MINI_WINDOW -> {
+                maxWindowView?.isVisible = false
+            }
+        }
     }
 }

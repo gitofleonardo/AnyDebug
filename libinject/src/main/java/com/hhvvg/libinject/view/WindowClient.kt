@@ -26,4 +26,22 @@ interface WindowClient {
     fun getParentWindowVisibleFrame(): Rect
     fun onWindowStateChanged(state: Int)
     fun onWindowInsetsChanged(insets: Insets)
+    fun onRequestMaxWindowSize(width: Int, height: Int)
+    fun onWindowWidthChanged(
+        startWidth: Float,
+        endWidth: Float,
+        minWidth: Float,
+        maxWidth: Float,
+        width: Float
+    )
+
+    fun onWindowHeightChanged(
+        startHeight: Float,
+        endHeight: Float,
+        minHeight: Float,
+        maxHeight: Float,
+        height: Float
+    )
+
+    fun onStateSizeAnimationEnd(state: Int)
 }

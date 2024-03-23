@@ -18,6 +18,7 @@
 package com.hhvvg.libinject.view
 
 import android.animation.Animator
+import android.animation.AnimatorSet
 import android.graphics.PixelFormat
 import android.graphics.PointF
 import android.graphics.Rect
@@ -35,6 +36,7 @@ import android.view.animation.DecelerateInterpolator
 import androidx.core.animation.addListener
 import androidx.core.content.res.ResourcesCompat
 import androidx.dynamicanimation.animation.DynamicAnimation
+import com.hhvvg.libinject.R
 import com.hhvvg.libinject.utils.OverScroll
 import com.hhvvg.libinject.utils.SpringAnimationBuilder
 import com.hhvvg.libinject.utils.createRemotePackageContext
@@ -92,12 +94,7 @@ class WindowController(
         private val WINDOW_WIDTH_PROPERTY =
             object : FloatProperty<WindowController>("window_width_property") {
                 override fun get(window: WindowController): Float {
-                    return if (window.windowParams.width > 0)
-                        window.windowParams.width.toFloat()
-                    else run {
-                        window.decorView.getLocalVisibleRect(tempRect)
-                        tempRect.width().toFloat()
-                    }
+                    return window.windowParams.width.toFloat()
                 }
 
                 override fun setValue(window: WindowController, value: Float) {
@@ -109,12 +106,7 @@ class WindowController(
         private val WINDOW_HEIGHT_PROPERTY =
             object : FloatProperty<WindowController>("window_width_property") {
                 override fun get(window: WindowController): Float {
-                    return if (window.windowParams.height > 0)
-                        window.windowParams.height.toFloat()
-                    else run {
-                        window.decorView.getLocalVisibleRect(tempRect)
-                        tempRect.height().toFloat()
-                    }
+                    return window.windowParams.height.toFloat()
                 }
 
                 override fun setValue(window: WindowController, value: Float) {
@@ -132,14 +124,15 @@ class WindowController(
             field = value
             windowClient.onWindowStateChanged(value)
         }
+    val currentState: Int
+        get() = windowState
     private val undampedWindowTranslation = PointF()
     private val maxFloatingWindowDragTranslation by lazy {
         parentWindowFrame.height()
     }
     private var dockToEdgeAnimationX: Animator? = null
     private var dockToEdgeAnimationY: Animator? = null
-    private var widthAnimation: Animator? = null
-    private var heightAnimation: Animator? = null
+    private var sizeChangeAnimator: AnimatorSet? = null
     private val runningDockingAnimation: Boolean
         get() = dockToEdgeAnimationX != null && dockToEdgeAnimationY != null
     private val gestureDetector = GestureDetector(window.context, this)
@@ -189,8 +182,9 @@ class WindowController(
     }
 
     fun configureWindowParams() = with(windowParams) {
-        width = LayoutParams.WRAP_CONTENT
-        height = LayoutParams.WRAP_CONTENT
+        val miniWindowSize = calcMiniWindowSize()
+        width = miniWindowSize.x.toInt()
+        height = miniWindowSize.y.toInt()
         windowX = 0
         windowY = run {
             (parentWindowFrame.height() * WINDOW_INIT_Y_RATIO).toInt()
@@ -286,32 +280,57 @@ class WindowController(
     }
 
     private fun animateWindowSize(finalWidth: Float, finalHeight: Float) {
-        widthAnimation?.cancel()
-        heightAnimation?.cancel()
-        widthAnimation = SpringAnimationBuilder(context)
+        sizeChangeAnimator?.cancel()
+        val miniSize = calcMiniWindowSize()
+        val maxSize = calcMaxWindowSize()
+        val startWidth = WINDOW_WIDTH_PROPERTY.get(this)
+        val widthAnimationBuilder = SpringAnimationBuilder(context)
             .setDampingRatio(FLING_DAMPING_RATIO)
             .setStiffness(FLING_STIFFNESS)
             .setEndValue(finalWidth)
             .setMinimumVisibleChange(DynamicAnimation.MIN_VISIBLE_CHANGE_PIXELS)
-            .setStartValue(WINDOW_WIDTH_PROPERTY.get(this))
-            .build(this, WINDOW_WIDTH_PROPERTY).apply {
-                addListener(onEnd = {
-                    widthAnimation = null
-                })
-                start()
-            }
-        heightAnimation = SpringAnimationBuilder(context)
+            .setStartValue(startWidth)
+        val widthAnimation = widthAnimationBuilder.build(this, WINDOW_WIDTH_PROPERTY)
+        widthAnimation.addUpdateListener {
+            val interpolatedWidth = widthAnimationBuilder.getInterpolatedValue(it.animatedFraction)
+            windowClient.onWindowWidthChanged(
+                startWidth,
+                finalWidth,
+                miniSize.x,
+                maxSize.x,
+                interpolatedWidth
+            )
+        }
+        val startHeight = WINDOW_HEIGHT_PROPERTY.get(this)
+        val heightAnimationBuilder = SpringAnimationBuilder(context)
             .setDampingRatio(FLING_DAMPING_RATIO)
             .setStiffness(FLING_STIFFNESS)
             .setEndValue(finalHeight)
             .setMinimumVisibleChange(DynamicAnimation.MIN_VISIBLE_CHANGE_PIXELS)
-            .setStartValue(WINDOW_HEIGHT_PROPERTY.get(this))
-            .build(this, WINDOW_HEIGHT_PROPERTY).apply {
-                addListener(onEnd = {
-                    heightAnimation = null
-                })
-                start()
-            }
+            .setStartValue(startHeight)
+        val heightAnimation = heightAnimationBuilder.build(this, WINDOW_HEIGHT_PROPERTY)
+        heightAnimation.addUpdateListener {
+            val interpolatedHeight =
+                heightAnimationBuilder.getInterpolatedValue(it.animatedFraction)
+            windowClient.onWindowHeightChanged(
+                startHeight,
+                finalHeight,
+                miniSize.y,
+                maxSize.y,
+                interpolatedHeight
+            )
+        }
+        val animatorSet = AnimatorSet().apply {
+            play(widthAnimation)
+            play(heightAnimation)
+            addListener(onEnd = {
+                sizeChangeAnimator = null
+                windowClient.onStateSizeAnimationEnd(currentState)
+            })
+        }
+        sizeChangeAnimator = animatorSet.apply {
+            start()
+        }
     }
 
     private fun moveMaximizeWindowCenter() {
@@ -366,20 +385,13 @@ class WindowController(
         return PointF(finalX, finalY)
     }
 
-    private fun calcMiniWindowSize(): PointF {
-        val parentFrame = windowClient.getParentWindowVisibleFrame()
-        val parentWindowWidth = parentFrame.width()
-        val parentWindowHeight = parentFrame.height()
-        val widthSpec =
-            View.MeasureSpec.makeMeasureSpec(parentWindowWidth, View.MeasureSpec.AT_MOST)
-        val heightSpec =
-            View.MeasureSpec.makeMeasureSpec(parentWindowHeight, View.MeasureSpec.AT_MOST)
-        decorView.measure(widthSpec, heightSpec)
-        val size = PointF()
-        decorView.let {
-            size.set(it.measuredWidth.toFloat(), it.measuredHeight.toFloat())
-        }
-        return size
+    fun calcMiniWindowSize(): PointF {
+        return PointF(
+            remoteContext.resources.getDimensionPixelSize(R.dimen.config_mini_window_width)
+                .toFloat(),
+            remoteContext.resources.getDimensionPixelSize(R.dimen.config_mini_window_height)
+                .toFloat()
+        )
     }
 
     fun minimizeWindow(velocityX: Float = 0f, velocityY: Float = 0f) {
@@ -402,20 +414,30 @@ class WindowController(
         windowState = STATE_MAX_WINDOW
         windowParams.flags =
             windowParams.flags and LayoutParams.FLAG_NOT_FOCUSABLE.inv()
+        val size = calcMaxWindowSize()
+        val finalWidth = size.x
+        val finalHeight = size.y
+        windowClient.onRequestMaxWindowSize(finalWidth.toInt(), finalHeight.toInt())
+        animateWindowSize(finalWidth, finalHeight)
+        moveMaximizeWindowCenter()
+    }
+
+    fun calcMaxWindowSize(): PointF {
         val parentFrame = parentWindowFrame
         val parentWindowWidth = parentFrame.width()
         val parentWindowHeight = parentFrame.height()
         val finalWidth = parentWindowWidth * MAX_WINDOW_WIDTH_RATIO
         val finalHeight = parentWindowHeight * MAX_WINDOW_HEIGHT_RATIO
-        animateWindowSize(finalWidth, finalHeight)
-        moveMaximizeWindowCenter()
+        return PointF(
+            finalWidth,
+            finalHeight
+        )
     }
 
     private fun cancelAllAnimations() {
         dockToEdgeAnimationX?.cancel()
         dockToEdgeAnimationY?.cancel()
-        widthAnimation?.cancel()
-        heightAnimation?.cancel()
+        sizeChangeAnimator?.cancel()
     }
 
     override fun onDown(e: MotionEvent): Boolean {

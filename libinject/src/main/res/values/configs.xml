@@ -20,4 +20,6 @@
     <dimen name="display_window_radius">15dp</dimen>
     <dimen name="display_card_radius">10dp</dimen>
     <dimen name="preference_title_width">100dp</dimen>
+    <dimen name="config_mini_window_width">120dp</dimen>
+    <dimen name="config_mini_window_height">200dp</dimen>
 </resources>
