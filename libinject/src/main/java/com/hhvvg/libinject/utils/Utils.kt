@@ -17,6 +17,9 @@
 
 package com.hhvvg.libinject.utils
 
+import android.content.Context
+import android.content.res.Resources
+import android.view.ContextThemeWrapper
 import android.view.View
 import android.view.ViewGroup
 import java.util.regex.Pattern
@@ -31,4 +34,22 @@ fun <T : ViewGroup> View.findTargetAncestor(targetClass: Class<T>): T? {
         currParent = currParent.parent
     }
     return if (currParent == null || !targetClass.isInstance(currParent)) null else currParent as T
+}
+
+fun Context.createRemotePackageContext(): Context {
+    val packageContext = createPackageContext(
+        APPLICATION_ID,
+        Context.CONTEXT_INCLUDE_CODE or Context.CONTEXT_IGNORE_SECURITY
+    )
+    val themeResId =
+        packageContext.resources.getIdentifier("AppTheme", "style", packageContext.packageName)
+    return ContextThemeWrapper(packageContext, themeResId)
+}
+
+fun Context.drawableResId(name: String): Int {
+    return resources.getIdentifier(name, "drawable", packageName)
+}
+
+fun Context.dimenResId(name: String): Int {
+    return resources.getIdentifier(name, "dimen", packageName)
 }

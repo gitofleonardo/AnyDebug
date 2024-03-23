@@ -21,6 +21,7 @@ import android.animation.Animator
 import android.graphics.PixelFormat
 import android.graphics.PointF
 import android.graphics.Rect
+import android.os.Build
 import android.util.FloatProperty
 import android.view.GestureDetector
 import android.view.GestureDetector.OnGestureListener
@@ -28,13 +29,18 @@ import android.view.Gravity
 import android.view.MotionEvent
 import android.view.View
 import android.view.Window
+import android.view.WindowInsets
 import android.view.WindowManager
 import android.view.animation.DecelerateInterpolator
 import androidx.core.animation.addListener
+import androidx.core.content.res.ResourcesCompat
 import androidx.dynamicanimation.animation.DynamicAnimation
-import com.hhvvg.libinject.R
+import com.hhvvg.libinject.utils.Logger
 import com.hhvvg.libinject.utils.OverScroll
 import com.hhvvg.libinject.utils.SpringAnimationBuilder
+import com.hhvvg.libinject.utils.createRemotePackageContext
+import com.hhvvg.libinject.utils.dimenResId
+import com.hhvvg.libinject.utils.drawableResId
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
@@ -141,6 +147,7 @@ class WindowController(
     private val downPoint = PointF()
     private val lastMovePoint = PointF()
     private val context by lazy { window.context }
+    private val remoteContext by lazy { context.createRemotePackageContext() }
     private val parentWindowFrame: Rect
         get() = run {
             windowClient.getParentWindowVisibleFrame()
@@ -170,6 +177,20 @@ class WindowController(
             updateWindow()
         }
 
+    init {
+        decorView.setOnApplyWindowInsetsListener { v, insets ->
+            Logger.log("insets=${insets}")
+            windowOffsetY = -if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                val imeInsets = insets.getInsets(WindowInsets.Type.ime())
+                imeInsets.bottom
+            } else {
+                val systemInsets = insets.systemWindowInsets
+                systemInsets.bottom
+            }
+            return@setOnApplyWindowInsetsListener insets.consumeSystemWindowInsets()
+        }
+    }
+
     fun configureWindowParams() = with(windowParams) {
         width = WindowManager.LayoutParams.WRAP_CONTENT
         height = WindowManager.LayoutParams.WRAP_CONTENT
@@ -183,9 +204,17 @@ class WindowController(
             WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL or
                     WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS or
                     WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
-        window.setBackgroundDrawableResource(android.R.color.transparent)
+        window.setBackgroundDrawable(
+            ResourcesCompat.getDrawable(
+                remoteContext.resources,
+                remoteContext.drawableResId("display_window_background"),
+                remoteContext.theme
+            )
+        )
         window.setElevation(
-            context.resources.getDimensionPixelSize(R.dimen.decor_elevation).toFloat()
+            remoteContext.resources.getDimensionPixelSize(
+                remoteContext.dimenResId("decor_elevation")
+            ).toFloat()
         )
     }
 

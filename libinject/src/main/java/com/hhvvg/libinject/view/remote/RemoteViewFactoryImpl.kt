@@ -24,6 +24,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.hhvvg.libinject.utils.APPLICATION_ID
+import com.hhvvg.libinject.utils.createRemotePackageContext
 
 class RemoteViewFactoryImpl : RemoteViewFactory {
 
@@ -32,13 +33,7 @@ class RemoteViewFactoryImpl : RemoteViewFactory {
         context: Context, name: String, root: ViewGroup?,
         attachToRoot: Boolean
     ): View {
-        var packageContext = context.createPackageContext(
-            APPLICATION_ID,
-            Context.CONTEXT_INCLUDE_CODE or Context.CONTEXT_IGNORE_SECURITY
-        )
-        val themeResId =
-            packageContext.resources.getIdentifier("AppTheme", "style", packageContext.packageName)
-        packageContext = ContextThemeWrapper(packageContext, themeResId)
+        val packageContext = context.createRemotePackageContext()
         val resId = packageContext.resources
             .getIdentifier(name, "layout", packageContext.packageName)
         if (resId > 0) {

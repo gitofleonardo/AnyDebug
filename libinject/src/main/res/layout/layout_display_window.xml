@@ -20,8 +20,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/content"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:background="@drawable/display_window_background">
+    android:layout_height="wrap_content">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/mini_window_container"
