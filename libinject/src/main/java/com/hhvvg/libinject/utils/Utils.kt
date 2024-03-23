@@ -18,11 +18,13 @@
 package com.hhvvg.libinject.utils
 
 import android.content.Context
-import android.content.res.Resources
+import android.graphics.Point
 import android.view.ContextThemeWrapper
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import java.util.regex.Pattern
+
 
 const val APPLICATION_ID = "com.hhvvg.anydebugv2"
 
@@ -52,4 +54,11 @@ fun Context.drawableResId(name: String): Int {
 
 fun Context.dimenResId(name: String): Int {
     return resources.getIdentifier(name, "dimen", packageName)
+}
+
+fun Context.screenSize(): Point {
+    val display = (getSystemService(Context.WINDOW_SERVICE) as WindowManager).defaultDisplay
+    val outPoint = Point()
+    display.getRealSize(outPoint)
+    return outPoint
 }

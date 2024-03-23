@@ -17,6 +17,7 @@
 
 package com.hhvvg.libinject.view
 
+import android.graphics.Insets
 import android.graphics.Rect
 import android.view.WindowManager
 
@@ -24,4 +25,5 @@ interface WindowClient {
     fun updateWindowAttributes(attr: WindowManager.LayoutParams)
     fun getParentWindowVisibleFrame(): Rect
     fun onWindowStateChanged(state: Int)
+    fun onWindowInsetsChanged(insets: Insets)
 }

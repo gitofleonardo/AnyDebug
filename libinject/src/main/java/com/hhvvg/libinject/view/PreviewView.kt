@@ -59,7 +59,7 @@ class PreviewView(context: Context, attrs: AttributeSet?, defStyleAttr: Int, def
         if (!renderNode.hasDisplayList()) {
             buildDisplayList(renderer)
         }
-        if (renderNode.hasDisplayList()) {
+        if (renderNode.hasDisplayList() && canvas.isHardwareAccelerated) {
             canvas.drawRenderNode(renderNode)
         }
     }

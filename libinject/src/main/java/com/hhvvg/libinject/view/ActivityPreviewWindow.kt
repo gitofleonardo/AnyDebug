@@ -21,6 +21,7 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Dialog
 import android.content.Context
+import android.graphics.Insets
 import android.graphics.Rect
 import android.os.Bundle
 import android.view.MotionEvent
@@ -32,9 +33,9 @@ import android.view.WindowManager
 import android.widget.Switch
 import androidx.core.view.isVisible
 import com.hhvvg.libinject.R
-import com.hhvvg.libinject.utils.Logger
 import com.hhvvg.libinject.utils.call
 import com.hhvvg.libinject.utils.override
+import com.hhvvg.libinject.utils.screenSize
 import com.hhvvg.libinject.view.remote.RemoteViewFactoryLoader
 import de.robv.android.xposed.XC_MethodHook.Unhook
 
@@ -80,7 +81,6 @@ class ActivityPreviewWindow(private val activity: Activity) : Dialog(activity),
         windowController.configureWindowParams()
         setCancelable(false)
         setCanceledOnTouchOutside(false)
-        Logger.log(TAG, "addView to window.")
     }
 
     override fun show() {
@@ -94,7 +94,6 @@ class ActivityPreviewWindow(private val activity: Activity) : Dialog(activity),
         super.dismiss()
         contentView = null
         activityTouchHookToken?.unhook()
-        Logger.log(TAG, "removeView from window.")
     }
 
     private fun handleActivityTouchStateChanged(interceptTouch: Boolean) {
@@ -197,5 +196,27 @@ class ActivityPreviewWindow(private val activity: Activity) : Dialog(activity),
     override fun onBackPressed() {
         super.onBackPressed()
         windowController.minimizeWindow()
+    }
+
+    override fun onWindowInsetsChanged(insets: Insets) = with(contentView) {
+        this?.findFocus()?.let {
+            val container = findViewById<View>(R.id.max_window_container)
+            if (insets.bottom == 0 && container.scrollY != 0) {
+                container.scrollY = 0
+                return
+            }
+            val focusedPos = IntArray(2)
+            it.getLocationOnScreen(focusedPos)
+            focusedPos[1] += windowController.windowY
+            val focusedBottom = focusedPos[1] + it.height
+
+            val screenSize = context.screenSize()
+            val visibleBottom = screenSize.y - insets.bottom
+
+            if (focusedBottom > visibleBottom) {
+                container.scrollY = focusedBottom - visibleBottom
+            }
+        }
+        Unit
     }
 }

@@ -30,12 +30,11 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.Window
 import android.view.WindowInsets
-import android.view.WindowManager
+import android.view.WindowManager.LayoutParams
 import android.view.animation.DecelerateInterpolator
 import androidx.core.animation.addListener
 import androidx.core.content.res.ResourcesCompat
 import androidx.dynamicanimation.animation.DynamicAnimation
-import com.hhvvg.libinject.utils.Logger
 import com.hhvvg.libinject.utils.OverScroll
 import com.hhvvg.libinject.utils.SpringAnimationBuilder
 import com.hhvvg.libinject.utils.createRemotePackageContext
@@ -158,7 +157,7 @@ class WindowController(
             updateLocationParams()
             updateWindow()
         }
-    private var windowY = 0
+    var windowY = 0
         set(value) {
             field = value
             updateLocationParams()
@@ -178,32 +177,29 @@ class WindowController(
         }
 
     init {
-        decorView.setOnApplyWindowInsetsListener { v, insets ->
-            Logger.log("insets=${insets}")
-            windowOffsetY = -if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                val imeInsets = insets.getInsets(WindowInsets.Type.ime())
-                imeInsets.bottom
+        decorView.setOnApplyWindowInsetsListener { _, insets ->
+            val winInsets = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                insets.getInsets(WindowInsets.Type.ime())
             } else {
-                val systemInsets = insets.systemWindowInsets
-                systemInsets.bottom
+                insets.systemWindowInsets
             }
-            return@setOnApplyWindowInsetsListener insets.consumeSystemWindowInsets()
+            windowClient.onWindowInsetsChanged(winInsets)
+            return@setOnApplyWindowInsetsListener insets
         }
     }
 
     fun configureWindowParams() = with(windowParams) {
-        width = WindowManager.LayoutParams.WRAP_CONTENT
-        height = WindowManager.LayoutParams.WRAP_CONTENT
+        width = LayoutParams.WRAP_CONTENT
+        height = LayoutParams.WRAP_CONTENT
         windowX = 0
         windowY = run {
             (parentWindowFrame.height() * WINDOW_INIT_Y_RATIO).toInt()
         }
         format = PixelFormat.TRANSPARENT
         gravity = Gravity.TOP or Gravity.START
-        flags =
-            WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL or
-                    WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS or
-                    WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+        flags = LayoutParams.FLAG_NOT_TOUCH_MODAL or
+                LayoutParams.FLAG_LAYOUT_NO_LIMITS or
+                LayoutParams.FLAG_NOT_FOCUSABLE
         window.setBackgroundDrawable(
             ResourcesCompat.getDrawable(
                 remoteContext.resources,
@@ -391,7 +387,7 @@ class WindowController(
             return
         }
         windowState = STATE_MINI_WINDOW
-        windowParams.flags = windowParams.flags or WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
+        windowParams.flags = windowParams.flags or LayoutParams.FLAG_NOT_FOCUSABLE
         val miniWidowSize = calcMiniWindowSize()
         val finalWidth = miniWidowSize.x
         val finalHeight = miniWidowSize.y
@@ -405,7 +401,7 @@ class WindowController(
         }
         windowState = STATE_MAX_WINDOW
         windowParams.flags =
-            windowParams.flags and WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE.inv()
+            windowParams.flags and LayoutParams.FLAG_NOT_FOCUSABLE.inv()
         val parentFrame = parentWindowFrame
         val parentWindowWidth = parentFrame.width()
         val parentWindowHeight = parentFrame.height()
