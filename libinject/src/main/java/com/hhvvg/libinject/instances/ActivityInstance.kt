@@ -47,9 +47,7 @@ class ActivityInstance(private val activity: Activity) : Instance, ActivityLifec
     }
     private val windowShouldDisplay: Boolean
         get() = AllSettings.editEnabled.value
-    private val previewWindow by lazy {
-        ActivityPreviewWindow(activity)
-    }
+    private var previewWindow: ActivityPreviewWindow? = null
 
     init {
         Logger.log(TAG, "activity $activity created.")
@@ -62,10 +60,17 @@ class ActivityInstance(private val activity: Activity) : Instance, ActivityLifec
     }
 
     private fun onDisplayWindowChanged(show: Boolean) {
-        if (show) {
-            previewWindow.show()
+        previewWindow = if (show) {
+            val preview = previewWindow
+            if (preview != null) {
+                return
+            }
+            ActivityPreviewWindow(activity).apply {
+                show()
+            }
         } else {
-            previewWindow.dismiss()
+            previewWindow?.dismiss()
+            null
         }
     }
 
