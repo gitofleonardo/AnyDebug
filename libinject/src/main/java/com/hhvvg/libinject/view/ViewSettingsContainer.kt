@@ -51,9 +51,6 @@ class ViewSettingsContainer(
     private val okButton by lazy {
         findViewById<FloatingActionButton>(R.id.ok_button)
     }
-    private val scrollContainer by lazy {
-        findViewById<ScrollView>(R.id.scroll_view)
-    }
 
     private var targetView: View? = null
     private var factory: SettingsFactory? = null
@@ -74,7 +71,7 @@ class ViewSettingsContainer(
         clearSettings()
         val target = targetView ?: return
         val views = mutableListOf<SettingContent>()
-        factory = SettingsFactoryManager.createFactory(target, settingsContainer).apply {
+        factory = SettingsFactoryManager.createFactory(target).apply {
             onCreate(target, settingsContainer, views)
         }
         views.forEach {

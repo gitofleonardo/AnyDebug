@@ -68,6 +68,11 @@ class InputPreferenceView(
         set(value) {
             inputView.inputType = value
         }
+    var maxLines: Int
+        get() = inputView.maxLines
+        set(value) {
+            inputView.maxLines = value
+        }
     var text: CharSequence?
         get() = inputView.text
         set(value) {
@@ -87,9 +92,13 @@ class InputPreferenceView(
         val ta = context.obtainStyledAttributes(attrs, R.styleable.InputPreferenceView)
         title = ta.getString(R.styleable.InputPreferenceView_preference_title)
         hint = ta.getString(R.styleable.InputPreferenceView_preference_input_hint)
-        inputType = ta.getInteger(
+        inputType = ta.getInt(
             R.styleable.InputPreferenceView_android_inputType,
             InputType.TYPE_CLASS_TEXT
+        )
+        maxLines = ta.getInt(
+            R.styleable.InputPreferenceView_android_maxLines,
+            1
         )
         summary = ta.getString(R.styleable.InputPreferenceView_preference_summary)
         ta.recycle()

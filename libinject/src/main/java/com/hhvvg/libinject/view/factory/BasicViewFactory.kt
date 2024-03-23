@@ -41,7 +41,7 @@ import com.hhvvg.libinject.view.preference.OptionsPreferenceView
 import com.hhvvg.libinject.view.preference.PreferenceView
 import kotlin.reflect.KClass
 
-class BasicViewFactory : SettingsFactory {
+open class BasicViewFactory : SettingsFactory {
 
     private val View.paddingLtrb: String
         get() = "[${paddingLeft},${paddingTop},${paddingRight},${paddingBottom}]"

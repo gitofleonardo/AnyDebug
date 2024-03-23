@@ -32,8 +32,9 @@
 
     <declare-styleable name="InputPreferenceView">
         <attr name="preference_title" />
-        <attr name="preference_summary"/>
+        <attr name="preference_summary" />
         <attr name="preference_input_hint" format="string|reference" />
         <attr name="android:inputType" />
+        <attr name="android:maxLines" />
     </declare-styleable>
 </resources>

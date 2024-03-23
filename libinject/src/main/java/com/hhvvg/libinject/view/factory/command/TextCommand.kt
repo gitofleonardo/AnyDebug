@@ -15,20 +15,13 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.hhvvg.libinject.view
+package com.hhvvg.libinject.view.factory.command
 
-import android.view.View
-import android.view.ViewGroup
 import android.widget.TextView
-import com.hhvvg.libinject.view.factory.BasicViewFactory
-import com.hhvvg.libinject.view.factory.TextViewFactory
 
-object SettingsFactoryManager {
+class TextCommand(view: TextView, private val text: CharSequence) : BaseCommand<TextView>(view) {
 
-    fun createFactory(target: View): SettingsFactory {
-        return when(target) {
-            is TextView -> TextViewFactory()
-            else -> BasicViewFactory()
-        }
+    override fun onApply() {
+        targetView.text = text
     }
 }
