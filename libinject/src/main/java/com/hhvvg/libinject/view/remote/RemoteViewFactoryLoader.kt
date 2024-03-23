@@ -19,6 +19,7 @@ package com.hhvvg.libinject.view.remote
 
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import com.hhvvg.libinject.utils.APPLICATION_ID
 import dalvik.system.DexClassLoader
 
@@ -29,9 +30,10 @@ class RemoteViewFactoryLoader(private val context: Context) {
     fun getRemoteFactory(): RemoteViewFactory {
         val intent = Intent().apply {
             setPackage(APPLICATION_ID)
+            action = "com.hhvvg.anydebug.action.MAIN"
         }
         val pm = context.packageManager
-        val plugins = pm.queryIntentActivities(intent, 0)
+        val plugins = pm.queryIntentActivities(intent, PackageManager.MATCH_ALL)
         if (plugins.isEmpty()) {
             throw RuntimeException()
         }

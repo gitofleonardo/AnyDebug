@@ -16,7 +16,7 @@
   -->
 
 <resources>
-    <dimen name="decor_elevation">20dp</dimen>
+    <dimen name="decor_elevation">10dp</dimen>
     <dimen name="display_window_radius">15dp</dimen>
     <dimen name="display_card_radius">10dp</dimen>
     <dimen name="preference_title_width">100dp</dimen>
