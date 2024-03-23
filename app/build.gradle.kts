@@ -9,7 +9,7 @@ android {
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.hhvvg.anydebugv2"
+        applicationId = "com.hhvvg.anydebug"
         minSdk = 29
         targetSdk = 34
         versionCode = 10
@@ -27,7 +27,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            buildConfigField("String", "PACKAGE_NAME", "\"com.hhvvg.anydebugv2\"")
+            buildConfigField("String", "PACKAGE_NAME", "\"com.hhvvg.anydebug\"")
         }
         debug {
             isMinifyEnabled = false
@@ -37,7 +37,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            buildConfigField("String", "PACKAGE_NAME", "\"com.hhvvg.anydebugv2\"")
+            buildConfigField("String", "PACKAGE_NAME", "\"com.hhvvg.anydebug\"")
         }
     }
     compileOptions {

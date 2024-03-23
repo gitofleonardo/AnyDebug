@@ -17,7 +17,6 @@
 
 <resources>
     <array name="required_packages">
-        <item>tv.danmaku.bili</item>
     </array>
 
     <string-array name="visibility_array">

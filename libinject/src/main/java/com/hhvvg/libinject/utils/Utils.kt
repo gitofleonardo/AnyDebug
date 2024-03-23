@@ -26,7 +26,7 @@ import android.view.WindowManager
 import java.util.regex.Pattern
 
 
-const val APPLICATION_ID = "com.hhvvg.anydebugv2"
+const val APPLICATION_ID = "com.hhvvg.anydebug"
 
 val ltrbPattern = Pattern.compile("^\\[(-?\\d+),(-?\\d+),(-?\\d+),(-?\\d+)]$")
 
