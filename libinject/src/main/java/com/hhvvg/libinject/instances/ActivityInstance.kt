@@ -65,7 +65,7 @@ class ActivityInstance(private val activity: Activity) : Instance, ActivityLifec
         if (show) {
             previewWindow.show()
         } else {
-            previewWindow.hide()
+            previewWindow.dismiss()
         }
     }
 
