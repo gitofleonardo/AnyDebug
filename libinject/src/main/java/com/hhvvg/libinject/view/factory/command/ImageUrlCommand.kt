@@ -15,23 +15,16 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.hhvvg.libinject.view
+package com.hhvvg.libinject.view.factory.command
 
-import android.view.View
-import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.TextView
-import com.hhvvg.libinject.view.factory.BasicViewFactory
-import com.hhvvg.libinject.view.factory.ImageViewFactory
-import com.hhvvg.libinject.view.factory.TextViewFactory
+import com.bumptech.glide.Glide
 
-object SettingsFactoryManager {
+class ImageUrlCommand(view: ImageView, private val url: String) : BaseCommand<ImageView>(view) {
 
-    fun createFactory(target: View): SettingsFactory {
-        return when(target) {
-            is TextView -> TextViewFactory()
-            is ImageView -> ImageViewFactory()
-            else -> BasicViewFactory()
-        }
+    override fun onApply() {
+        Glide.with(targetView)
+            .load(url)
+            .into(targetView)
     }
 }

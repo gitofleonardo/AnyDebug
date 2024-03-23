@@ -54,6 +54,10 @@ open class BasicViewFactory : SettingsFactory {
         commandQueue[command::class] = command
     }
 
+    protected fun removeCommand(clazz: KClass<*>) {
+        commandQueue.remove(clazz)
+    }
+
     private fun flushCommands() {
         commandQueue.forEach { (_, u) ->
             u.onApply()
