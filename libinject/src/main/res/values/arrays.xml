@@ -18,9 +18,19 @@
 <resources>
     <array name="required_packages"></array>
 
-    <string-array name="visibility_array">
+    <string-array name="visibilities">
         <item>Visible</item>
         <item>Invisible</item>
         <item>Gone</item>
+    </string-array>
+
+    <string-array name="image_scale_types">
+        <item>fitXY</item>
+        <item>fitStart</item>
+        <item>fitCenter</item>
+        <item>fitEnd</item>
+        <item>center</item>
+        <item>centerCrop</item>
+        <item>centerInside</item>
     </string-array>
 </resources>

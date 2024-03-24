@@ -23,6 +23,7 @@ import android.view.ContextThemeWrapper
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import android.widget.ImageView
 import java.util.regex.Pattern
 
 
@@ -91,4 +92,15 @@ fun Context.screenSize(): Point {
     val outPoint = Point()
     display.getRealSize(outPoint)
     return outPoint
+}
+
+/**
+ * Reverse mapping from key->value to value->key
+ */
+fun <K, V> Map<K, V>.reverse(): Map<V, K> {
+    val result = mutableMapOf<V, K>()
+    entries.forEach {
+        result[it.value] = it.key
+    }
+    return result
 }

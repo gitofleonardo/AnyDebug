@@ -27,6 +27,7 @@ import com.hhvvg.libinject.R
 import com.hhvvg.libinject.utils.findTargetAncestor
 import com.hhvvg.libinject.utils.ltrb
 import com.hhvvg.libinject.utils.paddingLtrb
+import com.hhvvg.libinject.utils.reverse
 import com.hhvvg.libinject.view.PreviewList
 import com.hhvvg.libinject.view.PreviewView
 import com.hhvvg.libinject.view.SettingContent
@@ -96,7 +97,8 @@ open class BasicViewFactory : SettingsFactory {
         }
         widthPreference.text = viewParams.width.toString()
         heightPreference.text = viewParams.height.toString()
-        visibilityPreference.selectedIndex = createVisibilityMapper()[targetView.visibility] ?: 0
+        val visibilityIndexMapper = createVisibilityMapper()
+        visibilityPreference.selectedIndex = visibilityIndexMapper[targetView.visibility] ?: 0
         preview.setRenderer(targetView)
         clzName.summary = targetView.javaClass.name
         contextInfo.summary = targetView.context.javaClass.name
@@ -111,7 +113,7 @@ open class BasicViewFactory : SettingsFactory {
         }
 
         visibilityPreference.setOnCheckChangedListener { _, id ->
-            val indexMapper = createVisibilityIndexMapper()
+            val indexMapper = visibilityIndexMapper.reverse()
             val visibility = indexMapper[id] ?: targetView.visibility
             addCommand(VisibilityCommand(targetView, visibility))
         }
@@ -160,14 +162,6 @@ open class BasicViewFactory : SettingsFactory {
         commandQueue.remove(clazz)
     }
 
-    private fun createVisibilityIndexMapper(): Map<Int, Int> {
-        return mapOf(
-            0 to View.VISIBLE,
-            1 to View.INVISIBLE,
-            2 to View.GONE
-        )
-    }
-
     private fun createVisibilityMapper(): Map<Int, Int> {
         return mapOf(
             View.VISIBLE to 0,
@@ -175,5 +169,4 @@ open class BasicViewFactory : SettingsFactory {
             View.GONE to 2
         )
     }
-
 }

@@ -21,10 +21,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.ImageView.ScaleType
 import com.hhvvg.libinject.R
+import com.hhvvg.libinject.utils.reverse
 import com.hhvvg.libinject.view.SettingContent
+import com.hhvvg.libinject.view.factory.command.ImageScaleTypeCommand
 import com.hhvvg.libinject.view.factory.command.ImageUrlCommand
 import com.hhvvg.libinject.view.preference.InputPreferenceView
+import com.hhvvg.libinject.view.preference.OptionsPreferenceView
 
 /**
  * Settings factory for a ImageView
@@ -43,6 +47,16 @@ class ImageViewFactory : BasicViewFactory() {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.layout_image_view_settings, parent, false)
         val urlPref = view.findViewById<InputPreferenceView>(R.id.image_url_input)
+        val scaleTypePref = view.findViewById<OptionsPreferenceView>(R.id.scale_type_preference)
+
+        val scaleTypeIndexMapper = createScaleTypeMapper()
+        val indexScaleTypeMapper = scaleTypeIndexMapper.reverse()
+        scaleTypePref.selectedIndex = scaleTypeIndexMapper.getOrDefault(targetView.scaleType, -1)
+        scaleTypePref.setOnCheckChangedListener { _, id ->
+            indexScaleTypeMapper[id]?.let {
+                addCommand(ImageScaleTypeCommand(targetView, it))
+            }
+        }
         urlPref.setOnTextChangedListener {
             if (it.isNotEmpty()) {
                 addCommand(ImageUrlCommand(targetView, it.toString()))
@@ -55,4 +69,15 @@ class ImageViewFactory : BasicViewFactory() {
         )
     }
 
+    private fun createScaleTypeMapper(): Map<ScaleType, Int> {
+        return mapOf(
+            ScaleType.FIT_XY to 0,
+            ScaleType.FIT_START to 1,
+            ScaleType.FIT_CENTER to 2,
+            ScaleType.FIT_END to 3,
+            ScaleType.CENTER to 4,
+            ScaleType.CENTER_CROP to 5,
+            ScaleType.CENTER_INSIDE to 6
+        )
+    }
 }
