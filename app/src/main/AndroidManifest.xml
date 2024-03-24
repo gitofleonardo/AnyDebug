@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
+
     <queries>
 
     </queries>
@@ -25,6 +26,10 @@
         <meta-data
             android:name="xposedminversion"
             android:value="93" />
+        <meta-data
+            android:name="xposedscope"
+            android:resource="@array/required_packages" />
+
         <activity
             android:name=".MainActivity"
             android:exported="true">
