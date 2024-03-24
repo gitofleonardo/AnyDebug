@@ -18,15 +18,11 @@
 package com.hhvvg.anydebug.utils
 
 import android.content.Context
-import android.graphics.Point
 import android.view.ContextThemeWrapper
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
+import com.hhvvg.anydebug.BuildConfig
 import java.util.regex.Pattern
-
-
-const val APPLICATION_ID = "com.hhvvg.anydebug"
 
 /**
  * Regex pattern for parsing padding/margin
@@ -61,36 +57,12 @@ fun <T : ViewGroup> View.findTargetAncestor(targetClass: Class<T>): T? {
  */
 fun Context.createRemotePackageContext(): Context {
     val packageContext = createPackageContext(
-        APPLICATION_ID,
+        BuildConfig.APPLICATION_ID,
         Context.CONTEXT_INCLUDE_CODE or Context.CONTEXT_IGNORE_SECURITY
     )
     val themeResId =
         packageContext.resources.getIdentifier("AppTheme", "style", packageContext.packageName)
     return ContextThemeWrapper(packageContext, themeResId)
-}
-
-/**
- * Get drawable resource id
- */
-fun Context.drawableResId(name: String): Int {
-    return resources.getIdentifier(name, "drawable", packageName)
-}
-
-/**
- * Get dimen resource id
- */
-fun Context.dimenResId(name: String): Int {
-    return resources.getIdentifier(name, "dimen", packageName)
-}
-
-/**
- * Get default display screen size
- */
-fun Context.screenSize(): Point {
-    val display = (getSystemService(Context.WINDOW_SERVICE) as WindowManager).defaultDisplay
-    val outPoint = Point()
-    display.getRealSize(outPoint)
-    return outPoint
 }
 
 /**

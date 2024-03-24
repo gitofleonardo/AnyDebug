@@ -17,6 +17,7 @@
 
 package com.hhvvg.anydebug
 
+import android.content.res.XModuleResources
 import com.hhvvg.anydebug.modules.ActivityModule
 import com.hhvvg.anydebug.utils.Logger
 import com.highcapable.yukihookapi.annotation.xposed.InjectYukiHookWithXposed
@@ -26,8 +27,8 @@ import kotlin.reflect.KClass
 
 @InjectYukiHookWithXposed
 object HookEntry : IYukiHookXposedInit {
-    private var processLoaded = false
-
+    lateinit var moduleRes: XModuleResources
+    lateinit var modulePath: String
     private val modules = arrayOf<KClass<*>>(
         ActivityModule::class,
     )
@@ -38,14 +39,17 @@ object HookEntry : IYukiHookXposedInit {
     override fun onXposedEvent() {
         super.onXposedEvent()
         YukiXposedEvent.onHandleLoadPackage { params ->
-            if (processLoaded) {
+            if (!params.isFirstApplication) {
                 Logger.log("Process already loaded, skip init modules.")
                 return@onHandleLoadPackage
             }
             modules.forEach {
                 (it.java.constructors[0].newInstance() as Module).onHook(params)
             }
-            processLoaded = true
+        }
+        YukiXposedEvent.onInitZygote {
+            modulePath = it.modulePath
+            moduleRes = XModuleResources.createInstance(modulePath, null)
         }
     }
 }
