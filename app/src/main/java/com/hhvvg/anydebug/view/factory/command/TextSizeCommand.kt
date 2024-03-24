@@ -15,15 +15,16 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.hhvvg.anydebug
+package com.hhvvg.anydebug.view.factory.command
 
-import android.app.Application
-import com.hhvvg.anydebug.configurations.AllSettings
+import android.widget.TextView
 
-class App : Application() {
+/**
+ * Command for setting text size
+ */
+class TextSizeCommand(view: TextView, private val textSize: CharSequence) : BaseCommand<TextView>(view) {
 
-    override fun onCreate() {
-        super.onCreate()
-        AllSettings.init(this)
+    override fun onApply() {
+        textSize.toString().toFloatOrNull()?.let { targetView.textSize = it }
     }
 }

@@ -15,15 +15,11 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.hhvvg.anydebug
+package com.hhvvg.anydebug.view.factory.command
 
-import android.app.Application
-import com.hhvvg.anydebug.configurations.AllSettings
+import android.view.View
 
-class App : Application() {
-
-    override fun onCreate() {
-        super.onCreate()
-        AllSettings.init(this)
-    }
-}
+/**
+ * A abstract command for changing views' attributes
+ */
+abstract class BaseCommand<T : View>(protected val targetView: T) : FactoryCommand

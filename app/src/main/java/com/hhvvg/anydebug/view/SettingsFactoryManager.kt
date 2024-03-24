@@ -15,15 +15,23 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.hhvvg.anydebug
+package com.hhvvg.anydebug.view
 
-import android.app.Application
-import com.hhvvg.anydebug.configurations.AllSettings
+import android.view.View
+import android.widget.ImageView
+import android.widget.TextView
+import com.hhvvg.anydebug.view.factory.BasicViewFactory
+import com.hhvvg.anydebug.view.factory.ImageViewFactory
+import com.hhvvg.anydebug.view.factory.TextViewFactory
 
-class App : Application() {
+object SettingsFactoryManager {
 
-    override fun onCreate() {
-        super.onCreate()
-        AllSettings.init(this)
+    fun createFactory(target: View): SettingsFactory {
+        return when (target) {
+            is TextView -> TextViewFactory()
+            is ImageView -> ImageViewFactory()
+            else -> BasicViewFactory()
+        }
     }
+
 }

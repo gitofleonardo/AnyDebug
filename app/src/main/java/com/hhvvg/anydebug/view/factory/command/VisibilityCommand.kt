@@ -15,15 +15,16 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.hhvvg.anydebug
+package com.hhvvg.anydebug.view.factory.command
 
-import android.app.Application
-import com.hhvvg.anydebug.configurations.AllSettings
+import android.view.View
 
-class App : Application() {
+/**
+ * Command for setting visibility
+ */
+class VisibilityCommand(view: View, private val visibility: Int) : BaseCommand<View>(view) {
 
-    override fun onCreate() {
-        super.onCreate()
-        AllSettings.init(this)
+    override fun onApply() {
+        targetView.visibility = visibility
     }
 }

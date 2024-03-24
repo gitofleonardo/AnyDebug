@@ -15,15 +15,15 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.hhvvg.anydebug
+package com.hhvvg.anydebug.view.factory.command
 
-import android.app.Application
-import com.hhvvg.anydebug.configurations.AllSettings
+/**
+ * @see BaseCommand
+ */
+interface FactoryCommand {
 
-class App : Application() {
-
-    override fun onCreate() {
-        super.onCreate()
-        AllSettings.init(this)
-    }
+    /**
+     * Called when this command is being applied
+     */
+    fun onApply()
 }

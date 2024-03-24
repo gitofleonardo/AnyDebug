@@ -15,15 +15,15 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.hhvvg.anydebug
+package com.hhvvg.anydebug.view.factory.command
 
-import android.app.Application
-import com.hhvvg.anydebug.configurations.AllSettings
+import android.widget.ImageView
+import android.widget.ImageView.ScaleType
 
-class App : Application() {
+class ImageScaleTypeCommand(view: ImageView, private val scaleType: ScaleType) :
+    BaseCommand<ImageView>(view) {
 
-    override fun onCreate() {
-        super.onCreate()
-        AllSettings.init(this)
+    override fun onApply() {
+        targetView.scaleType = scaleType
     }
 }

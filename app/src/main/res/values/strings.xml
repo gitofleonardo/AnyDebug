@@ -1,4 +1,28 @@
 <resources>
     <string name="app_name">AnyDebugV2</string>
     <string name="tile_control_service_label">EditControl</string>
+
+    <string name="touch_indicator_desc">TouchIndicator</string>
+    <string name="sample_text">Hello world</string>
+    <string name="long_sample_text">Hello world.Hello world.Hello world.Hello world.Hello world.Hello world.Hello world.Hello world.Hello world.Hello world.Hello world.Hello world.Hello world.Hello world.Hello world.Hello world.Hello world.Hello world.Hello world.Hello world.Hello world.</string>
+    <string name="title_basic_view">Basics</string>
+    <string name="title_context">Context</string>
+    <string name="title_class">Class</string>
+    <string name="title_children">Children</string>
+    <string name="title_visibility">Visibility</string>
+    <string name="title_width">Width</string>
+    <string name="title_height">Height</string>
+    <string name="title_padding">Padding-L-T-R-B</string>
+    <string name="title_margin">Margin-L-T-R-B</string>
+    <string name="view_size_hint">-1 for match_parent, -2 for wrap_content</string>
+    <string name="view_ltrb_format_hint">Format: [left,top,right,bottom]</string>
+    <string name="title_text_view">TextView</string>
+    <string name="title_text_input">Text</string>
+    <string name="summary_text_input">Notes: All span info will be lost.</string>
+    <string name="title_text_size_input">Text Size</string>
+    <string name="title_text_max_lines_input">Max Lines</string>
+    <string name="title_image_view">ImageView</string>
+    <string name="image_view_hint">Only supports http/https url now.</string>
+    <string name="title_image_url">Image Url</string>
+    <string name="title_image_scale_type">Scale Type</string>
 </resources>

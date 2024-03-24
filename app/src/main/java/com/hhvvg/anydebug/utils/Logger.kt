@@ -15,15 +15,23 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.hhvvg.anydebug
+package com.hhvvg.anydebug.utils
 
-import android.app.Application
-import com.hhvvg.anydebug.configurations.AllSettings
+import de.robv.android.xposed.XposedBridge
 
-class App : Application() {
+class Logger {
+    companion object {
+        fun log(tag: String, log: String, t: Throwable? = null) {
+            XposedBridge.log("${tag}: $log")
+            t?.let { log(it) }
+        }
 
-    override fun onCreate() {
-        super.onCreate()
-        AllSettings.init(this)
+        fun log(log: String) {
+            XposedBridge.log(log)
+        }
+
+        fun log(t: Throwable) {
+            XposedBridge.log(t)
+        }
     }
 }

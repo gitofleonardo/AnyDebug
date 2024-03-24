@@ -17,19 +17,12 @@
 
 package com.hhvvg.anydebug
 
-import android.database.ContentObserver
-import android.os.Build
-import android.os.Handler
-import android.os.Looper
-import android.provider.Settings
+import android.annotation.SuppressLint
 import android.service.quicksettings.Tile
 import android.service.quicksettings.TileService
-import android.util.Log
-import androidx.annotation.RequiresApi
-import com.hhvvg.libinject.configurations.AllSettings
-import com.hhvvg.libinject.configurations.CONTENT_URI
+import com.hhvvg.anydebug.configurations.AllSettings
+import com.hhvvg.anydebug.configurations.ConfigChangedReceiver
 
-@RequiresApi(Build.VERSION_CODES.N)
 class TileControlService : TileService() {
 
     private var stateEnabled: Boolean
@@ -39,34 +32,28 @@ class TileControlService : TileService() {
             qsTile.updateTile()
         }
 
-    private val observer = object : ContentObserver(Handler(Looper.myLooper() ?: Looper.getMainLooper())) {
-        override fun onChange(selfChange: Boolean) {
-            super.onChange(selfChange)
-            stateEnabled = AllSettings.editEnabled.value
-        }
+    private val configReceiver = ConfigChangedReceiver {
+        stateEnabled = AllSettings.editEnabled
     }
 
+    @SuppressLint("UnspecifiedRegisterReceiverFlag")
     override fun onCreate() {
         super.onCreate()
-        contentResolver.registerContentObserver(
-            CONTENT_URI,
-            true,
-            observer
-        )
+        ConfigChangedReceiver.registerConfigReceiver(this, configReceiver)
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        contentResolver.unregisterContentObserver(observer)
+        unregisterReceiver(configReceiver)
     }
 
     override fun onTileAdded() {
         super.onTileAdded()
-        stateEnabled = AllSettings.editEnabled.value
+        stateEnabled = AllSettings.editEnabled
     }
 
     override fun onClick() {
         super.onClick()
-        AllSettings.editEnabled.value = !AllSettings.editEnabled.value
+        AllSettings.editEnabled = !AllSettings.editEnabled
     }
 }

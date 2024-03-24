@@ -15,15 +15,19 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.hhvvg.anydebug
+package com.hhvvg.anydebug.view.factory.command
 
-import android.app.Application
-import com.hhvvg.anydebug.configurations.AllSettings
+import android.widget.ImageView
+import com.bumptech.glide.Glide
 
-class App : Application() {
+/**
+ * Command for loading url into a ImageView
+ */
+class ImageUrlCommand(view: ImageView, private val url: String) : BaseCommand<ImageView>(view) {
 
-    override fun onCreate() {
-        super.onCreate()
-        AllSettings.init(this)
+    override fun onApply() {
+        Glide.with(targetView)
+            .load(url)
+            .into(targetView)
     }
 }

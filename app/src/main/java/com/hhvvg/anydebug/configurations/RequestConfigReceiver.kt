@@ -15,15 +15,28 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.hhvvg.anydebug
+package com.hhvvg.anydebug.configurations
 
-import android.app.Application
-import com.hhvvg.anydebug.configurations.AllSettings
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import com.hhvvg.anydebug.utils.APPLICATION_ID
 
-class App : Application() {
+private const val ACTION_REQUEST_CONFIG = "com.hhvvg.anydebug.action_request_config"
 
-    override fun onCreate() {
-        super.onCreate()
-        AllSettings.init(this)
+class RequestConfigReceiver : BroadcastReceiver() {
+
+    override fun onReceive(context: Context, intent: Intent?) {
+        ConfigChangedReceiver.sendConfigBroadcast(context, AllSettings.editEnabled)
+    }
+
+    companion object {
+        @JvmStatic
+        fun requestConfigBroadcast(context: Context) {
+            val intent = Intent(ACTION_REQUEST_CONFIG).apply {
+                setPackage(APPLICATION_ID)
+            }
+            context.sendBroadcast(intent)
+        }
     }
 }

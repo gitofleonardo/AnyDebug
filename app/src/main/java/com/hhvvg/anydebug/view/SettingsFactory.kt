@@ -15,15 +15,33 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.hhvvg.anydebug
+package com.hhvvg.anydebug.view
 
-import android.app.Application
-import com.hhvvg.anydebug.configurations.AllSettings
+import android.view.View
+import android.view.ViewGroup
 
-class App : Application() {
+/**
+ * Basic factory for creating settings for a View
+ */
+interface SettingsFactory {
 
-    override fun onCreate() {
-        super.onCreate()
-        AllSettings.init(this)
-    }
+    /**
+     * Creating settings
+     *
+     * @param targetView target view for mod
+     * @param parent parent view of settings
+     * @param outViews all settings contents
+     */
+    fun onCreate(targetView: View, parent: ViewGroup, outViews: MutableList<SettingContent>)
+
+    /**
+     * Commit all pending settings
+     */
+    fun commit()
+
 }
+
+/**
+ * Settings identity
+ */
+data class SettingContent(val view: View, val title: CharSequence)

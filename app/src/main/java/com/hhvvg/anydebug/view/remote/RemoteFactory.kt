@@ -15,15 +15,20 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.hhvvg.anydebug
+package com.hhvvg.anydebug.view.remote
 
-import android.app.Application
-import com.hhvvg.anydebug.configurations.AllSettings
+import android.content.Context
+import android.view.View
+import android.view.ViewGroup
 
-class App : Application() {
+/**
+ * Factory for invoking remote codes
+ */
+interface RemoteFactory {
 
-    override fun onCreate() {
-        super.onCreate()
-        AllSettings.init(this)
-    }
+    /**
+     * Inflate a layout from remote source
+     */
+    fun onInflateView(context: Context, name: String,
+                      root: ViewGroup? = null, attachToRoot: Boolean = false): View
 }

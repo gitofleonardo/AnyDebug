@@ -15,15 +15,20 @@
  *     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package com.hhvvg.anydebug
+package com.hhvvg.anydebug.modules
 
 import android.app.Application
+import com.hhvvg.anydebug.Module
 import com.hhvvg.anydebug.configurations.AllSettings
+import com.hhvvg.anydebug.utils.doBefore
+import de.robv.android.xposed.callbacks.XC_LoadPackage
 
-class App : Application() {
+class ApplicationModule : Module {
 
-    override fun onCreate() {
-        super.onCreate()
-        AllSettings.init(this)
+    override fun onHook(param: XC_LoadPackage.LoadPackageParam) {
+        Application::class.doBefore("onCreate") {
+            AllSettings.init(context)
+        }
     }
+
 }

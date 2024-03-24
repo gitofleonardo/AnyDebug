@@ -17,13 +17,15 @@
 
 package com.hhvvg.anydebug
 
-import android.app.Application
-import com.hhvvg.anydebug.configurations.AllSettings
+import android.app.AndroidAppHelper
+import android.content.Context
+import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam
 
-class App : Application() {
+interface Module {
 
-    override fun onCreate() {
-        super.onCreate()
-        AllSettings.init(this)
-    }
+    val context: Context
+        get() = AndroidAppHelper.currentApplication()
+
+    fun onHook(param: LoadPackageParam)
+
 }
