@@ -18,12 +18,10 @@
 package com.hhvvg.anydebug
 
 import android.app.Application
-import com.hhvvg.anydebug.configurations.AllSettings
 
 class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        AllSettings.init(this)
     }
 }

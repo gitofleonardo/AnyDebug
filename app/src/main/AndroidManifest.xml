@@ -24,7 +24,7 @@
             android:value="Debug your views, change attributes of views." />
         <meta-data
             android:name="xposedminversion"
-            android:value="53" />
+            android:value="93" />
         <activity
             android:name=".MainActivity"
             android:exported="true">
@@ -48,14 +48,6 @@
                 android:name="android.service.quicksettings.TOGGLEABLE_TILE"
                 android:value="true" />
         </service>
-
-        <receiver
-            android:name=".configurations.RequestConfigReceiver"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="com.hhvvg.anydebug.action_request_config" />
-            </intent-filter>
-        </receiver>
     </application>
 
 </manifest>

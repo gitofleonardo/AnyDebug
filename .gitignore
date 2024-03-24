@@ -13,3 +13,5 @@
 .externalNativeBuild
 .cxx
 local.properties
+/app/src/main/assets/xposed_init
+/app/src/main/resources/META-INF/yukihookapi_init

@@ -20,8 +20,8 @@ package com.hhvvg.anydebug
 import android.annotation.SuppressLint
 import android.service.quicksettings.Tile
 import android.service.quicksettings.TileService
-import com.hhvvg.anydebug.configurations.AllSettings
 import com.hhvvg.anydebug.configurations.ConfigChangedReceiver
+import com.hhvvg.anydebug.configurations.ModuleSettings.Companion.moduleSettings
 
 class TileControlService : TileService() {
 
@@ -32,8 +32,11 @@ class TileControlService : TileService() {
             qsTile.updateTile()
         }
 
+    private val settings by lazy {
+        moduleSettings
+    }
     private val configReceiver = ConfigChangedReceiver {
-        stateEnabled = AllSettings.editEnabled
+        stateEnabled = settings.editEnabled
     }
 
     @SuppressLint("UnspecifiedRegisterReceiverFlag")
@@ -49,11 +52,12 @@ class TileControlService : TileService() {
 
     override fun onTileAdded() {
         super.onTileAdded()
-        stateEnabled = AllSettings.editEnabled
+        stateEnabled = settings.editEnabled
     }
 
     override fun onClick() {
         super.onClick()
-        AllSettings.editEnabled = !AllSettings.editEnabled
+        settings.editEnabled = !settings.editEnabled
+        ConfigChangedReceiver.sendConfigBroadcast(this, settings.editEnabled)
     }
 }

@@ -36,7 +36,7 @@ import androidx.core.view.isVisible
 import com.hhvvg.anydebug.R
 import com.hhvvg.anydebug.utils.call
 import com.hhvvg.anydebug.utils.override
-import com.hhvvg.anydebug.view.remote.RemoteFactoryLoader
+import com.hhvvg.anydebug.view.remote.RemoteFactoryImpl
 import de.robv.android.xposed.XC_MethodHook.Unhook
 import java.util.function.Consumer
 
@@ -56,7 +56,7 @@ class ActivityPreviewWindow(private val activity: Activity) : Dialog(activity),
     private val previewList: View by lazy { contentView.findViewById(R.id.preview_list) }
 
     private val remoteInflater by lazy {
-        RemoteFactoryLoader(activity).getRemoteFactory()
+        RemoteFactoryImpl()
     }
 
     private val windowController by lazy {

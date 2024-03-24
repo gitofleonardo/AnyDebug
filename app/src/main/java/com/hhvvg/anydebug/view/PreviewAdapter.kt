@@ -25,7 +25,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.hhvvg.anydebug.R
-import com.hhvvg.anydebug.view.remote.RemoteFactoryLoader
+import com.hhvvg.anydebug.view.remote.RemoteFactoryImpl
 
 /**
  * Adapter for PreviewList
@@ -34,7 +34,7 @@ class PreviewAdapter(context: Context) : Adapter<PreviewHolder>() {
 
     private var onPreviewClickListener: OnClickListener? = null
     private val previewItems = mutableListOf<ViewItem>()
-    private val remoteInflater = RemoteFactoryLoader(context).getRemoteFactory()
+    private val remoteInflater = RemoteFactoryImpl()
 
     override fun getItemCount(): Int {
         return previewItems.size

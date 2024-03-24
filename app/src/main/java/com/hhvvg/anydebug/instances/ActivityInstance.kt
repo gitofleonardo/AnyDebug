@@ -22,7 +22,7 @@ import android.app.Application.ActivityLifecycleCallbacks
 import android.os.Bundle
 import com.hhvvg.anydebug.Instance
 import com.hhvvg.anydebug.configurations.ConfigChangedReceiver
-import com.hhvvg.anydebug.configurations.RequestConfigReceiver
+import com.hhvvg.anydebug.configurations.ModuleSettings.Companion.moduleSettings
 import com.hhvvg.anydebug.utils.doAfter
 import com.hhvvg.anydebug.view.ActivityPreviewWindow
 import de.robv.android.xposed.XC_MethodHook.Unhook
@@ -31,6 +31,11 @@ class ActivityInstance(private val activity: Activity) : Instance, ActivityLifec
 
     private var previewWindow: ActivityPreviewWindow? = null
 
+    private val settings by lazy {
+        activity.moduleSettings
+    }
+    private val shouldShowWindow: Boolean
+        get() = settings.editEnabled
     private var windowFocusHook: Unhook? = null
     private val configReceiver by lazy {
         ConfigChangedReceiver {
@@ -43,7 +48,7 @@ class ActivityInstance(private val activity: Activity) : Instance, ActivityLifec
         ConfigChangedReceiver.registerConfigReceiver(activity, configReceiver)
         windowFocusHook = Activity::class.doAfter("onWindowFocusChanged", Boolean::class.java) {
             if (it.args[0] as Boolean) {
-                RequestConfigReceiver.requestConfigBroadcast(activity)
+                onDisplayWindowChanged(shouldShowWindow)
             }
         }
     }

@@ -18,7 +18,6 @@
 package com.hhvvg.anydebug
 
 import com.hhvvg.anydebug.modules.ActivityModule
-import com.hhvvg.anydebug.modules.ApplicationModule
 import com.hhvvg.anydebug.utils.Logger
 import com.highcapable.yukihookapi.annotation.xposed.InjectYukiHookWithXposed
 import com.highcapable.yukihookapi.hook.xposed.bridge.event.YukiXposedEvent
@@ -30,7 +29,6 @@ object HookEntry : IYukiHookXposedInit {
     private var processLoaded = false
 
     private val modules = arrayOf<KClass<*>>(
-        ApplicationModule::class,
         ActivityModule::class,
     )
 

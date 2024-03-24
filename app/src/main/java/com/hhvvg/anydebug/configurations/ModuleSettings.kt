@@ -17,25 +17,25 @@
 
 package com.hhvvg.anydebug.configurations
 
-import android.annotation.SuppressLint
 import android.content.Context
+import com.highcapable.yukihookapi.hook.factory.prefs
+import com.highcapable.yukihookapi.hook.xposed.prefs.YukiHookPrefsBridge
 
-const val SETTINGS_SP_NAME = "settings_shared_preferences.xml"
+private const val MODULE_SETTINGS_SP_NAME = "module_settings_shared_preferences.xml"
 private const val KEY_EDIT_ENABLED = "key_edit_enabled"
 
-@SuppressLint("StaticFieldLeak")
-object AllSettings {
-    private lateinit var context: Context
-    private val preferences by lazy { context.getSharedPreferences(SETTINGS_SP_NAME, Context.MODE_PRIVATE) }
+class ModuleSettings private constructor(private val context: Context) {
+    private val prefs: YukiHookPrefsBridge
+        get() = context.prefs(MODULE_SETTINGS_SP_NAME)
 
     var editEnabled: Boolean
-        get() = preferences.getBoolean(KEY_EDIT_ENABLED, true)
+        get() = prefs.getBoolean(KEY_EDIT_ENABLED, true)
         set(value) {
-            preferences.edit().putBoolean(KEY_EDIT_ENABLED, value).apply()
-            ConfigChangedReceiver.sendConfigBroadcast(context, value)
+            prefs.edit().putBoolean(KEY_EDIT_ENABLED, value).apply()
         }
 
-    fun init(context: Context) {
-        AllSettings.context = context
+    companion object {
+        val Context.moduleSettings
+            get() = ModuleSettings(this)
     }
 }
