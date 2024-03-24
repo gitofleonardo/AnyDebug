@@ -19,9 +19,11 @@ package com.hhvvg.libinject.view
 
 import android.animation.Animator
 import android.animation.AnimatorSet
+import android.graphics.Color
 import android.graphics.PixelFormat
 import android.graphics.PointF
 import android.graphics.Rect
+import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.util.FloatProperty
 import android.view.GestureDetector
@@ -245,7 +247,7 @@ class WindowController(
         flags = LayoutParams.FLAG_NOT_TOUCH_MODAL or
                 LayoutParams.FLAG_LAYOUT_NO_LIMITS or
                 LayoutParams.FLAG_NOT_FOCUSABLE
-        window.setBackgroundDrawable(null)
+        window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
             setCanPlayMoveAnimation(false)
         }
