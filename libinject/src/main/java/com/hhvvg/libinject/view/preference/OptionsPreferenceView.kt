@@ -30,6 +30,9 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import com.hhvvg.libinject.R
 import java.lang.IllegalArgumentException
 
+/**
+ * Preference for options
+ */
 class OptionsPreferenceView(
     context: Context,
     attrs: AttributeSet?,
@@ -38,39 +41,44 @@ class OptionsPreferenceView(
 ) :
     ConstraintLayout(context, attrs, defStyleAttr, defStyleRes), OnClickListener {
 
-    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int)
-            : this(context, attrs, defStyleAttr, 0)
+    private var onRadioChangedListener: OnCheckedChangeListener? = null
+    private val radioGroup: RadioGroup by lazy { findViewById(R.id.radio_group) }
 
-    constructor(context: Context, attrs: AttributeSet?)
-
-            : this(context, attrs, 0)
-
-    constructor(context: Context)
-            : this(context, null)
+    private val summaryView: TextView
+        get() = findViewById(R.id.summary_view)
 
     private val titleView: TextView
         get() = findViewById(R.id.title_view)
-    private val summaryView: TextView
-        get() = findViewById(R.id.summary_view)
-    private val radioGroup: RadioGroup by lazy { findViewById(R.id.radio_group) }
+
     private val options: Array<CharSequence>
-    private var onRadioChangedListener: OnCheckedChangeListener? = null
+
+    var selectedIndex: Int = -1
+        set(value) {
+            field = value
+            summary = options[value]
+        }
 
     var summary: CharSequence?
         get() = summaryView.text
         set(value) {
             summaryView.text = value
         }
+
     var title: CharSequence?
         get() = titleView.text
         set(value) {
             titleView.text = value
         }
-    var selectedIndex: Int = -1
-        set(value) {
-            field = value
-            summary = options[value]
-        }
+
+    constructor(context: Context)
+            : this(context, null)
+
+    constructor(context: Context, attrs: AttributeSet?)
+
+            : this(context, attrs, 0)
+
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int)
+            : this(context, attrs, defStyleAttr, 0)
 
     init {
         inflate(context, R.layout.layout_options_preference_view, this)
@@ -92,6 +100,10 @@ class OptionsPreferenceView(
         }
     }
 
+    fun setOnCheckChangedListener(listener: OnCheckedChangeListener) {
+        onRadioChangedListener = listener
+    }
+
     private fun fillRadio() {
         options.forEachIndexed { index, charSequence ->
             val radio = LayoutInflater.from(context)
@@ -107,7 +119,4 @@ class OptionsPreferenceView(
         }
     }
 
-    fun setOnCheckChangedListener(listener: OnCheckedChangeListener) {
-        onRadioChangedListener = listener
-    }
 }

@@ -64,4 +64,5 @@ class MainInjectHook : IXposedHookLoadPackage, IXposedHookZygoteInit {
             return XModuleResources.createInstance(path, null)
         }
     }
+
 }

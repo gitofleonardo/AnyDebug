@@ -23,34 +23,39 @@ import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.hhvvg.libinject.R
 
+/**
+ * Basic preference with a title and a summary
+ */
 class PreferenceView(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) :
     ConstraintLayout(context, attrs, defStyleAttr, defStyleRes) {
 
-    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int)
-            : this(context, attrs, defStyleAttr, 0)
-
-    constructor(context: Context, attrs: AttributeSet?)
-
-            : this(context, attrs, 0)
-
-    constructor(context: Context)
-            : this(context, null)
+    private val summaryView: TextView
+        get() = findViewById(R.id.summary_view)
 
     private val titleView: TextView
         get() = findViewById(R.id.title_view)
-    private val summaryView: TextView
-        get() = findViewById(R.id.summary_view)
 
     var summary: CharSequence?
         get() = summaryView.text
         set(value) {
             summaryView.text = value
         }
+
     var title: CharSequence?
         get() = titleView.text
         set(value) {
             titleView.text = value
         }
+
+    constructor(context: Context)
+            : this(context, null)
+
+    constructor(context: Context, attrs: AttributeSet?)
+
+            : this(context, attrs, 0)
+
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int)
+            : this(context, attrs, defStyleAttr, 0)
 
     init {
         inflate(context, R.layout.layout_preference_view, this)
@@ -59,4 +64,5 @@ class PreferenceView(context: Context, attrs: AttributeSet?, defStyleAttr: Int, 
         summaryView.text = ta.getText(R.styleable.PreferenceView_preference_summary)
         ta.recycle()
     }
+
 }

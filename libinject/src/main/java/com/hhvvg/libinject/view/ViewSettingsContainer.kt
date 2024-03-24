@@ -24,12 +24,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.LinearLayout
-import android.widget.ScrollView
 import android.widget.TextView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.hhvvg.libinject.R
 import java.util.function.Consumer
 
+/**
+ * Parent container for settings
+ */
 class ViewSettingsContainer(
     context: Context,
     attrs: AttributeSet?,
@@ -37,27 +39,28 @@ class ViewSettingsContainer(
     defStyleRes: Int
 ) : FrameLayout(context, attrs, defStyleAttr, defStyleRes) {
 
-    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int)
-            : this(context, attrs, defStyleAttr, 0)
+    private var factory: SettingsFactory? = null
+    private var onCommitListener: Runnable? = null
+    private var onViewRemoveListener: Consumer<View>? = null
+    private var targetView: View? = null
+
+    private val okButton by lazy {
+        findViewById<FloatingActionButton>(R.id.ok_button)
+    }
+
+    private val settingsContainer by lazy {
+        findViewById<LinearLayout>(R.id.settings_container)
+    }
+
+    constructor(context: Context)
+            : this(context, null)
 
     constructor(context: Context, attrs: AttributeSet?)
 
             : this(context, attrs, 0)
 
-    constructor(context: Context)
-            : this(context, null)
-
-    private val settingsContainer by lazy {
-        findViewById<LinearLayout>(R.id.settings_container)
-    }
-    private val okButton by lazy {
-        findViewById<FloatingActionButton>(R.id.ok_button)
-    }
-
-    private var targetView: View? = null
-    private var factory: SettingsFactory? = null
-    private var onViewRemoveListener: Consumer<View>? = null
-    private var onCommitListener: Runnable? = null
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int)
+            : this(context, attrs, defStyleAttr, 0)
 
     init {
         inflate(context, R.layout.layout_view_settings_container, this)
@@ -65,11 +68,6 @@ class ViewSettingsContainer(
             factory?.commit()
             onCommitListener?.run()
         }
-    }
-
-    fun setTargetView(target: View) {
-        targetView = target
-        recreateSettings()
     }
 
     fun removeTargetView() {
@@ -81,12 +79,28 @@ class ViewSettingsContainer(
         }
     }
 
+    fun setOnCommitListener(listener: Runnable) {
+        onCommitListener = listener
+    }
+
     fun setOnViewRemoveListener(listener: Consumer<View>) {
         onViewRemoveListener = listener
     }
 
-    fun setOnCommitListener(listener: Runnable) {
-        onCommitListener = listener
+    fun setTargetView(target: View) {
+        targetView = target
+        recreateSettings()
+    }
+
+    private fun clearSettings() {
+        settingsContainer.removeAllViews()
+    }
+
+    private fun createTitle(titleText: CharSequence): TextView {
+        val title =
+            LayoutInflater.from(context).inflate(R.layout.layout_title, this, false) as TextView
+        title.text = titleText
+        return title
     }
 
     private fun recreateSettings() {
@@ -102,14 +116,4 @@ class ViewSettingsContainer(
         }
     }
 
-    private fun clearSettings() {
-        settingsContainer.removeAllViews()
-    }
-
-    private fun createTitle(titleText: CharSequence): TextView {
-        val title =
-            LayoutInflater.from(context).inflate(R.layout.layout_title, this, false) as TextView
-        title.text = titleText
-        return title
-    }
 }

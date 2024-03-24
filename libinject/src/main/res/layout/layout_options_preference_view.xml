@@ -35,30 +35,30 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:textColor="?attr/colorOnSurfaceVariant"
-        android:maxLines="1"
-        android:ellipsize="end"
-        android:textSize="12sp"
         android:id="@+id/summary_view"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
+        android:ellipsize="end"
         android:focusable="true"
         android:gravity="end"
         android:longClickable="true"
+        android:maxLines="1"
         android:text="@string/sample_text"
+        android:textColor="?attr/colorOnSurfaceVariant"
         android:textIsSelectable="true"
+        android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="@id/title_view"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/title_view"
         app:layout_constraintTop_toTopOf="@id/title_view" />
 
     <RadioGroup
+        android:id="@+id/radio_group"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:animateLayoutChanges="true"
         android:gravity="end|center_vertical"
         android:orientation="vertical"
-        app:layout_constraintTop_toBottomOf="@id/title_view"
-        android:id="@+id/radio_group"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        app:layout_constraintTop_toBottomOf="@id/title_view" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -22,8 +22,10 @@ import android.content.Context
 import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam
 
 interface Module {
+
     val context: Context
         get() = AndroidAppHelper.currentApplication()
 
     fun onHook(param: LoadPackageParam)
+
 }

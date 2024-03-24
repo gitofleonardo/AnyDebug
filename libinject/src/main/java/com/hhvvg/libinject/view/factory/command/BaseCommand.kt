@@ -19,5 +19,7 @@ package com.hhvvg.libinject.view.factory.command
 
 import android.view.View
 
-abstract class BaseCommand<T : View>(protected val targetView: T) : FactoryCommand {
-}
+/**
+ * A abstract command for changing views' attributes
+ */
+abstract class BaseCommand<T : View>(protected val targetView: T) : FactoryCommand

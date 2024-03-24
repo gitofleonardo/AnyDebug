@@ -28,6 +28,9 @@ import androidx.core.widget.addTextChangedListener
 import com.hhvvg.libinject.R
 import java.util.function.Consumer
 
+/**
+ * Preference for text input
+ */
 class InputPreferenceView(
     context: Context,
     attrs: AttributeSet?,
@@ -36,48 +39,35 @@ class InputPreferenceView(
 ) :
     ConstraintLayout(context, attrs, defStyleAttr, defStyleRes) {
 
-    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int)
-            : this(context, attrs, defStyleAttr, 0)
+    private var textListener: Consumer<CharSequence>? = null
 
-    constructor(context: Context, attrs: AttributeSet?)
-
-            : this(context, attrs, 0)
-
-    constructor(context: Context)
-            : this(context, null)
-
-    private val titleView: TextView
-        get() = findViewById(R.id.title_view)
-    private val summaryView: TextView
-        get() = findViewById(R.id.summary_view)
     private val inputView: EditText
         get() = findViewById(R.id.input_view)
 
-    var title: CharSequence?
-        get() = titleView.text
-        set(value) {
-            titleView.text = value
-        }
+    private val summaryView: TextView
+        get() = findViewById(R.id.summary_view)
+
+    private val titleView: TextView
+        get() = findViewById(R.id.title_view)
+
     var hint: CharSequence?
         get() = inputView.hint
         set(value) {
             inputView.hint = value
         }
+
     var inputType: Int
         get() = inputView.inputType
         set(value) {
             inputView.inputType = value
         }
+
     var maxLines: Int
         get() = inputView.maxLines
         set(value) {
             inputView.maxLines = value
         }
-    var text: CharSequence?
-        get() = inputView.text
-        set(value) {
-            inputView.setText(value?.toString() ?: "")
-        }
+
     var summary: CharSequence?
         get() = summaryView.text
         set(value) {
@@ -85,7 +75,27 @@ class InputPreferenceView(
             summaryView.isVisible = !value.isNullOrEmpty()
         }
 
-    private var textListener: Consumer<CharSequence>? = null
+    var text: CharSequence?
+        get() = inputView.text
+        set(value) {
+            inputView.setText(value?.toString() ?: "")
+        }
+
+    var title: CharSequence?
+        get() = titleView.text
+        set(value) {
+            titleView.text = value
+        }
+
+    constructor(context: Context)
+            : this(context, null)
+
+    constructor(context: Context, attrs: AttributeSet?)
+
+            : this(context, attrs, 0)
+
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int)
+            : this(context, attrs, defStyleAttr, 0)
 
     init {
         inflate(context, R.layout.layout_input_preference_view, this)
@@ -111,4 +121,5 @@ class InputPreferenceView(
     fun setOnTextChangedListener(listener: Consumer<CharSequence>) {
         textListener = listener
     }
+
 }

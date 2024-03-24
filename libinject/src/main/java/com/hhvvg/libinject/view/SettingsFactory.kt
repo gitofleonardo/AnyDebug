@@ -21,12 +21,28 @@ import android.content.Context
 import android.view.View
 import android.view.ViewGroup
 
+/**
+ * Basic factory for creating settings for a View
+ */
 interface SettingsFactory {
 
+    /**
+     * Creating settings
+     *
+     * @param targetView target view for mod
+     * @param parent parent view of settings
+     * @param outViews all settings contents
+     */
     fun onCreate(targetView: View, parent: ViewGroup, outViews: MutableList<SettingContent>)
 
+    /**
+     * Commit all pending settings
+     */
     fun commit()
 
 }
 
+/**
+ * Settings identity
+ */
 data class SettingContent(val view: View, val title: CharSequence)

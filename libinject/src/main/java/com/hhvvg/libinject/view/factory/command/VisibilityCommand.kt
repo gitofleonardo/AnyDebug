@@ -19,6 +19,9 @@ package com.hhvvg.libinject.view.factory.command
 
 import android.view.View
 
+/**
+ * Command for setting visibility
+ */
 class VisibilityCommand(view: View, private val visibility: Int) : BaseCommand<View>(view) {
 
     override fun onApply() {

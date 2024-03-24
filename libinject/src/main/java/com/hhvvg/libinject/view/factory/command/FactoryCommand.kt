@@ -17,6 +17,13 @@
 
 package com.hhvvg.libinject.view.factory.command
 
+/**
+ * @see BaseCommand
+ */
 interface FactoryCommand {
+
+    /**
+     * Called when this command is being applied
+     */
     fun onApply()
 }

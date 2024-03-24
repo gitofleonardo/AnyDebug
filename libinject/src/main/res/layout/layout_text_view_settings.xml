@@ -16,22 +16,22 @@
   -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
-    android:background="@drawable/display_card_background">
+    android:background="@drawable/display_card_background"
+    android:orientation="vertical">
 
     <com.hhvvg.libinject.view.preference.InputPreferenceView
-        android:maxLines="2"
-        android:inputType="text|textMultiLine"
         android:id="@+id/text_input"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
+        android:inputType="text|textMultiLine"
+        android:maxLines="2"
         android:text="@string/sample_text"
-        app:preference_title="@string/title_text_input"
-        app:preference_summary="@string/summary_text_input"/>
+        app:preference_summary="@string/summary_text_input"
+        app:preference_title="@string/title_text_input" />
 
     <View
         android:layout_width="match_parent"
@@ -40,11 +40,11 @@
         android:background="?attr/colorSurface" />
 
     <com.hhvvg.libinject.view.preference.InputPreferenceView
-        android:inputType="numberSigned|numberDecimal|number"
         android:id="@+id/text_size_input"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:inputType="numberSigned|numberDecimal|number"
         android:text="@string/sample_text"
-        app:preference_title="@string/title_text_size_input"/>
+        app:preference_title="@string/title_text_size_input" />
 
 </LinearLayout>

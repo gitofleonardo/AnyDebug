@@ -20,26 +20,28 @@ package com.hhvvg.libinject.view
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
-import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.hhvvg.libinject.R
 import com.rbrooks.indefinitepagerindicator.IndefinitePagerIndicator
-import java.util.function.Consumer
 
+/**
+ * Preview view for a set of views
+ */
 class PreviewList(context: Context, attrs: AttributeSet?, defStyleAttr: Int) :
     RecyclerView(context, attrs, defStyleAttr) {
+
+    private val indicatorView: IndefinitePagerIndicator?
+        get() = (parent as View).findViewById(R.id.page_indicator)
+
+    private val previewAdapter = PreviewAdapter(context)
+
+    constructor(context: Context) : this(context, null)
+
     constructor(context: Context, attrs: AttributeSet?)
 
             : this(context, attrs, 0)
-
-    constructor(context: Context)
-            : this(context, null)
-
-    private val previewAdapter = PreviewAdapter(context)
-    private val indicatorView: IndefinitePagerIndicator?
-        get() = (parent as View).findViewById(R.id.page_indicator)
 
     init {
         adapter = previewAdapter
@@ -52,11 +54,6 @@ class PreviewList(context: Context, attrs: AttributeSet?, defStyleAttr: Int) :
         indicatorView?.attachToRecyclerView(this)
     }
 
-    fun updatePreviewItems(items: List<View>) {
-        previewAdapter.updatePreviewItems(items.map { ViewItem(it) })
-        indicatorView?.requestLayout()
-    }
-
     fun removePreviewView(view: View) {
         previewAdapter.removePreviewView(view)
         indicatorView?.requestLayout()
@@ -65,4 +62,10 @@ class PreviewList(context: Context, attrs: AttributeSet?, defStyleAttr: Int) :
     fun setOnPreviewClickListener(listener: OnClickListener) {
         previewAdapter.setOnClickListener(listener)
     }
+
+    fun updatePreviewItems(items: List<View>) {
+        previewAdapter.updatePreviewItems(items.map { ViewItem(it) })
+        indicatorView?.requestLayout()
+    }
+
 }

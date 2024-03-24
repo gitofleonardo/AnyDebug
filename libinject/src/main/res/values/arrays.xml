@@ -16,8 +16,7 @@
   -->
 
 <resources>
-    <array name="required_packages">
-    </array>
+    <array name="required_packages"></array>
 
     <string-array name="visibility_array">
         <item>Visible</item>

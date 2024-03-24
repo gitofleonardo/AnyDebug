@@ -21,9 +21,9 @@
     android:background="@null"
     android:button="@drawable/button_radio"
     android:layoutDirection="rtl"
+    android:paddingVertical="3dp"
     android:paddingStart="15dp"
     android:paddingEnd="0dp"
     android:text="@string/sample_text"
     android:textAlignment="textEnd"
-    android:paddingVertical="3dp"
-    android:textColor="?attr/colorOnSurfaceVariant"/>
+    android:textColor="?attr/colorOnSurfaceVariant" />

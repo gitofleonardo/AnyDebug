@@ -17,11 +17,30 @@
 
 package com.hhvvg.libinject.view.remote
 
+import android.annotation.SuppressLint
 import android.content.Context
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.hhvvg.libinject.utils.createRemotePackageContext
 
-interface RemoteViewFactory {
-    fun onInflateView(context: Context, name: String,
-                      root: ViewGroup? = null, attachToRoot: Boolean = false): View
+/**
+ * Impl for RemoteFactory
+ */
+class RemoteFactoryImpl : RemoteFactory {
+
+    @SuppressLint("DiscouragedApi")
+    override fun onInflateView(
+        context: Context, name: String, root: ViewGroup?,
+        attachToRoot: Boolean
+    ): View {
+        val packageContext = context.createRemotePackageContext()
+        val resId = packageContext.resources
+            .getIdentifier(name, "layout", packageContext.packageName)
+        if (resId > 0) {
+            return LayoutInflater.from(packageContext).inflate(resId, root, attachToRoot)
+        }
+        throw RuntimeException("Error inflating remote layout.")
+    }
+
 }

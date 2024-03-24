@@ -26,11 +26,11 @@
         android:id="@+id/mini_window_container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
         app:layout_constraintBottom_toTopOf="@id/bottom_drag_bar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginBottom="5dp">
+        app:layout_constraintTop_toTopOf="parent">
 
         <com.hhvvg.libinject.view.PreviewList
             android:id="@+id/preview_list"
@@ -81,9 +81,9 @@
 
     <com.hhvvg.libinject.view.ViewSettingsContainer
         android:id="@+id/max_window_container"
-        android:visibility="gone"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:visibility="gone" />
 
     <FrameLayout
         android:id="@+id/bottom_drag_bar"

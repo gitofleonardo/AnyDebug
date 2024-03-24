@@ -27,16 +27,12 @@ import android.os.Looper
 import com.hhvvg.libinject.Instance
 import com.hhvvg.libinject.configurations.AllSettings
 import com.hhvvg.libinject.configurations.CONTENT_URI
-import com.hhvvg.libinject.modules.ActivityModule
-import com.hhvvg.libinject.utils.Logger
 import com.hhvvg.libinject.utils.doAfter
 import com.hhvvg.libinject.view.ActivityPreviewWindow
 
 class ActivityInstance(private val activity: Activity) : Instance, ActivityLifecycleCallbacks {
 
-    companion object {
-        private val TAG = ActivityModule::class.java.simpleName
-    }
+    private var previewWindow: ActivityPreviewWindow? = null
 
     private val observer by lazy {
         object : ContentObserver(Handler(Looper.getMainLooper())) {
@@ -45,18 +41,49 @@ class ActivityInstance(private val activity: Activity) : Instance, ActivityLifec
             }
         }
     }
+
     private val windowShouldDisplay: Boolean
         get() = AllSettings.editEnabled.value
-    private var previewWindow: ActivityPreviewWindow? = null
 
     init {
-        Logger.log(TAG, "activity $activity created.")
         activity.registerActivityLifecycleCallbacks(this)
         Activity::class.doAfter("onWindowFocusChanged", Boolean::class.java) {
             if (it.args[0] as Boolean) {
                 onDisplayWindowChanged(windowShouldDisplay)
             }
         }
+    }
+
+    override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
+        activity.contentResolver.registerContentObserver(
+            CONTENT_URI,
+            true,
+            observer
+        )
+    }
+
+    override fun onActivityDestroyed(activity: Activity) {
+    }
+
+    override fun onActivityPaused(activity: Activity) {
+    }
+
+    override fun onActivityPreDestroyed(activity: Activity) {
+        super.onActivityPreDestroyed(activity)
+        activity.contentResolver.unregisterContentObserver(observer)
+        onDisplayWindowChanged(false)
+    }
+
+    override fun onActivityResumed(activity: Activity) {
+    }
+
+    override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {
+    }
+
+    override fun onActivityStarted(activity: Activity) {
+    }
+
+    override fun onActivityStopped(activity: Activity) {
     }
 
     private fun onDisplayWindowChanged(show: Boolean) {
@@ -74,29 +101,4 @@ class ActivityInstance(private val activity: Activity) : Instance, ActivityLifec
         }
     }
 
-    override fun onActivityPreDestroyed(activity: Activity) {
-        super.onActivityPreDestroyed(activity)
-        activity.contentResolver.unregisterContentObserver(observer)
-        onDisplayWindowChanged(false)
-    }
-
-    override fun onActivityDestroyed(activity: Activity) {}
-
-    override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
-        activity.contentResolver.registerContentObserver(
-            CONTENT_URI,
-            true,
-            observer
-        )
-    }
-
-    override fun onActivityStarted(activity: Activity) {}
-
-    override fun onActivityResumed(activity: Activity) {}
-
-    override fun onActivityPaused(activity: Activity) {}
-
-    override fun onActivityStopped(activity: Activity) {}
-
-    override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {}
 }

@@ -19,7 +19,6 @@ package com.hhvvg.libinject.configurations
 
 import android.content.Context
 import android.os.Bundle
-import android.provider.Settings
 import java.lang.IllegalArgumentException
 
 class SettingItem<T>(
@@ -38,18 +37,22 @@ class SettingItem<T>(
                 (context.contentResolver.call(CONTENT_URI, key, METHOD_GET, null)
                     ?.getInt(KEY_RESULT, 0) ?: 0) as T
             }
+
             Boolean::class.java -> {
                 (context.contentResolver.call(CONTENT_URI, key, METHOD_GET, null)
                     ?.getBoolean(KEY_RESULT, false) ?: false) as T
             }
+
             Long::class.java -> {
                 (context.contentResolver.call(CONTENT_URI, key, METHOD_GET, null)
                     ?.getLong(KEY_RESULT, 0) ?: 0) as T
             }
+
             String::class.java -> {
                 (context.contentResolver.call(CONTENT_URI, key, METHOD_GET, null)
                     ?.getString(KEY_RESULT, "")) as T
             }
+
             else -> throw IllegalArgumentException()
         }
     }
@@ -60,19 +63,24 @@ class SettingItem<T>(
                 context.contentResolver.call(CONTENT_URI, key, METHOD_SET, Bundle()
                     .apply { putInt(KEY_ARG, value as Int) })
             }
+
             Boolean::class.java -> {
                 context.contentResolver.call(CONTENT_URI, key, METHOD_SET, Bundle()
                     .apply { putBoolean(KEY_ARG, value as Boolean) })
             }
+
             Long::class.java -> {
                 context.contentResolver.call(CONTENT_URI, key, METHOD_SET, Bundle()
                     .apply { putLong(KEY_ARG, value as Long) })
             }
+
             String::class.java -> {
                 context.contentResolver.call(CONTENT_URI, key, METHOD_SET, Bundle()
                     .apply { putString(KEY_ARG, value as String) })
             }
+
             else -> throw IllegalArgumentException()
         }
     }
+
 }

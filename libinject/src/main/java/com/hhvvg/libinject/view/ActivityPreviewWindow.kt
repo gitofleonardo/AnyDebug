@@ -37,45 +37,53 @@ import com.hhvvg.libinject.R
 import com.hhvvg.libinject.utils.call
 import com.hhvvg.libinject.utils.override
 import com.hhvvg.libinject.utils.screenSize
-import com.hhvvg.libinject.view.remote.RemoteViewFactoryLoader
+import com.hhvvg.libinject.view.remote.RemoteFactoryLoader
 import de.robv.android.xposed.XC_MethodHook.Unhook
 import java.util.function.Consumer
 
+/**
+ * Mod window
+ */
 @SuppressLint("RtlHardcoded")
 class ActivityPreviewWindow(private val activity: Activity) : Dialog(activity),
     OnTouchListener, WindowClient {
 
+    private lateinit var contentView: View
+    private var activityTouchHookToken: Unhook? = null
+    private val dragBar: View by lazy { contentView.findViewById(R.id.bottom_drag_bar) }
+    private val editSwitch: Switch by lazy { contentView.findViewById(R.id.edit_switch) }
+    private val maxWindowView: View by lazy { contentView.findViewById(R.id.max_window_container) }
+    private val miniWindowView: View by lazy { contentView.findViewById(R.id.mini_window_container) }
+    private val previewList: View by lazy { contentView.findViewById(R.id.preview_list) }
+
     private val remoteInflater by lazy {
-        RemoteViewFactoryLoader(activity).getRemoteFactory()
+        RemoteFactoryLoader(activity).getRemoteFactory()
     }
 
-    private var activityTouchHookToken: Unhook? = null
-    private val tempLoc = IntArray(2)
-    private val onPreviewClickListener: OnClickListener = OnClickListener { v -> onPreviewClick(v) }
-    private val onViewRemoveListener: Consumer<View> = Consumer {
-        contentView?.findViewById<View>(R.id.preview_list)?.call(
-            "removePreviewView",
-            it
-        )
-        windowController.minimizeWindow()
+    private val windowController by lazy {
+        WindowController(window!!, this)
     }
+
+    private val onPreviewClickListener: OnClickListener = OnClickListener {
+        maxWindowView.call("setTargetView", it)
+        windowController.maximizeWindow()
+    }
+
     private val onViewCommitListener: Runnable = Runnable {
         windowController.minimizeWindow()
     }
 
-    private val miniWindowView: View?
-        get() = contentView?.findViewById(R.id.mini_window_container)
-    private val maxWindowView: View?
-        get() = contentView?.findViewById(R.id.max_window_container)
-    private val editSwitch: Switch?
-        get() = contentView?.findViewById(R.id.edit_switch)
-    private val dragBar: View?
-        get() = contentView?.findViewById(R.id.bottom_drag_bar)
-    private val previewList: View?
-        get() = contentView?.findViewById(R.id.preview_list)
-    private var contentView: View? = null
-    private val windowController by lazy {
-        WindowController(window!!, this)
+    private val onViewRemoveListener: Consumer<View> = Consumer {
+        previewList.call("removePreviewView", it)
+        windowController.minimizeWindow()
+    }
+
+    private val tempLoc = IntArray(2)
+
+    @Deprecated("Deprecated in Java")
+    override fun onBackPressed() {
+        super.onBackPressed()
+        windowController.minimizeWindow()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -84,19 +92,19 @@ class ActivityPreviewWindow(private val activity: Activity) : Dialog(activity),
         contentView = onCreateWindowContent(activity).apply {
             setContentView(this)
         }
-        dragBar?.setOnTouchListener(this@ActivityPreviewWindow)
-        editSwitch?.setOnCheckedChangeListener { _, isChecked ->
+        dragBar.setOnTouchListener(this@ActivityPreviewWindow)
+        editSwitch.setOnCheckedChangeListener { _, isChecked ->
             handleActivityTouchStateChanged(isChecked)
         }
-        previewList?.call(
+        previewList.call(
             "setOnPreviewClickListener",
             onPreviewClickListener
         )
-        maxWindowView?.call(
+        maxWindowView.call(
             "setOnViewRemoveListener",
             onViewRemoveListener
         )
-        maxWindowView?.call(
+        maxWindowView.call(
             "setOnCommitListener",
             onViewCommitListener
         )
@@ -106,6 +114,123 @@ class ActivityPreviewWindow(private val activity: Activity) : Dialog(activity),
         setCanceledOnTouchOutside(false)
     }
 
+    override fun dismiss() {
+        super.dismiss()
+        activityTouchHookToken?.unhook()
+    }
+
+    override fun getParentWindowVisibleFrame(): Rect {
+        val rect = Rect()
+        activity.window?.decorView?.getWindowVisibleDisplayFrame(rect)
+        return rect
+    }
+
+    override fun onRequestMaxWindowSize(width: Int, height: Int) {
+        maxWindowView.let {
+            val params = it.layoutParams
+            params.width = width
+            params.height = height
+            it.layoutParams = params
+
+            it.pivotX = 0f
+            it.pivotY = 0f
+        }
+    }
+
+    override fun onStateSizeAnimationEnd(state: Int) {
+        when (state) {
+            WindowController.STATE_MINI_WINDOW -> {
+                maxWindowView.isVisible = false
+            }
+        }
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    override fun onTouch(v: View, event: MotionEvent): Boolean {
+        windowController.onTouchEvent(event)
+        return true
+    }
+
+    override fun onWindowHeightChanged(
+        startHeight: Float,
+        endHeight: Float,
+        minHeight: Float,
+        maxHeight: Float,
+        height: Float
+    ) {
+        val scaleY = (1 / maxHeight) * height
+        maxWindowView.let {
+            View.SCALE_Y.set(it, scaleY)
+        }
+    }
+
+    override fun onWindowInsetsChanged(insets: Insets) = with(contentView) {
+        this.findFocus()?.let {
+            val container = maxWindowView
+            if (insets.bottom == 0 && container.scrollY != 0) {
+                container.scrollY = 0
+                return
+            }
+            val focusedPos = IntArray(2)
+            it.getLocationOnScreen(focusedPos)
+            focusedPos[1] += windowController.windowY
+            val focusedBottom = focusedPos[1] + it.height
+
+            val screenSize = context.screenSize()
+            val visibleBottom = screenSize.y - insets.bottom
+
+            if (focusedBottom > visibleBottom) {
+                container.scrollY = focusedBottom - visibleBottom
+            }
+        }
+        Unit
+    }
+
+    override fun onWindowStateChanged(state: Int) {
+        when (state) {
+            WindowController.STATE_MINI_WINDOW -> {
+                // For animation
+                maxWindowView.isVisible = true
+            }
+
+            WindowController.STATE_MAX_WINDOW -> {
+                maxWindowView.isVisible = true
+                editSwitch.isChecked = false
+            }
+        }
+    }
+
+    override fun onWindowWidthChanged(
+        startWidth: Float,
+        endWidth: Float,
+        minWidth: Float,
+        maxWidth: Float,
+        width: Float
+    ) {
+        val alphaFraction = (width - startWidth) / (endWidth - startWidth)
+        val realAlphaFraction = when (windowController.currentState) {
+            WindowController.STATE_MINI_WINDOW -> {
+                1 - alphaFraction
+            }
+
+            WindowController.STATE_MAX_WINDOW -> {
+                alphaFraction
+            }
+
+            else -> return
+        }
+        maxWindowView.let {
+            View.ALPHA.set(it, realAlphaFraction)
+        }
+        miniWindowView.let {
+            View.ALPHA.set(it, 1 - realAlphaFraction)
+        }
+        val scaleX = (1 / maxWidth) * width
+        maxWindowView.let {
+            View.SCALE_X.set(it, scaleX)
+        }
+    }
+
     override fun show() {
         if (activity.isFinishing) {
             return
@@ -113,29 +238,8 @@ class ActivityPreviewWindow(private val activity: Activity) : Dialog(activity),
         super.show()
     }
 
-    override fun dismiss() {
-        super.dismiss()
-        contentView = null
-        activityTouchHookToken?.unhook()
-    }
-
-    private fun handleActivityTouchStateChanged(interceptTouch: Boolean) {
-        if (!interceptTouch) {
-            activityTouchHookToken?.unhook()
-            activityTouchHookToken = null
-            return
-        }
-        activityTouchHookToken = Activity::class.override(
-            "dispatchTouchEvent", MotionEvent::class.java
-        ) {
-            onActivityTouchEvent(it.args[0] as MotionEvent)
-            true
-        }
-    }
-
-    private fun onActivityTouchEvent(event: MotionEvent) {
-        val targets = findEventTargets(event)
-        setRenderers(targets)
+    override fun updateWindowAttributes(attr: WindowManager.LayoutParams) {
+        onWindowAttributesChanged(attr)
     }
 
     private fun findEventTargets(event: MotionEvent): List<View> {
@@ -163,6 +267,20 @@ class ActivityPreviewWindow(private val activity: Activity) : Dialog(activity),
         outList.addAll(touchedTargetChildren)
     }
 
+    private fun handleActivityTouchStateChanged(interceptTouch: Boolean) {
+        if (!interceptTouch) {
+            activityTouchHookToken?.unhook()
+            activityTouchHookToken = null
+            return
+        }
+        activityTouchHookToken = Activity::class.override(
+            "dispatchTouchEvent", MotionEvent::class.java
+        ) {
+            onActivityTouchEvent(it.args[0] as MotionEvent)
+            true
+        }
+    }
+
     private fun isEventInChild(event: MotionEvent, child: View): Boolean {
         child.getLocationOnScreen(tempLoc)
         return event.rawX >= tempLoc[0] &&
@@ -171,139 +289,17 @@ class ActivityPreviewWindow(private val activity: Activity) : Dialog(activity),
                 event.rawY <= tempLoc[1] + child.height
     }
 
-    private fun setRenderers(renderers: List<View>) {
-        previewList?.call("updatePreviewItems", renderers)
+    private fun onActivityTouchEvent(event: MotionEvent) {
+        val targets = findEventTargets(event)
+        setRenderers(targets)
     }
 
     private fun onCreateWindowContent(context: Context): View {
         return remoteInflater.onInflateView(context, "layout_display_window")
     }
 
-    @SuppressLint("ClickableViewAccessibility")
-    override fun onTouch(v: View, event: MotionEvent): Boolean {
-        windowController.onTouchEvent(event)
-        return true
+    private fun setRenderers(renderers: List<View>) {
+        previewList.call("updatePreviewItems", renderers)
     }
 
-    private fun onPreviewClick(view: View) {
-        maxWindowView?.call(
-            "setTargetView", view
-        )
-        windowController.maximizeWindow()
-    }
-
-    override fun updateWindowAttributes(attr: WindowManager.LayoutParams) {
-        onWindowAttributesChanged(attr)
-    }
-
-    override fun getParentWindowVisibleFrame(): Rect {
-        val rect = Rect()
-        activity.window?.decorView?.getWindowVisibleDisplayFrame(rect)
-        return rect
-    }
-
-    override fun onWindowStateChanged(state: Int) {
-        when (state) {
-            WindowController.STATE_MINI_WINDOW -> {
-                // For animation
-                maxWindowView?.isVisible = true
-            }
-
-            WindowController.STATE_MAX_WINDOW -> {
-                maxWindowView?.isVisible = true
-                editSwitch?.isChecked = false
-            }
-        }
-    }
-
-    override fun onBackPressed() {
-        super.onBackPressed()
-        windowController.minimizeWindow()
-    }
-
-    override fun onWindowInsetsChanged(insets: Insets) = with(contentView) {
-        this?.findFocus()?.let {
-            val container = maxWindowView!!
-            if (insets.bottom == 0 && container.scrollY != 0) {
-                container.scrollY = 0
-                return
-            }
-            val focusedPos = IntArray(2)
-            it.getLocationOnScreen(focusedPos)
-            focusedPos[1] += windowController.windowY
-            val focusedBottom = focusedPos[1] + it.height
-
-            val screenSize = context.screenSize()
-            val visibleBottom = screenSize.y - insets.bottom
-
-            if (focusedBottom > visibleBottom) {
-                container.scrollY = focusedBottom - visibleBottom
-            }
-        }
-        Unit
-    }
-
-    override fun onRequestMaxWindowSize(width: Int, height: Int) {
-        maxWindowView?.let {
-            val params = it.layoutParams
-            params.width = width
-            params.height = height
-            it.layoutParams = params
-
-            it.pivotX = 0f
-            it.pivotY = 0f
-        }
-    }
-
-    override fun onWindowWidthChanged(
-        startWidth: Float,
-        endWidth: Float,
-        minWidth: Float,
-        maxWidth: Float,
-        width: Float
-    ) {
-        val alphaFraction = (width - startWidth) / (endWidth - startWidth)
-        val realAlphaFraction = when (windowController.currentState) {
-            WindowController.STATE_MINI_WINDOW -> {
-                1 - alphaFraction
-            }
-
-            WindowController.STATE_MAX_WINDOW -> {
-                alphaFraction
-            }
-
-            else -> return
-        }
-        maxWindowView?.let {
-            View.ALPHA.set(it, realAlphaFraction)
-        }
-        miniWindowView?.let {
-            View.ALPHA.set(it, 1 - realAlphaFraction)
-        }
-        val scaleX = (1 / maxWidth) * width
-        maxWindowView?.let {
-            View.SCALE_X.set(it, scaleX)
-        }
-    }
-
-    override fun onWindowHeightChanged(
-        startHeight: Float,
-        endHeight: Float,
-        minHeight: Float,
-        maxHeight: Float,
-        height: Float
-    ) {
-        val scaleY = (1 / maxHeight) * height
-        maxWindowView?.let {
-            View.SCALE_Y.set(it, scaleY)
-        }
-    }
-
-    override fun onStateSizeAnimationEnd(state: Int) {
-        when (state) {
-            WindowController.STATE_MINI_WINDOW -> {
-                maxWindowView?.isVisible = false
-            }
-        }
-    }
 }

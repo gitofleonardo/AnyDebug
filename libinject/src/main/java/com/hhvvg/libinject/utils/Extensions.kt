@@ -24,6 +24,9 @@ import de.robv.android.xposed.XposedBridge
 import de.robv.android.xposed.XposedHelpers
 import kotlin.reflect.KClass
 
+/**
+ * Do action before method called.
+ */
 fun KClass<*>.doBefore(methodName: String, vararg methodParams: Class<*>, callback: (XC_MethodHook.MethodHookParam) -> Unit) {
     val method = XposedHelpers.findMethodBestMatch(this.java, methodName, *methodParams)
     val methodHook = object : XC_MethodHook() {
@@ -34,6 +37,9 @@ fun KClass<*>.doBefore(methodName: String, vararg methodParams: Class<*>, callba
     XposedBridge.hookMethod(method, methodHook)
 }
 
+/**
+ * Do action after method called.
+ */
 fun KClass<*>.doAfter(methodName: String, vararg methodParams: Class<*>, callback: (XC_MethodHook.MethodHookParam) -> Unit) {
     val method = XposedHelpers.findMethodBestMatch(this.java, methodName, *methodParams)
     val methodHook = object : XC_MethodHook() {
@@ -44,6 +50,9 @@ fun KClass<*>.doAfter(methodName: String, vararg methodParams: Class<*>, callbac
     XposedBridge.hookMethod(method, methodHook)
 }
 
+/**
+ * Overrides method call.
+ */
 fun KClass<*>.override(methodName: String, vararg methodParams: Class<*>, callback: (XC_MethodHook.MethodHookParam) -> Any?): Unhook {
     val method = XposedHelpers.findMethodBestMatch(this.java, methodName, *methodParams)
     val methodHook = object : XC_MethodReplacement() {
@@ -54,20 +63,9 @@ fun KClass<*>.override(methodName: String, vararg methodParams: Class<*>, callba
     return XposedBridge.hookMethod(method, methodHook)
 }
 
-fun Any.injectField(name: String, value: Any?) {
-    XposedHelpers.setAdditionalInstanceField(this, name, value)
-}
-
-fun <T> Any.getInjectedField(name: String): T? {
-    val value = XposedHelpers.getAdditionalInstanceField(this, name)
-    return value as T?
-}
-
-fun <T> Any.getInjectedField(name: String, defaultValue: T): T {
-    val value = XposedHelpers.getAdditionalInstanceField(this, name) ?: defaultValue
-    return value as T
-}
-
+/**
+ * Calls method with specific name
+ */
 fun Any.call(method: String, vararg args: Any) {
     XposedHelpers.callMethod(this, method, *args)
 }

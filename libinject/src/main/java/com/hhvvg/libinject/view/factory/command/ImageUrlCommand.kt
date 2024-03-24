@@ -20,6 +20,9 @@ package com.hhvvg.libinject.view.factory.command
 import android.widget.ImageView
 import com.bumptech.glide.Glide
 
+/**
+ * Command for loading url into a ImageView
+ */
 class ImageUrlCommand(view: ImageView, private val url: String) : BaseCommand<ImageView>(view) {
 
     override fun onApply() {

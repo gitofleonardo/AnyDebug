@@ -49,28 +49,57 @@ class SettingsProvider : ContentProvider() {
         if (arg == null) {
             return null
         }
-        return when(arg) {
+        return when (arg) {
             METHOD_GET -> handleGetMethod(method, extras)
             METHOD_SET -> handleSetMethod(method, extras)
             else -> super.call(method, arg, extras)
         }
     }
 
+    override fun delete(uri: Uri, selection: String?, selectionArgs: Array<out String>?): Int = 0
+
+    override fun getType(uri: Uri): String? = null
+
+    override fun insert(uri: Uri, values: ContentValues?): Uri? = null
+
+    override fun query(
+        uri: Uri,
+        projection: Array<out String>?,
+        selection: String?,
+        selectionArgs: Array<out String>?,
+        sortOrder: String?
+    ): Cursor? = null
+
+    override fun update(
+        uri: Uri,
+        values: ContentValues?,
+        selection: String?,
+        selectionArgs: Array<out String>?
+    ): Int = 0
+
     private fun handleGetMethod(method: String, extras: Bundle?): Bundle? {
-        return when(method) {
+        return when (method) {
             METHOD_EDIT_ENABLED -> {
                 handleGetMethodEditEnabled()
             }
+
             else -> null
         }
     }
 
+    private fun handleGetMethodEditEnabled(): Bundle {
+        return Bundle().apply {
+            putBoolean(KEY_RESULT, preferences.editEnabled)
+        }
+    }
+
     private fun handleSetMethod(method: String, extras: Bundle?): Bundle? {
-        return when(method) {
+        return when (method) {
             METHOD_EDIT_ENABLED -> {
                 handleSetMethodEditEnabled(extras)
                 null
             }
+
             else -> null
         }
     }
@@ -81,30 +110,4 @@ class SettingsProvider : ContentProvider() {
         context?.contentResolver?.notifyChange(CONTENT_URI, null, false)
     }
 
-    private fun handleGetMethodEditEnabled(): Bundle {
-        return Bundle().apply {
-            putBoolean(KEY_RESULT, preferences.editEnabled)
-        }
-    }
-
-    override fun query(
-        uri: Uri,
-        projection: Array<out String>?,
-        selection: String?,
-        selectionArgs: Array<out String>?,
-        sortOrder: String?
-    ): Cursor? = null
-
-    override fun getType(uri: Uri): String? = null
-
-    override fun insert(uri: Uri, values: ContentValues?): Uri? = null
-
-    override fun delete(uri: Uri, selection: String?, selectionArgs: Array<out String>?): Int = 0
-
-    override fun update(
-        uri: Uri,
-        values: ContentValues?,
-        selection: String?,
-        selectionArgs: Array<out String>?
-    ): Int = 0
 }

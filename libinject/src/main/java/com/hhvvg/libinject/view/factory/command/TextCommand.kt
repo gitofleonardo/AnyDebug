@@ -19,6 +19,9 @@ package com.hhvvg.libinject.view.factory.command
 
 import android.widget.TextView
 
+/**
+ * Command for setting text for a TextView
+ */
 class TextCommand(view: TextView, private val text: CharSequence) : BaseCommand<TextView>(view) {
 
     override fun onApply() {

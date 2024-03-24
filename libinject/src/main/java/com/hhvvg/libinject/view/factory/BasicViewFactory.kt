@@ -25,6 +25,8 @@ import androidx.core.view.children
 import androidx.core.view.isVisible
 import com.hhvvg.libinject.R
 import com.hhvvg.libinject.utils.findTargetAncestor
+import com.hhvvg.libinject.utils.ltrb
+import com.hhvvg.libinject.utils.paddingLtrb
 import com.hhvvg.libinject.view.PreviewList
 import com.hhvvg.libinject.view.PreviewView
 import com.hhvvg.libinject.view.SettingContent
@@ -41,33 +43,12 @@ import com.hhvvg.libinject.view.preference.OptionsPreferenceView
 import com.hhvvg.libinject.view.preference.PreferenceView
 import kotlin.reflect.KClass
 
+/**
+ * Default implementation for creating settings
+ */
 open class BasicViewFactory : SettingsFactory {
 
-    private val View.paddingLtrb: String
-        get() = "[${paddingLeft},${paddingTop},${paddingRight},${paddingBottom}]"
-    private val MarginLayoutParams.ltrb: String
-        get() = "[${leftMargin},${topMargin},${rightMargin},${bottomMargin}]"
-
     private val commandQueue = mutableMapOf<KClass<*>, FactoryCommand>()
-
-    protected fun addCommand(command: FactoryCommand) {
-        commandQueue[command::class] = command
-    }
-
-    protected fun removeCommand(clazz: KClass<*>) {
-        commandQueue.remove(clazz)
-    }
-
-    private fun flushCommands() {
-        commandQueue.forEach { (_, u) ->
-            u.onApply()
-        }
-        commandQueue.clear()
-    }
-
-    override fun commit() {
-        flushCommands()
-    }
 
     override fun onCreate(
         targetView: View,
@@ -164,12 +145,19 @@ open class BasicViewFactory : SettingsFactory {
         )
     }
 
-    private fun createVisibilityMapper(): Map<Int, Int> {
-        return mapOf(
-            View.VISIBLE to 0,
-            View.INVISIBLE to 1,
-            View.GONE to 2
-        )
+    override fun commit() {
+        commandQueue.forEach { (_, u) ->
+            u.onApply()
+        }
+        commandQueue.clear()
+    }
+
+    protected fun addCommand(command: FactoryCommand) {
+        commandQueue[command::class] = command
+    }
+
+    protected fun removeCommand(clazz: KClass<*>) {
+        commandQueue.remove(clazz)
     }
 
     private fun createVisibilityIndexMapper(): Map<Int, Int> {
@@ -179,4 +167,13 @@ open class BasicViewFactory : SettingsFactory {
             2 to View.GONE
         )
     }
+
+    private fun createVisibilityMapper(): Map<Int, Int> {
+        return mapOf(
+            View.VISIBLE to 0,
+            View.INVISIBLE to 1,
+            View.GONE to 2
+        )
+    }
+
 }

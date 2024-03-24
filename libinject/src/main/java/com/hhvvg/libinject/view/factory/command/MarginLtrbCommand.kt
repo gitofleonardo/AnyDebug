@@ -21,6 +21,9 @@ import android.view.View
 import android.view.ViewGroup.MarginLayoutParams
 import com.hhvvg.libinject.utils.ltrbPattern
 
+/**
+ * Command for settings margins
+ */
 class MarginLtrbCommand(view: View, private val ltrb: CharSequence) : BaseCommand<View>(view) {
 
     override fun onApply() {

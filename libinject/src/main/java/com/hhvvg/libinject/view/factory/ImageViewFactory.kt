@@ -26,6 +26,9 @@ import com.hhvvg.libinject.view.SettingContent
 import com.hhvvg.libinject.view.factory.command.ImageUrlCommand
 import com.hhvvg.libinject.view.preference.InputPreferenceView
 
+/**
+ * Settings factory for a ImageView
+ */
 class ImageViewFactory : BasicViewFactory() {
 
     override fun onCreate(
@@ -51,4 +54,5 @@ class ImageViewFactory : BasicViewFactory() {
             SettingContent(view, parent.context.resources.getString(R.string.title_image_view))
         )
     }
+
 }

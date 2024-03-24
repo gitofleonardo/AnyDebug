@@ -23,11 +23,14 @@ import android.content.pm.PackageManager
 import com.hhvvg.libinject.utils.APPLICATION_ID
 import dalvik.system.DexClassLoader
 
-private const val FACTORY_IMPL_CLASS = "com.hhvvg.libinject.view.remote.RemoteViewFactoryImpl"
+private const val FACTORY_IMPL_CLASS = "com.hhvvg.libinject.view.remote.RemoteFactoryImpl"
 
-class RemoteViewFactoryLoader(private val context: Context) {
+/**
+ * Load remote class.
+ */
+class RemoteFactoryLoader(private val context: Context) {
 
-    fun getRemoteFactory(): RemoteViewFactory {
+    fun getRemoteFactory(): RemoteFactory {
         val intent = Intent().apply {
             setPackage(APPLICATION_ID)
             action = "com.hhvvg.anydebug.action.MAIN"
@@ -46,9 +49,10 @@ class RemoteViewFactoryLoader(private val context: Context) {
         try {
             val clz = dcLoader.loadClass(FACTORY_IMPL_CLASS)
             val instance = clz.constructors[0].newInstance()
-            return instance as RemoteViewFactory
+            return instance as RemoteFactory
         } catch (e: Exception) {
             throw RuntimeException()
         }
     }
+
 }

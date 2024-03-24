@@ -20,6 +20,9 @@ package com.hhvvg.libinject.view.factory.command
 import android.view.View
 import com.hhvvg.libinject.utils.ltrbPattern
 
+/**
+ * Command for setting paddings
+ */
 class PaddingLtrbCommand(view: View, private val ltrb: CharSequence) : BaseCommand<View>(view) {
 
     override fun onApply() {

@@ -28,10 +28,11 @@ import com.hhvvg.libinject.view.factory.TextViewFactory
 object SettingsFactoryManager {
 
     fun createFactory(target: View): SettingsFactory {
-        return when(target) {
+        return when (target) {
             is TextView -> TextViewFactory()
             is ImageView -> ImageViewFactory()
             else -> BasicViewFactory()
         }
     }
+
 }

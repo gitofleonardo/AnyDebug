@@ -24,44 +24,37 @@ import android.util.AttributeSet
 import android.view.View
 import kotlin.math.min
 
+/**
+ * Capture and render other View
+ */
 class PreviewView(context: Context, attrs: AttributeSet?, defStyleAttr: Int, defStyleRes: Int) :
     View(context, attrs, defStyleAttr, defStyleRes) {
 
-    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int)
-            : this(context, attrs, defStyleAttr, 0)
+    private var renderer: View? = null
+    private val renderNode: RenderNode = RenderNode("PreviewViewNode")
+
+    constructor(context: Context)
+            : this(context, null)
 
     constructor(context: Context, attrs: AttributeSet?)
 
             : this(context, attrs, 0)
 
-    constructor(context: Context)
-            : this(context, null)
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int)
+            : this(context, attrs, defStyleAttr, 0)
 
-    private val renderNode: RenderNode = RenderNode("PreviewViewNode")
-
-    private var renderer: View? = null
-
-    fun setRenderer(view: View?) {
-        renderer = view
-        renderNode.discardDisplayList()
-        invalidate()
+    override fun onDraw(canvas: Canvas) {
+        renderer?.let { drawRenderer(canvas, it) }
     }
 
     fun getRenderer(): View? {
         return renderer
     }
 
-    override fun onDraw(canvas: Canvas) {
-        renderer?.let { drawRenderer(canvas, it) }
-    }
-
-    private fun drawRenderer(canvas: Canvas, renderer: View) {
-        if (!renderNode.hasDisplayList()) {
-            buildDisplayList(renderer)
-        }
-        if (renderNode.hasDisplayList() && canvas.isHardwareAccelerated) {
-            canvas.drawRenderNode(renderNode)
-        }
+    fun setRenderer(view: View?) {
+        renderer = view
+        renderNode.discardDisplayList()
+        invalidate()
     }
 
     private fun buildDisplayList(renderer: View) {
@@ -82,4 +75,14 @@ class PreviewView(context: Context, attrs: AttributeSet?, defStyleAttr: Int, def
             renderNode.endRecording()
         }
     }
+
+    private fun drawRenderer(canvas: Canvas, renderer: View) {
+        if (!renderNode.hasDisplayList()) {
+            buildDisplayList(renderer)
+        }
+        if (renderNode.hasDisplayList() && canvas.isHardwareAccelerated) {
+            canvas.drawRenderNode(renderNode)
+        }
+    }
+
 }

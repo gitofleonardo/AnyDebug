@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~     Copyright (C) <2024>  <gitofleonardo>
   ~
   ~     This program is free software: you can redistribute it and/or modify
@@ -17,6 +16,7 @@
   -->
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
     <application>
         <meta-data
             android:name="xposedmodule"
@@ -32,8 +32,8 @@
             android:resource="@array/required_packages" />
 
         <provider
-            android:authorities="com.hhvvg.anydebug.provider"
             android:name=".configurations.SettingsProvider"
-            android:exported="true"/>
+            android:authorities="com.hhvvg.anydebug.provider"
+            android:exported="true" />
     </application>
 </manifest>

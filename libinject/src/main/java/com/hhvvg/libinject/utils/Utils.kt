@@ -28,8 +28,26 @@ import java.util.regex.Pattern
 
 const val APPLICATION_ID = "com.hhvvg.anydebug"
 
-val ltrbPattern = Pattern.compile("^\\[(-?\\d+),(-?\\d+),(-?\\d+),(-?\\d+)]$")
+/**
+ * Regex pattern for parsing padding/margin
+ */
+val ltrbPattern: Pattern = Pattern.compile("^\\[(-?\\d+),(-?\\d+),(-?\\d+),(-?\\d+)]$")
 
+/**
+ * Padding format in string
+ */
+val View.paddingLtrb: String
+    get() = "[${paddingLeft},${paddingTop},${paddingRight},${paddingBottom}]"
+
+/**
+ * Margin format in string
+ */
+val ViewGroup.MarginLayoutParams.ltrb: String
+    get() = "[${leftMargin},${topMargin},${rightMargin},${bottomMargin}]"
+
+/**
+ * Find ancestor for target view with a specific class.
+ */
 fun <T : ViewGroup> View.findTargetAncestor(targetClass: Class<T>): T? {
     var currParent = parent
     while (currParent != null && !targetClass.isInstance(currParent)) {
@@ -38,6 +56,9 @@ fun <T : ViewGroup> View.findTargetAncestor(targetClass: Class<T>): T? {
     return if (currParent == null || !targetClass.isInstance(currParent)) null else currParent as T
 }
 
+/**
+ * Create package context of this app
+ */
 fun Context.createRemotePackageContext(): Context {
     val packageContext = createPackageContext(
         APPLICATION_ID,
@@ -48,14 +69,23 @@ fun Context.createRemotePackageContext(): Context {
     return ContextThemeWrapper(packageContext, themeResId)
 }
 
+/**
+ * Get drawable resource id
+ */
 fun Context.drawableResId(name: String): Int {
     return resources.getIdentifier(name, "drawable", packageName)
 }
 
+/**
+ * Get dimen resource id
+ */
 fun Context.dimenResId(name: String): Int {
     return resources.getIdentifier(name, "dimen", packageName)
 }
 
+/**
+ * Get default display screen size
+ */
 fun Context.screenSize(): Point {
     val display = (getSystemService(Context.WINDOW_SERVICE) as WindowManager).defaultDisplay
     val outPoint = Point()

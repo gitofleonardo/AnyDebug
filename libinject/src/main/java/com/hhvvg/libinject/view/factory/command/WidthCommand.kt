@@ -19,6 +19,9 @@ package com.hhvvg.libinject.view.factory.command
 
 import android.view.View
 
+/**
+ * Command for setting height spec
+ */
 class WidthCommand(view: View, private val width: Int) : BaseCommand<View>(view) {
 
     override fun onApply() {

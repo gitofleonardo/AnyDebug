@@ -31,4 +31,5 @@ class AllSettings {
             editEnabled = SettingItem(METHOD_EDIT_ENABLED, Boolean::class.java, appContext)
         }
     }
+
 }

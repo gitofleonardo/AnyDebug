@@ -37,4 +37,5 @@ class SettingsPreferenceWrapper(context: Context) {
     init {
         preferences = context.getSharedPreferences(SETTINGS_SP_NAME, Context.MODE_PRIVATE)
     }
+
 }

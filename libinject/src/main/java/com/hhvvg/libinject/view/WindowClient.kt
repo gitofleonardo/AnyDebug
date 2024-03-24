@@ -22,19 +22,10 @@ import android.graphics.Rect
 import android.view.WindowManager
 
 interface WindowClient {
-    fun updateWindowAttributes(attr: WindowManager.LayoutParams)
-    fun getParentWindowVisibleFrame(): Rect
-    fun onWindowStateChanged(state: Int)
-    fun onWindowInsetsChanged(insets: Insets)
-    fun onRequestMaxWindowSize(width: Int, height: Int)
-    fun onWindowWidthChanged(
-        startWidth: Float,
-        endWidth: Float,
-        minWidth: Float,
-        maxWidth: Float,
-        width: Float
-    )
 
+    fun getParentWindowVisibleFrame(): Rect
+    fun onRequestMaxWindowSize(width: Int, height: Int)
+    fun onStateSizeAnimationEnd(state: Int)
     fun onWindowHeightChanged(
         startHeight: Float,
         endHeight: Float,
@@ -43,5 +34,16 @@ interface WindowClient {
         height: Float
     )
 
-    fun onStateSizeAnimationEnd(state: Int)
+    fun onWindowInsetsChanged(insets: Insets)
+    fun onWindowStateChanged(state: Int)
+
+    fun onWindowWidthChanged(
+        startWidth: Float,
+        endWidth: Float,
+        minWidth: Float,
+        maxWidth: Float,
+        width: Float
+    )
+
+    fun updateWindowAttributes(attr: WindowManager.LayoutParams)
 }

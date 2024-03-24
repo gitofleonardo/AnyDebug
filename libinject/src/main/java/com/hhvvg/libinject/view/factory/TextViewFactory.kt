@@ -27,6 +27,9 @@ import com.hhvvg.libinject.view.factory.command.TextCommand
 import com.hhvvg.libinject.view.factory.command.TextSizeCommand
 import com.hhvvg.libinject.view.preference.InputPreferenceView
 
+/**
+ * Settings factory for a TextView
+ */
 class TextViewFactory : BasicViewFactory() {
 
     override fun onCreate(
@@ -58,4 +61,5 @@ class TextViewFactory : BasicViewFactory() {
             )
         )
     }
+
 }

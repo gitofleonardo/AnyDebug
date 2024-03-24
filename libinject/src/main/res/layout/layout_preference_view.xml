@@ -34,8 +34,6 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:textColor="?attr/colorOnSurfaceVariant"
-        android:textSize="12sp"
         android:id="@+id/summary_view"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -44,7 +42,9 @@
         android:gravity="end"
         android:longClickable="true"
         android:text="@string/long_sample_text"
+        android:textColor="?attr/colorOnSurfaceVariant"
         android:textIsSelectable="true"
+        android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/title_view"

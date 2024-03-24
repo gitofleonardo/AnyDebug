@@ -19,6 +19,9 @@ package com.hhvvg.libinject.view.factory.command
 
 import android.widget.TextView
 
+/**
+ * Command for setting text size
+ */
 class TextSizeCommand(view: TextView, private val textSize: CharSequence) : BaseCommand<TextView>(view) {
 
     override fun onApply() {
