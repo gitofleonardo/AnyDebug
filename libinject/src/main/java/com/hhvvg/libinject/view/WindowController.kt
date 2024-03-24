@@ -85,6 +85,17 @@ class WindowController(
             updateWindow()
         }
 
+    private var windowContentWidth = 0
+        set(value) {
+            field = value
+            updateWindowContent()
+        }
+    private var windowContentHeight = 0
+        set(value) {
+            field = value
+            updateWindowContent()
+        }
+
     private val context by lazy { window.context }
 
     private val maxFloatingWindowDragTranslation by lazy {
@@ -171,7 +182,7 @@ class WindowController(
         if (windowState == STATE_MINI_WINDOW) {
             windowX += downDiffX.toInt()
             windowY += downDiffY.toInt()
-            updateWindow()
+            updateWindowContent()
         } else {
             undampedWindowTranslation.set(
                 undampedWindowTranslation.x + downDiffX,
@@ -188,7 +199,7 @@ class WindowController(
             val maximizeWindowPos = calcMaximizeWindowPosition()
             windowX = (maximizeWindowPos.x + dampedTranX).toInt()
             windowY = (maximizeWindowPos.y + dampedTranY).toInt()
-            updateWindow()
+            updateWindowContent()
         }
         return true
     }
@@ -200,7 +211,7 @@ class WindowController(
         return false
     }
 
-    fun calcMaxWindowSize(): PointF {
+    private fun calcMaxWindowSize(): PointF {
         val parentFrame = parentWindowFrame
         val parentWindowWidth = parentFrame.width()
         val parentWindowHeight = parentFrame.height()
@@ -212,7 +223,7 @@ class WindowController(
         )
     }
 
-    fun calcMiniWindowSize(): PointF {
+    private fun calcMiniWindowSize(): PointF {
         return PointF(
             remoteContext.resources.getDimensionPixelSize(R.dimen.config_mini_window_width)
                 .toFloat(),
@@ -225,27 +236,16 @@ class WindowController(
         val miniWindowSize = calcMiniWindowSize()
         width = miniWindowSize.x.toInt()
         height = miniWindowSize.y.toInt()
+        windowContentWidth = width
+        windowContentHeight = height
         windowX = 0
-        windowY = run {
-            (parentWindowFrame.height() * WINDOW_INIT_Y_RATIO).toInt()
-        }
+        windowY = (parentWindowFrame.height() * WINDOW_INIT_Y_RATIO).toInt()
         format = PixelFormat.TRANSPARENT
         gravity = Gravity.TOP or Gravity.START
         flags = LayoutParams.FLAG_NOT_TOUCH_MODAL or
                 LayoutParams.FLAG_LAYOUT_NO_LIMITS or
                 LayoutParams.FLAG_NOT_FOCUSABLE
-        window.setBackgroundDrawable(
-            ResourcesCompat.getDrawable(
-                remoteContext.resources,
-                remoteContext.drawableResId("display_window_background"),
-                remoteContext.theme
-            )
-        )
-        window.setElevation(
-            remoteContext.resources.getDimensionPixelSize(
-                remoteContext.dimenResId("decor_elevation")
-            ).toFloat()
-        )
+        window.setBackgroundDrawable(null)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
             setCanPlayMoveAnimation(false)
         }
@@ -262,6 +262,11 @@ class WindowController(
         val finalWidth = size.x
         val finalHeight = size.y
         windowClient.onRequestMaxWindowSize(finalWidth.toInt(), finalHeight.toInt())
+        windowParams.apply {
+            width = finalWidth.toInt()
+            height = finalHeight.toInt()
+        }
+        windowClient.updateWindowAttributes(windowParams)
         animateWindowSize(finalWidth, finalHeight)
         moveMaximizeWindowCenter()
     }
@@ -340,8 +345,8 @@ class WindowController(
         val maxSize = calcMaxWindowSize()
         val startWidth = WINDOW_WIDTH_PROPERTY.get(this)
         val widthAnimationBuilder = SpringAnimationBuilder(context)
-            .setDampingRatio(FLING_DAMPING_RATIO)
-            .setStiffness(FLING_STIFFNESS)
+            .setDampingRatio(SIZE_CHANGE_DAMPING_RATIO)
+            .setStiffness(SIZE_CHANGE_STIFFNESS)
             .setEndValue(finalWidth)
             .setMinimumVisibleChange(DynamicAnimation.MIN_VISIBLE_CHANGE_PIXELS)
             .setStartValue(startWidth)
@@ -358,8 +363,8 @@ class WindowController(
         }
         val startHeight = WINDOW_HEIGHT_PROPERTY.get(this)
         val heightAnimationBuilder = SpringAnimationBuilder(context)
-            .setDampingRatio(FLING_DAMPING_RATIO)
-            .setStiffness(FLING_STIFFNESS)
+            .setDampingRatio(SIZE_CHANGE_DAMPING_RATIO)
+            .setStiffness(SIZE_CHANGE_STIFFNESS)
             .setEndValue(finalHeight)
             .setMinimumVisibleChange(DynamicAnimation.MIN_VISIBLE_CHANGE_PIXELS)
             .setStartValue(startHeight)
@@ -379,13 +384,22 @@ class WindowController(
             play(widthAnimation)
             play(heightAnimation)
             addListener(onEnd = {
-                sizeChangeAnimator = null
-                windowClient.onStateSizeAnimationEnd(currentState)
+                onSizeAnimationEnd()
             })
         }
         sizeChangeAnimator = animatorSet.apply {
             start()
         }
+    }
+
+    private fun onSizeAnimationEnd() {
+        sizeChangeAnimator = null
+        windowParams.apply {
+            width = windowContentWidth
+            height = windowContentHeight
+        }
+        windowClient.updateWindowAttributes(windowParams)
+        windowClient.onStateSizeAnimationEnd(currentState)
     }
 
     private fun calcMaximizeWindowPosition(): PointF {
@@ -458,6 +472,10 @@ class WindowController(
         y = windowY + windowOffsetY
     }
 
+    private fun updateWindowContent() {
+        windowClient.updateWindowContent(windowContentWidth, windowContentHeight)
+    }
+
     private fun updateWindow() {
         windowClient.updateWindowAttributes(windowParams)
     }
@@ -465,8 +483,10 @@ class WindowController(
     companion object {
         private const val FLING_VELOCITY_THRESHOLD = 3000f
         private const val MAX_FLING_VELOCITY = 30000f
-        private const val FLING_STIFFNESS = 200f
-        private const val FLING_DAMPING_RATIO = .80f
+        private const val FLING_STIFFNESS = 300f
+        private const val FLING_DAMPING_RATIO = .9f
+        private const val SIZE_CHANGE_STIFFNESS = 300f
+        private const val SIZE_CHANGE_DAMPING_RATIO = .95f
 
         const val STATE_MINI_WINDOW = 0
         const val STATE_MAX_WINDOW = 1
@@ -476,8 +496,6 @@ class WindowController(
 
         private const val WINDOW_INIT_Y_RATIO = .25f
 
-        private val tempRect = Rect()
-
         private val WINDOW_X_PROPERTY =
             object : FloatProperty<WindowController>("window_x_property") {
                 override fun get(window: WindowController): Float {
@@ -486,7 +504,6 @@ class WindowController(
 
                 override fun setValue(window: WindowController, value: Float) {
                     window.windowX = value.toInt()
-                    window.updateWindow()
                 }
             }
 
@@ -498,31 +515,28 @@ class WindowController(
 
                 override fun setValue(window: WindowController, value: Float) {
                     window.windowY = value.toInt()
-                    window.updateWindow()
                 }
             }
 
         private val WINDOW_WIDTH_PROPERTY =
             object : FloatProperty<WindowController>("window_width_property") {
                 override fun get(window: WindowController): Float {
-                    return window.windowParams.width.toFloat()
+                    return window.windowContentWidth.toFloat()
                 }
 
                 override fun setValue(window: WindowController, value: Float) {
-                    window.windowParams.width = value.toInt()
-                    window.updateWindow()
+                    window.windowContentWidth = value.toInt()
                 }
             }
 
         private val WINDOW_HEIGHT_PROPERTY =
             object : FloatProperty<WindowController>("window_width_property") {
                 override fun get(window: WindowController): Float {
-                    return window.windowParams.height.toFloat()
+                    return window.windowContentHeight.toFloat()
                 }
 
                 override fun setValue(window: WindowController, value: Float) {
-                    window.windowParams.height = value.toInt()
-                    window.updateWindow()
+                    window.windowContentHeight = value.toInt()
                 }
             }
     }

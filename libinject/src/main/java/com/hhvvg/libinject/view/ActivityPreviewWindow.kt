@@ -242,6 +242,14 @@ class ActivityPreviewWindow(private val activity: Activity) : Dialog(activity),
         onWindowAttributesChanged(attr)
     }
 
+    override fun updateWindowContent(width: Int, height: Int) {
+        contentView.layoutParams.let {
+            it.width = width
+            it.height = height
+            contentView.layoutParams = it
+        }
+    }
+
     private fun findEventTargets(event: MotionEvent): List<View> {
         val items = mutableListOf<View>()
         findEventTargets(activity.window.decorView, event, items)

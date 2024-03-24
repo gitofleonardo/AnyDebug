@@ -46,4 +46,9 @@ interface WindowClient {
     )
 
     fun updateWindowAttributes(attr: WindowManager.LayoutParams)
+
+    fun updateWindowContent(
+        width: Int,
+        height: Int
+    )
 }

@@ -20,7 +20,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/content"
     android:layout_width="120dp"
-    android:layout_height="200dp">
+    android:layout_height="200dp"
+    android:background="@drawable/display_window_background"
+    android:outlineProvider="background"
+    android:clipToOutline="true"
+    tools:targetApi="s">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/mini_window_container"
