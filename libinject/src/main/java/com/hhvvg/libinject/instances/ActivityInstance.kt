@@ -29,6 +29,7 @@ import com.hhvvg.libinject.configurations.AllSettings
 import com.hhvvg.libinject.configurations.CONTENT_URI
 import com.hhvvg.libinject.utils.doAfter
 import com.hhvvg.libinject.view.ActivityPreviewWindow
+import de.robv.android.xposed.XC_MethodHook.Unhook
 
 class ActivityInstance(private val activity: Activity) : Instance, ActivityLifecycleCallbacks {
 
@@ -44,10 +45,11 @@ class ActivityInstance(private val activity: Activity) : Instance, ActivityLifec
 
     private val windowShouldDisplay: Boolean
         get() = AllSettings.editEnabled.value
+    private var windowFocusHook: Unhook? = null
 
     init {
         activity.registerActivityLifecycleCallbacks(this)
-        Activity::class.doAfter("onWindowFocusChanged", Boolean::class.java) {
+        windowFocusHook = Activity::class.doAfter("onWindowFocusChanged", Boolean::class.java) {
             if (it.args[0] as Boolean) {
                 onDisplayWindowChanged(windowShouldDisplay)
             }
@@ -71,6 +73,7 @@ class ActivityInstance(private val activity: Activity) : Instance, ActivityLifec
     override fun onActivityPreDestroyed(activity: Activity) {
         super.onActivityPreDestroyed(activity)
         activity.contentResolver.unregisterContentObserver(observer)
+        windowFocusHook?.unhook()
         onDisplayWindowChanged(false)
     }
 

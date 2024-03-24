@@ -27,27 +27,27 @@ import kotlin.reflect.KClass
 /**
  * Do action before method called.
  */
-fun KClass<*>.doBefore(methodName: String, vararg methodParams: Class<*>, callback: (XC_MethodHook.MethodHookParam) -> Unit) {
+fun KClass<*>.doBefore(methodName: String, vararg methodParams: Class<*>, callback: (XC_MethodHook.MethodHookParam) -> Unit): Unhook {
     val method = XposedHelpers.findMethodBestMatch(this.java, methodName, *methodParams)
     val methodHook = object : XC_MethodHook() {
         override fun beforeHookedMethod(param: MethodHookParam) {
             callback.invoke(param)
         }
     }
-    XposedBridge.hookMethod(method, methodHook)
+    return XposedBridge.hookMethod(method, methodHook)
 }
 
 /**
  * Do action after method called.
  */
-fun KClass<*>.doAfter(methodName: String, vararg methodParams: Class<*>, callback: (XC_MethodHook.MethodHookParam) -> Unit) {
+fun KClass<*>.doAfter(methodName: String, vararg methodParams: Class<*>, callback: (XC_MethodHook.MethodHookParam) -> Unit): Unhook {
     val method = XposedHelpers.findMethodBestMatch(this.java, methodName, *methodParams)
     val methodHook = object : XC_MethodHook() {
         override fun afterHookedMethod(param: MethodHookParam) {
             callback.invoke(param)
         }
     }
-    XposedBridge.hookMethod(method, methodHook)
+    return XposedBridge.hookMethod(method, methodHook)
 }
 
 /**
