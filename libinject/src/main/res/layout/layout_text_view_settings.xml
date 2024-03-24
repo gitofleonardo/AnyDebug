@@ -47,4 +47,17 @@
         android:text="@string/sample_text"
         app:preference_title="@string/title_text_size_input" />
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="5dp"
+        android:background="?attr/colorSurface" />
+
+    <com.hhvvg.libinject.view.preference.InputPreferenceView
+        android:id="@+id/max_lines_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="numberDecimal"
+        android:text="@string/sample_text"
+        app:preference_title="@string/title_text_max_lines_input" />
 </LinearLayout>

@@ -24,6 +24,7 @@ import android.widget.TextView
 import com.hhvvg.libinject.R
 import com.hhvvg.libinject.view.SettingContent
 import com.hhvvg.libinject.view.factory.command.TextCommand
+import com.hhvvg.libinject.view.factory.command.TextMaxLinesCommand
 import com.hhvvg.libinject.view.factory.command.TextSizeCommand
 import com.hhvvg.libinject.view.preference.InputPreferenceView
 
@@ -45,7 +46,12 @@ class TextViewFactory : BasicViewFactory() {
             .inflate(R.layout.layout_text_view_settings, parent, false)
         val textInputPref = view.findViewById<InputPreferenceView>(R.id.text_input)
         val textSizeInputPref = view.findViewById<InputPreferenceView>(R.id.text_size_input)
+        val maxLinesInputPref = view.findViewById<InputPreferenceView>(R.id.max_lines_input)
 
+        maxLinesInputPref.text = targetView.maxLines.toString()
+        maxLinesInputPref.setOnTextChangedListener {
+            addCommand(TextMaxLinesCommand(targetView, it))
+        }
         textInputPref.text = targetView.text
         textInputPref.setOnTextChangedListener {
             addCommand(TextCommand(targetView, it))

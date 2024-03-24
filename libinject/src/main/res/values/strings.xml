@@ -34,6 +34,7 @@
     <string name="title_text_input">Text</string>
     <string name="summary_text_input">Notes: All span info will be lost.</string>
     <string name="title_text_size_input">Text Size</string>
+    <string name="title_text_max_lines_input">Max Lines</string>
     <string name="title_image_view">ImageView</string>
     <string name="image_view_hint">Only supports http/https url now.</string>
     <string name="title_image_url">Image Url</string>
