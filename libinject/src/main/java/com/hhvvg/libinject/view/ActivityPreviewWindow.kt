@@ -164,26 +164,14 @@ class ActivityPreviewWindow(private val activity: Activity) : Dialog(activity),
         }
     }
 
-    override fun onWindowInsetsChanged(insets: Insets) = with(contentView) {
-        this.findFocus()?.let {
-            val container = maxWindowView
-            if (insets.bottom == 0 && container.scrollY != 0) {
-                container.scrollY = 0
-                return
-            }
-            val focusedPos = IntArray(2)
-            it.getLocationOnScreen(focusedPos)
-            focusedPos[1] += windowController.windowY
-            val focusedBottom = focusedPos[1] + it.height
-
-            val screenSize = context.screenSize()
-            val visibleBottom = screenSize.y - insets.bottom
-
-            if (focusedBottom > visibleBottom) {
-                container.scrollY = focusedBottom - visibleBottom
-            }
+    override fun onWindowInsetsChanged(insets: Insets) = with(contentView.findFocus()) {
+        if (this == null || windowController.currentState != WindowController.STATE_MAX_WINDOW) {
+            return@with
         }
-        Unit
+        val maxWindowSize = windowController.getMaxWindowSize()
+        val height = (maxWindowSize.y - insets.bottom).toInt()
+        updateWindowContent(maxWindowSize.x.toInt(), height)
+        onRequestMaxWindowSize(maxWindowSize.x.toInt(), height)
     }
 
     override fun onWindowStateChanged(state: Int) {
