@@ -17,6 +17,7 @@
 
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -45,19 +46,21 @@
 
         </ScrollView>
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
+        <ImageButton
             android:id="@+id/ok_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:layout_margin="10dp"
-            android:backgroundTint="?attr/colorPrimary"
+            android:background="@drawable/fab_background"
             android:contentDescription="@null"
+            android:elevation="10dp"
+            android:foreground="?attr/selectableItemBackground"
             android:padding="20dp"
             android:src="@drawable/ic_check_24"
             android:tint="?attr/colorOnPrimary"
             app:layout_anchor="@id/scroll_view"
             app:layout_anchorGravity="bottom|end"
-            app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior" />
+            tools:ignore="UseAppTint" />
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 </merge>

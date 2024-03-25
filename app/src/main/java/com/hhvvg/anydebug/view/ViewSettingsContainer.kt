@@ -22,6 +22,7 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -45,7 +46,7 @@ class ViewSettingsContainer(
     private var targetView: View? = null
 
     private val okButton by lazy {
-        findViewById<FloatingActionButton>(R.id.ok_button)
+        findViewById<View>(R.id.ok_button)
     }
 
     private val settingsContainer by lazy {
