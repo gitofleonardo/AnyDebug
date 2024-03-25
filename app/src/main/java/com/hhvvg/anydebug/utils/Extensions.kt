@@ -20,6 +20,7 @@ package com.hhvvg.anydebug.utils
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.Resources
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.hhvvg.anydebug.BuildConfig
@@ -134,4 +135,11 @@ fun <K, V> Map<K, V>.reverse(): Map<V, K> {
         result[it.value] = it.key
     }
     return result
+}
+
+/**
+ * Create module layout inflater
+ */
+fun Context.moduleLayoutInflater(): LayoutInflater {
+    return LayoutInflater.from(createModuleContext())
 }

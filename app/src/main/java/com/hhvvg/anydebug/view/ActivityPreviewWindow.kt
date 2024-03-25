@@ -34,7 +34,6 @@ import android.view.WindowManager
 import android.widget.Switch
 import androidx.core.view.isVisible
 import com.hhvvg.anydebug.R
-import com.hhvvg.anydebug.utils.call
 import com.hhvvg.anydebug.utils.override
 import com.hhvvg.anydebug.view.remote.RemoteFactoryImpl
 import de.robv.android.xposed.XC_MethodHook.Unhook
@@ -51,9 +50,9 @@ class ActivityPreviewWindow(private val activity: Activity) : Dialog(activity),
     private var activityTouchHookToken: Unhook? = null
     private val dragBar: View by lazy { contentView.findViewById(R.id.bottom_drag_bar) }
     private val editSwitch: Switch by lazy { contentView.findViewById(R.id.edit_switch) }
-    private val maxWindowView: View by lazy { contentView.findViewById(R.id.max_window_container) }
+    private val maxWindowView: ViewSettingsContainer by lazy { contentView.findViewById(R.id.max_window_container) }
     private val miniWindowView: View by lazy { contentView.findViewById(R.id.mini_window_container) }
-    private val previewList: View by lazy { contentView.findViewById(R.id.preview_list) }
+    private val previewList: PreviewList by lazy { contentView.findViewById(R.id.preview_list) }
 
     private val remoteInflater by lazy {
         RemoteFactoryImpl()
@@ -64,7 +63,7 @@ class ActivityPreviewWindow(private val activity: Activity) : Dialog(activity),
     }
 
     private val onPreviewClickListener: OnClickListener = OnClickListener {
-        maxWindowView.call("setTargetView", it)
+        maxWindowView.setTargetView(it)
         windowController.maximizeWindow()
     }
 
@@ -73,7 +72,7 @@ class ActivityPreviewWindow(private val activity: Activity) : Dialog(activity),
     }
 
     private val onViewRemoveListener: Consumer<View> = Consumer {
-        previewList.call("removePreviewView", it)
+        previewList.removePreviewView(it)
         windowController.minimizeWindow()
     }
 
@@ -95,18 +94,9 @@ class ActivityPreviewWindow(private val activity: Activity) : Dialog(activity),
         editSwitch.setOnCheckedChangeListener { _, isChecked ->
             handleActivityTouchStateChanged(isChecked)
         }
-        previewList.call(
-            "setOnPreviewClickListener",
-            onPreviewClickListener
-        )
-        maxWindowView.call(
-            "setOnViewRemoveListener",
-            onViewRemoveListener
-        )
-        maxWindowView.call(
-            "setOnCommitListener",
-            onViewCommitListener
-        )
+        previewList.setOnPreviewClickListener(onPreviewClickListener)
+        maxWindowView.setOnViewRemoveListener(onViewRemoveListener)
+        maxWindowView.setOnCommitListener(onViewCommitListener)
         setRenderers(mutableListOf(activity.window.decorView))
         windowController.configureWindowParams()
         setCancelable(false)
@@ -294,7 +284,7 @@ class ActivityPreviewWindow(private val activity: Activity) : Dialog(activity),
     }
 
     private fun setRenderers(renderers: List<View>) {
-        previewList.call("updatePreviewItems", renderers)
+        previewList.updatePreviewItems(renderers)
     }
 
 }

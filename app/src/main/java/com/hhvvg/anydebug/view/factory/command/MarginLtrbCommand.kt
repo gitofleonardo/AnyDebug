@@ -38,5 +38,6 @@ class MarginLtrbCommand(view: View, private val ltrb: CharSequence) : BaseComman
             params.rightMargin = matcher.group(3)?.toInt() ?: 0
             params.bottomMargin = matcher.group(4)?.toInt() ?: 0
         }
+        targetView.layoutParams = params
     }
 }
