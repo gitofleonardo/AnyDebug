@@ -34,6 +34,7 @@ import android.view.WindowManager
 import android.widget.Switch
 import androidx.core.view.isVisible
 import com.hhvvg.anydebug.R
+import com.hhvvg.anydebug.utils.getWindowDisplayFrame
 import com.hhvvg.anydebug.utils.override
 import com.hhvvg.anydebug.view.remote.RemoteFactoryImpl
 import de.robv.android.xposed.XC_MethodHook.Unhook
@@ -108,10 +109,10 @@ class ActivityPreviewWindow(private val activity: Activity) : Dialog(activity),
         activityTouchHookToken?.unhook()
     }
 
-    override fun getParentWindowVisibleFrame(): Rect {
-        val rect = Rect()
-        activity.window?.decorView?.getWindowVisibleDisplayFrame(rect)
-        return rect
+    override fun getParentWindowFrame(): Rect {
+        return Rect().apply {
+            activity.window?.decorView?.getWindowDisplayFrame(this)
+        }
     }
 
     override fun onRequestMaxWindowSize(width: Int, height: Int) {

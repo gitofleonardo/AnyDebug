@@ -20,6 +20,7 @@ package com.hhvvg.anydebug.utils
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.Resources
+import android.graphics.Rect
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -76,8 +77,19 @@ fun KClass<*>.override(methodName: String, vararg methodParams: Class<*>, callba
 /**
  * Calls method with specific name
  */
-fun Any.call(method: String, vararg args: Any) {
-    XposedHelpers.callMethod(this, method, *args)
+fun Any.call(method: String, vararg args: Any): Any? {
+    return XposedHelpers.callMethod(this, method, *args)
+}
+
+/**
+ * Guarded call a method
+ */
+fun Any.guardedCall(method: String, vararg args: Any) {
+    try {
+        call(method, *args)
+    } catch (e: Exception) {
+        e.printStackTrace()
+    }
 }
 
 /**
@@ -142,4 +154,15 @@ fun <K, V> Map<K, V>.reverse(): Map<V, K> {
  */
 fun Context.moduleLayoutInflater(): LayoutInflater {
     return LayoutInflater.from(createModuleContext())
+}
+
+/**
+ * Get window display frame, ignoring insets
+ */
+fun View.getWindowDisplayFrame(outRect: Rect) {
+    outRect.setEmpty()
+    guardedCall("getWindowDisplayFrame", outRect)
+    if (outRect.isEmpty) {
+        getWindowVisibleDisplayFrame(outRect)
+    }
 }

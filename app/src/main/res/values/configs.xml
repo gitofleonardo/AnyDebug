@@ -22,4 +22,6 @@
     <dimen name="preference_title_width">100dp</dimen>
     <dimen name="config_mini_window_width">120dp</dimen>
     <dimen name="config_mini_window_height">200dp</dimen>
+    <dimen name="config_max_window_min_width">300dp</dimen>
+    <dimen name="config_max_window_min_height">500dp</dimen>
 </resources>

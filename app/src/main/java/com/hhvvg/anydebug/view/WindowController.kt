@@ -113,13 +113,20 @@ class WindowController(
 
     private val parentWindowFrame: Rect
         get() = run {
-            windowClient.getParentWindowVisibleFrame()
+            windowClient.getParentWindowFrame()
         }
 
     private val runningDockingAnimation: Boolean
         get() = dockToEdgeAnimationX != null && dockToEdgeAnimationY != null
 
     private val undampedWindowTranslation = PointF()
+
+    private val maximumWindowWidth: Int by lazy {
+        moduleResources.getDimensionPixelSize(R.dimen.config_max_window_min_width)
+    }
+    private val maximumWindowHeight: Int by lazy {
+        moduleResources.getDimensionPixelSize(R.dimen.config_max_window_min_height)
+    }
 
     var windowY = 0
         set(value) {
@@ -214,12 +221,11 @@ class WindowController(
         val parentFrame = parentWindowFrame
         val parentWindowWidth = parentFrame.width()
         val parentWindowHeight = parentFrame.height()
-        val finalWidth = parentWindowWidth * MAX_WINDOW_WIDTH_RATIO
-        val finalHeight = parentWindowHeight * MAX_WINDOW_HEIGHT_RATIO
-        return PointF(
-            finalWidth,
-            finalHeight
-        )
+        var finalWidth = parentWindowWidth * MAX_WINDOW_WIDTH_RATIO
+        var finalHeight = parentWindowHeight * MAX_WINDOW_HEIGHT_RATIO
+        finalHeight = min(finalHeight, maximumWindowHeight.toFloat())
+        finalWidth = min(finalWidth, maximumWindowWidth.toFloat())
+        return PointF(finalWidth, finalHeight)
     }
 
     fun getMiniWindowSize(): PointF {
@@ -403,11 +409,12 @@ class WindowController(
     }
 
     private fun calcMaximizeWindowPosition(): PointF {
-        val parentFrame = windowClient.getParentWindowVisibleFrame()
+        val parentFrame = windowClient.getParentWindowFrame()
         val parentWindowWidth = parentFrame.width()
         val parentWindowHeight = parentFrame.height()
-        val finalX = parentWindowWidth * (1 - MAX_WINDOW_WIDTH_RATIO) * .5f
-        val finalY = parentWindowHeight * (1 - MAX_WINDOW_HEIGHT_RATIO) * .5f
+        val maximumWinSize = getMaxWindowSize()
+        val finalX = (parentWindowWidth - maximumWinSize.x) * .5f
+        val finalY = (parentWindowHeight - maximumWinSize.y) * .3f
         return PointF(finalX, finalY)
     }
 

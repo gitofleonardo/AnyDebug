@@ -23,7 +23,7 @@ import android.view.WindowManager
 
 interface WindowClient {
 
-    fun getParentWindowVisibleFrame(): Rect
+    fun getParentWindowFrame(): Rect
     fun onRequestMaxWindowSize(width: Int, height: Int)
     fun onStateSizeAnimationEnd(state: Int)
     fun onWindowHeightChanged(
