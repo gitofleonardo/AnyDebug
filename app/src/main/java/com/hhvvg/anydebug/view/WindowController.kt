@@ -40,7 +40,7 @@ import androidx.dynamicanimation.animation.DynamicAnimation
 import com.hhvvg.anydebug.R
 import com.hhvvg.anydebug.utils.OverScroll
 import com.hhvvg.anydebug.utils.SpringAnimationBuilder
-import com.hhvvg.anydebug.utils.createRemotePackageContext
+import com.hhvvg.anydebug.utils.moduleResources
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
@@ -101,7 +101,7 @@ class WindowController(
         parentWindowFrame.height()
     }
 
-    private val remoteContext by lazy { context.createRemotePackageContext() }
+    private val moduleResources by lazy { context.moduleResources }
     private val windowParams by lazy { window.attributes }
 
     private val decorView: View
@@ -224,9 +224,9 @@ class WindowController(
 
     fun getMiniWindowSize(): PointF {
         return PointF(
-            remoteContext.resources.getDimensionPixelSize(R.dimen.config_mini_window_width)
+            moduleResources.getDimensionPixelSize(R.dimen.config_mini_window_width)
                 .toFloat(),
-            remoteContext.resources.getDimensionPixelSize(R.dimen.config_mini_window_height)
+            moduleResources.getDimensionPixelSize(R.dimen.config_mini_window_height)
                 .toFloat()
         )
     }

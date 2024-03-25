@@ -19,18 +19,14 @@ package com.hhvvg.anydebug
 
 import android.content.res.XModuleResources
 import com.hhvvg.anydebug.modules.ActivityModule
-import com.hhvvg.anydebug.modules.AndroidSystemModule
 import com.hhvvg.anydebug.utils.Logger
 import com.highcapable.yukihookapi.annotation.xposed.InjectYukiHookWithXposed
-import com.highcapable.yukihookapi.hook.factory.toJavaPrimitiveType
 import com.highcapable.yukihookapi.hook.xposed.bridge.event.YukiXposedEvent
 import com.highcapable.yukihookapi.hook.xposed.proxy.IYukiHookXposedInit
-import de.robv.android.xposed.XC_MethodHook
-import de.robv.android.xposed.XposedHelpers
 import kotlin.reflect.KClass
 
 @InjectYukiHookWithXposed
-object HookEntry : IYukiHookXposedInit {
+object InjectHookEntry : IYukiHookXposedInit {
     lateinit var moduleRes: XModuleResources
     lateinit var modulePath: String
     private val modules = arrayOf<KClass<*>>(
@@ -45,10 +41,6 @@ object HookEntry : IYukiHookXposedInit {
         YukiXposedEvent.onHandleLoadPackage { params ->
             if (!params.isFirstApplication) {
                 Logger.log("Process already loaded, skip init modules.")
-                return@onHandleLoadPackage
-            }
-            if (params.packageName == "android") {
-                AndroidSystemModule().onHook(params)
                 return@onHandleLoadPackage
             }
             modules.forEach {

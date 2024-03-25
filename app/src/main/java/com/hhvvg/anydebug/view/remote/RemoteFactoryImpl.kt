@@ -22,10 +22,9 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.hhvvg.anydebug.BuildConfig
-import com.hhvvg.anydebug.HookEntry
-import com.hhvvg.anydebug.utils.createRemotePackageContext
-import com.highcapable.yukihookapi.hook.factory.applyModuleTheme
+import com.hhvvg.anydebug.BuildConfig.APPLICATION_ID
+import com.hhvvg.anydebug.utils.createModuleContext
+import com.hhvvg.anydebug.utils.moduleResources
 
 /**
  * Impl for RemoteFactory
@@ -37,13 +36,12 @@ class RemoteFactoryImpl : RemoteFactory {
         context: Context, name: String, root: ViewGroup?,
         attachToRoot: Boolean
     ): View {
-        val packageContext = context.createRemotePackageContext()
-        val resId = packageContext.resources
-            .getIdentifier(name, "layout", BuildConfig.APPLICATION_ID)
-        if (resId > 0) {
-            return LayoutInflater.from(packageContext).inflate(resId, root, attachToRoot)
+        val layoutId = context.moduleResources.getIdentifier(name, "layout", APPLICATION_ID)
+        val moduleContext = context.createModuleContext()
+        val layout = context.moduleResources.getLayout(layoutId)
+        if (layoutId > 0) {
+            return LayoutInflater.from(moduleContext).inflate(layout, root, attachToRoot)
         }
         throw RuntimeException("Error inflating remote layout.")
     }
-
 }

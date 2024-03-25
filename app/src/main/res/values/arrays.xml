@@ -16,9 +16,7 @@
   -->
 
 <resources>
-    <array name="required_packages">
-        <item>android</item>
-    </array>
+    <array name="required_packages" />
 
     <string-array name="visibilities">
         <item>Visible</item>

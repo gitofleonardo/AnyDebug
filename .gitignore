@@ -7,6 +7,7 @@
 /.idea/workspace.xml
 /.idea/navEditor.xml
 /.idea/assetWizardSettings.xml
+/.idea/.name
 .DS_Store
 /build
 /captures
@@ -15,3 +16,4 @@
 local.properties
 /app/src/main/assets/xposed_init
 /app/src/main/resources/META-INF/yukihookapi_init
+/app/release/*
