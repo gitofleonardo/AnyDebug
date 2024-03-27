@@ -116,6 +116,9 @@ class ActivityPreviewWindow(private val activity: Activity) : OnTouchListener, W
     fun dismiss() {
         shown = false
         activityTouchHookToken?.unhook()
+        if (decorView.isAttachedToWindow) {
+            windowManager.removeView(decorView)
+        }
     }
 
     override fun onBackInvoked() {
