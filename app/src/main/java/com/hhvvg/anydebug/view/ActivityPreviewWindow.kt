@@ -19,21 +19,16 @@ package com.hhvvg.anydebug.view
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.app.Dialog
 import android.content.Context
 import android.graphics.Insets
 import android.graphics.Rect
-import android.os.Bundle
 import android.view.MotionEvent
 import android.view.View
 import android.view.View.OnClickListener
 import android.view.View.OnTouchListener
 import android.view.ViewGroup
-import android.view.Window
 import android.view.WindowManager
-import android.widget.FrameLayout
 import android.widget.Switch
-import android.window.OnBackInvokedCallback
 import androidx.core.view.isVisible
 import com.hhvvg.anydebug.R
 import com.hhvvg.anydebug.utils.getWindowDisplayFrame
@@ -46,7 +41,8 @@ import java.util.function.Consumer
  * Mod window
  */
 @SuppressLint("RtlHardcoded")
-class ActivityPreviewWindow(private val activity: Activity) : OnTouchListener, WindowClient {
+class ActivityPreviewWindow(private val activity: Activity) : OnTouchListener, WindowClient,
+    OnBackInvokedCallback {
 
     private lateinit var contentView: View
     private var activityTouchHookToken: Unhook? = null
@@ -88,11 +84,12 @@ class ActivityPreviewWindow(private val activity: Activity) : OnTouchListener, W
     }
     internal val windowParams: WindowManager.LayoutParams = WindowManager.LayoutParams()
     internal val context: Context = activity
-    internal val decorView: ViewGroup = FrameLayout(activity)
+    internal val decorView: DecorView = DecorView(activity)
 
     private fun onCreate() {
         contentView = onCreateWindowContent(activity)
         decorView.addView(contentView)
+        decorView.setOnBackInvokedCallback(this)
         dragBar.setOnTouchListener(this@ActivityPreviewWindow)
         editSwitch.setOnCheckedChangeListener { _, isChecked ->
             handleActivityTouchStateChanged(isChecked)
@@ -119,6 +116,10 @@ class ActivityPreviewWindow(private val activity: Activity) : OnTouchListener, W
     fun dismiss() {
         shown = false
         activityTouchHookToken?.unhook()
+    }
+
+    override fun onBackInvoked() {
+        windowController.minimizeWindow()
     }
 
     override fun getParentWindowFrame(): Rect {
