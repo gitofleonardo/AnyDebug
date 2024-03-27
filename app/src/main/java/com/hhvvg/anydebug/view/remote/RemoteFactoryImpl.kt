@@ -41,9 +41,7 @@ class RemoteFactoryImpl : RemoteFactory {
         val moduleContext = context.topContext().createModuleContext()
         val layout = context.moduleResources.getLayout(layoutId)
         if (layoutId > 0) {
-            return LayoutInflater.from(moduleContext).cloneInContext(
-                moduleContext
-            ).inflate(layout, root, attachToRoot)
+            return LayoutInflater.from(moduleContext).inflate(layout, root, attachToRoot)
         }
         throw RuntimeException("Error inflating remote layout.")
     }
