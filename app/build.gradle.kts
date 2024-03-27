@@ -13,8 +13,8 @@ android {
         applicationId = "com.hhvvg.anydebug"
         minSdk = 29
         targetSdk = 34
-        versionCode = 11
-        versionName = "3.0.1"
+        versionCode = 12
+        versionName = "3.0.2"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -28,7 +28,6 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            buildConfigField("String", "PACKAGE_NAME", "\"com.hhvvg.anydebug\"")
         }
         debug {
             isMinifyEnabled = false
@@ -38,7 +37,6 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            buildConfigField("String", "PACKAGE_NAME", "\"com.hhvvg.anydebug\"")
         }
     }
     compileOptions {
