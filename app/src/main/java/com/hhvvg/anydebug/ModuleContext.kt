@@ -21,6 +21,7 @@ import android.content.Context
 import android.content.res.Resources
 import android.content.res.Resources.Theme
 import android.view.ContextThemeWrapper
+import android.view.LayoutInflater
 import com.hhvvg.anydebug.utils.moduleResources
 import com.highcapable.yukihookapi.YukiHookAPI
 import com.highcapable.yukihookapi.hook.factory.classOf
@@ -29,12 +30,24 @@ import com.highcapable.yukihookapi.hook.factory.classOf
  * Context for loading module's resources
  */
 class ModuleContext(baseContext: Context, theme: Theme) : ContextThemeWrapper(baseContext, theme) {
+
+    private val inflater by lazy {
+        (super.getSystemService(LAYOUT_INFLATER_SERVICE) as LayoutInflater).cloneInContext(this)
+    }
+
     override fun getResources(): Resources {
         return moduleResources
     }
 
     override fun getClassLoader(): ClassLoader {
         return classOf<YukiHookAPI>().classLoader ?: error("Error loading lsp class loader.")
+    }
+
+    override fun getSystemService(name: String): Any {
+        if (LAYOUT_INFLATER_SERVICE == name) {
+            return inflater
+        }
+        return super.getSystemService(name)
     }
 
 }

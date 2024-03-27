@@ -19,6 +19,7 @@ package com.hhvvg.anydebug.utils
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.ContextWrapper
 import android.content.res.Resources
 import android.graphics.Rect
 import android.view.LayoutInflater
@@ -165,4 +166,15 @@ fun View.getWindowDisplayFrame(outRect: Rect) {
     if (outRect.isEmpty) {
         getWindowVisibleDisplayFrame(outRect)
     }
+}
+
+/**
+ * Return the most top context of this context
+ */
+fun Context.topContext(): Context {
+    var top: Context = this
+    while (top is ContextWrapper) {
+        top = top.baseContext
+    }
+    return top
 }
