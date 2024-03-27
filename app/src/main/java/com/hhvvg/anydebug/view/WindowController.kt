@@ -49,7 +49,7 @@ import kotlin.math.min
  * Controls position and size of window
  */
 class WindowController(
-    private val window: Window,
+    private val window: ActivityPreviewWindow,
     private val windowClient: WindowClient,
 ) : OnGestureListener {
 
@@ -102,7 +102,7 @@ class WindowController(
     }
 
     private val moduleResources by lazy { context.moduleResources }
-    private val windowParams by lazy { window.attributes }
+    private val windowParams by lazy { window.windowParams }
 
     private val decorView: View
         get() = window.decorView
@@ -250,7 +250,6 @@ class WindowController(
         flags = LayoutParams.FLAG_NOT_TOUCH_MODAL or
                 LayoutParams.FLAG_LAYOUT_NO_LIMITS or
                 LayoutParams.FLAG_NOT_FOCUSABLE
-        window.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
             setCanPlayMoveAnimation(false)
         }

@@ -31,7 +31,9 @@ import android.view.View.OnTouchListener
 import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
+import android.widget.FrameLayout
 import android.widget.Switch
+import android.window.OnBackInvokedCallback
 import androidx.core.view.isVisible
 import com.hhvvg.anydebug.R
 import com.hhvvg.anydebug.utils.getWindowDisplayFrame
@@ -44,8 +46,7 @@ import java.util.function.Consumer
  * Mod window
  */
 @SuppressLint("RtlHardcoded")
-class ActivityPreviewWindow(private val activity: Activity) : Dialog(activity),
-    OnTouchListener, WindowClient {
+class ActivityPreviewWindow(private val activity: Activity) : OnTouchListener, WindowClient {
 
     private lateinit var contentView: View
     private var activityTouchHookToken: Unhook? = null
@@ -60,7 +61,7 @@ class ActivityPreviewWindow(private val activity: Activity) : Dialog(activity),
     }
 
     private val windowController by lazy {
-        WindowController(window!!, this)
+        WindowController(this, this)
     }
 
     private val onPreviewClickListener: OnClickListener = OnClickListener {
@@ -79,18 +80,19 @@ class ActivityPreviewWindow(private val activity: Activity) : Dialog(activity),
 
     private val tempLoc = IntArray(2)
 
-    @Deprecated("Deprecated in Java")
-    override fun onBackPressed() {
-        super.onBackPressed()
-        windowController.minimizeWindow()
-    }
+    private var created = false
+    private var shown = false
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        requestWindowFeature(Window.FEATURE_NO_TITLE)
-        contentView = onCreateWindowContent(activity).apply {
-            setContentView(this)
-        }
+    private val windowManager by lazy {
+        activity.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+    }
+    internal val windowParams: WindowManager.LayoutParams = WindowManager.LayoutParams()
+    internal val context: Context = activity
+    internal val decorView: ViewGroup = FrameLayout(activity)
+
+    private fun onCreate() {
+        contentView = onCreateWindowContent(activity)
+        decorView.addView(contentView)
         dragBar.setOnTouchListener(this@ActivityPreviewWindow)
         editSwitch.setOnCheckedChangeListener { _, isChecked ->
             handleActivityTouchStateChanged(isChecked)
@@ -100,12 +102,22 @@ class ActivityPreviewWindow(private val activity: Activity) : Dialog(activity),
         maxWindowView.setOnCommitListener(onViewCommitListener)
         setRenderers(mutableListOf(activity.window.decorView))
         windowController.configureWindowParams()
-        setCancelable(false)
-        setCanceledOnTouchOutside(false)
     }
 
-    override fun dismiss() {
-        super.dismiss()
+    fun show() {
+        if (activity.isFinishing || shown) {
+            return
+        }
+        if (!created) {
+            created = true
+            onCreate()
+        }
+        shown = true
+        windowManager.addView(decorView, windowParams)
+    }
+
+    fun dismiss() {
+        shown = false
         activityTouchHookToken?.unhook()
     }
 
@@ -209,15 +221,10 @@ class ActivityPreviewWindow(private val activity: Activity) : Dialog(activity),
         }
     }
 
-    override fun show() {
-        if (activity.isFinishing) {
-            return
-        }
-        super.show()
-    }
-
     override fun updateWindowAttributes(attr: WindowManager.LayoutParams) {
-        onWindowAttributesChanged(attr)
+        if (decorView.isAttachedToWindow) {
+            windowManager.updateViewLayout(decorView, attr)
+        }
     }
 
     override fun updateWindowContent(width: Int, height: Int) {
@@ -287,5 +294,4 @@ class ActivityPreviewWindow(private val activity: Activity) : Dialog(activity),
     private fun setRenderers(renderers: List<View>) {
         previewList.updatePreviewItems(renderers)
     }
-
 }
